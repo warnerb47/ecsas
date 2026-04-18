@@ -22,7 +22,10 @@
         "libs/shop/feature-product-detail/src/index.ts"
       ],
       "@org/shop/feature-products": ["libs/shop/feature-products/src/index.ts"],
-      "@org/shop/shared-ui": ["libs/shop/shared-ui/src/index.ts"]
+      "@org/shop/shared-ui": ["libs/shop/shared-ui/src/index.ts"],
+      "@org/ecsas/feature-dashboard": [
+        "libs/ecsas/feature-dashboard/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]
