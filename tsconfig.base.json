@@ -28,6 +28,9 @@
       ],
       "@org/ecsas/feature-procedure": [
         "libs/ecsas/feature-procedure/src/index.ts"
+      ],
+      "@org/ecsas/feature-application": [
+        "libs/ecsas/feature-application/src/index.ts"
       ]
     }
   },
