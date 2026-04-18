@@ -4,7 +4,7 @@
   "sourceRoot": "libs/ecsas/feature-procedure/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": [],
+  "tags": ["scope:ecsas", "type:feature"],
   "targets": {
     "build": {
       "executor": "@nx/angular:ng-packagr-lite",

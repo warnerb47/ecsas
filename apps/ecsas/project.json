@@ -4,7 +4,7 @@
   "projectType": "application",
   "prefix": "ecsas",
   "sourceRoot": "apps/ecsas/src",
-  "tags": [],
+  "tags": ["scope:ecsas"],
   "targets": {
     "build": {
       "executor": "@angular/build:application",

@@ -29,6 +29,10 @@ export default [
               onlyDependOnLibsWithTags: ['scope:shop', 'scope:shared'],
             },
             {
+              sourceTag: 'scope:ecsas',
+              onlyDependOnLibsWithTags: ['scope:ecsas', 'scope:shared'],
+            },
+            {
               sourceTag: 'scope:api',
               onlyDependOnLibsWithTags: ['scope:api', 'scope:shared'],
             },
