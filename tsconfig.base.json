@@ -25,6 +25,9 @@
       "@org/shop/shared-ui": ["libs/shop/shared-ui/src/index.ts"],
       "@org/ecsas/feature-dashboard": [
         "libs/ecsas/feature-dashboard/src/index.ts"
+      ],
+      "@org/ecsas/feature-procedure": [
+        "libs/ecsas/feature-procedure/src/index.ts"
       ]
     }
   },
