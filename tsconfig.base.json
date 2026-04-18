@@ -31,7 +31,8 @@
       ],
       "@org/ecsas/feature-application": [
         "libs/ecsas/feature-application/src/index.ts"
-      ]
+      ],
+      "@org/ecsas/feature-setting": ["libs/ecsas/feature-setting/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
