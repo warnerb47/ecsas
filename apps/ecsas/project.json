@@ -1,31 +1,25 @@
 {
-  "name": "shop",
+  "name": "ecsas",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "prefix": "app",
-  "sourceRoot": "apps/shop/src",
-  "tags": ["scope:shop"],
+  "prefix": "ecsas",
+  "sourceRoot": "apps/ecsas/src",
+  "tags": [],
   "targets": {
     "build": {
       "executor": "@angular/build:application",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/shop",
-        "browser": "apps/shop/src/main.ts",
-        "polyfills": ["zone.js"],
-        "tsConfig": "apps/shop/tsconfig.app.json",
+        "outputPath": "dist/apps/ecsas",
+        "browser": "apps/ecsas/src/main.ts",
+        "tsConfig": "apps/ecsas/tsconfig.app.json",
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/shop/public"
+            "input": "apps/ecsas/public"
           }
         ],
-        "styles": ["apps/shop/src/styles.css"],
-        "server": "apps/shop/src/main.server.ts",
-        "ssr": {
-          "entry": "apps/shop/src/server.ts"
-        },
-        "outputMode": "server"
+        "styles": ["apps/ecsas/src/styles.css"]
       },
       "configurations": {
         "production": {
@@ -52,35 +46,31 @@
       "defaultConfiguration": "production"
     },
     "serve": {
-      "dependsOn": ["api:serve"],
       "continuous": true,
       "executor": "@angular/build:dev-server",
+      "options": {
+        "port": 4200
+      },
       "configurations": {
         "production": {
-          "buildTarget": "shop:build:production"
+          "buildTarget": "ecsas:build:production"
         },
         "development": {
-          "buildTarget": "shop:build:development"
+          "buildTarget": "ecsas:build:development"
         }
       },
-      "defaultConfiguration": "development",
-      "options": {
-        "proxyConfig": "apps/shop/proxy.conf.json"
-      }
+      "defaultConfiguration": "development"
     },
-    "extract-i18n": {
-      "executor": "@angular/build:extract-i18n",
-      "options": {
-        "buildTarget": "shop:build"
-      }
+    "lint": {
+      "executor": "@nx/eslint:lint"
     },
     "serve-static": {
       "continuous": true,
       "executor": "@nx/web:file-server",
       "options": {
-        "buildTarget": "shop:build",
-        "port": 4201,
-        "staticFilePath": "dist/apps/shop/browser",
+        "buildTarget": "ecsas:build",
+        "port": 4200,
+        "staticFilePath": "dist/apps/ecsas/browser",
         "spa": true
       }
     }
