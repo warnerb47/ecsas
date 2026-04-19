@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Procedure } from '@org/models';
 
 @Component({
   selector: 'lib-pending-procedure-card',
@@ -7,9 +8,18 @@ import { CommonModule } from '@angular/common';
   templateUrl: './pending-procedure-card.component.html'
 })
 export class PendingProcedureCardComponent {
-  @Input() icon: string = '';
-  @Input() title: string = '';
-  @Input() description: string = '';
-  @Input() status: string = '';
-  @Input() count: number = 0;
+  procedure = input.required<Procedure>();
+  count = input<number>(0);
+  procedureSelected = output<Procedure>();
+
+  icons = signal({
+    'MEDICAL': 'pi pi-heart',
+    'TABASKI': 'pi pi-calendar',
+    'LAYENNES': 'pi pi-users',
+    'PAQUE': 'pi pi-gift'
+  });
+
+  onProcedureSelected() {
+    this.procedureSelected.emit(this.procedure());
+  }
 }

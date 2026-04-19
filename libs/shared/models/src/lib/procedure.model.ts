@@ -4,4 +4,6 @@ export interface Procedure {
   description: string;
   begin: Date;
   end: Date;
+  status: 'IN_PROGRESS' | 'COMPLETED';
+  type: 'MEDICAL' | 'TABASKI' | 'LAYENNES' | 'PAQUE';
 }

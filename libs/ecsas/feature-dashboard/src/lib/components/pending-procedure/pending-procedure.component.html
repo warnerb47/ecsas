@@ -6,29 +6,11 @@
     </button>
   </div>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+    @for (procedure of procedures; track procedure.id; let i = $index) {
       <lib-pending-procedure-card 
-          icon="pi pi-building"
-          title="Appel des Layennes"
-          description="Aide sociale exceptionnelle destinée aux pèlerins et résidents pour la célébration annuelle."
-          status="ouvert"
-          [count]="3">
+          [procedure]="procedure"
+          [count]="counts[i]">
       </lib-pending-procedure-card>
-
-      <lib-pending-procedure-card 
-          icon="pi pi-heart"
-          title="Secours Médical"
-          description="Prise en charge des frais d'hospitalisation et d'achat de médicaments pour les nécessiteux."
-          status="ouvert"
-          [count]="4">
-      </lib-pending-procedure-card>
-
-      <lib-pending-procedure-card 
-          icon="pi pi-money-bill"
-          title="Aide Tabaski 2024"
-          description="Soutien aux familles vulnérables pour l'achat du bélier de la Tabaski."
-          status="clôturé"
-          [count]="0">
-      </lib-pending-procedure-card>
-
+    }
   </div>
 </div>

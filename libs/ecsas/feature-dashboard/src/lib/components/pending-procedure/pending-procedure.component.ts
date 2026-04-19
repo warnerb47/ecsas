@@ -1,9 +1,42 @@
 import { Component } from '@angular/core';
 import { PendingProcedureCardComponent } from './pending-procedure-card/pending-procedure-card.component';
+import { Procedure } from '@org/models';
 
 @Component({
   selector: 'lib-pending-procedure',
   imports: [PendingProcedureCardComponent],
   templateUrl: './pending-procedure.component.html',
 })
-export class PendingProcedureComponent {}
+export class PendingProcedureComponent {
+  procedures: Procedure[] = [
+    {
+      id: '1',
+      name: 'Appel des Layennes',
+      description: 'Aide sociale exceptionnelle destinée aux pèlerins et résidents pour la célébration annuelle.',
+      begin: new Date('2025-01-15'),
+      end: new Date('2025-06-30'),
+      status: 'IN_PROGRESS',
+      type: 'LAYENNES',
+    },
+    {
+      id: '2',
+      name: 'Secours Médical',
+      description: "Prise en charge des frais d'hospitalisation et d'achat de médicaments pour les nécessiteux.",
+      begin: new Date('2025-02-01'),
+      end: new Date('2025-12-31'),
+      status: 'IN_PROGRESS',
+      type: 'MEDICAL',
+    },
+    {
+      id: '3',
+      name: 'Aide Tabaski 2024',
+      description: "Soutien aux familles vulnérables pour l'achat du bélier de la Tabaski.",
+      begin: new Date('2024-06-01'),
+      end: new Date('2024-06-30'),
+      status: 'COMPLETED',
+      type: 'TABASKI',
+    },
+  ];
+
+  counts: number[] = [3, 4, 0];
+}
