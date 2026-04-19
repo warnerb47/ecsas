@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
-import { FeatureSetting } from './feature-setting/feature-setting';
+import { SettingComponent } from './setting/setting.component';
 
 export const featureSettingRoutes: Route[] = [
-  { path: '', component: FeatureSetting },
+  { path: '', component: SettingComponent },
 ];
