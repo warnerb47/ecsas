@@ -32,7 +32,8 @@
       "@org/ecsas/feature-application": [
         "libs/ecsas/feature-application/src/index.ts"
       ],
-      "@org/ecsas/feature-setting": ["libs/ecsas/feature-setting/src/index.ts"]
+      "@org/ecsas/feature-setting": ["libs/ecsas/feature-setting/src/index.ts"],
+      "@ord/ecsas/shared-ui": ["libs/ecsas/shared-ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
