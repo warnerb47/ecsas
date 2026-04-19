@@ -1,0 +1,7 @@
+<div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+    <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">{{ title }}</p>
+    <p class="text-3xl font-black" [ngClass]="valueColor || 'text-slate-800'">{{ value }}</p>
+    @if (description) {
+        <p class="text-[10px] mt-2 font-medium" [ngClass]="descriptionColor || 'text-slate-400'">{{ description }}</p>
+    }
+</div>
