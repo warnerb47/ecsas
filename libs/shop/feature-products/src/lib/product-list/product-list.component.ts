@@ -8,7 +8,7 @@ import {
   ProductGridComponent,
   LoadingSpinnerComponent,
   ErrorMessageComponent,
-} from '@org/shop/shared-ui';
+} from '@org/shop/shop-shared-ui';
 
 @Component({
   selector: 'shop-product-list',

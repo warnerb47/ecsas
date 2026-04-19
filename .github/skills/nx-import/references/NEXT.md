@@ -161,7 +161,7 @@ No naming conflicts between frameworks.
 
 ### Scenario 1: Basic Nx Next.js App Router + Shared Lib → TS preset (PASS)
 
-- Source: CNW next preset (Next.js 16, App Router) + `@nx/react:library` shared-ui
+- Source: CNW next preset (Next.js 16, App Router) + `@nx/react:library` shop-shared-ui
 - Dest: CNW ts preset (Nx 23)
 - Import: subdirectory-at-a-time (apps, libs separately)
 - Errors found & fixed:

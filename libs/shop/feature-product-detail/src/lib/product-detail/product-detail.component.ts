@@ -3,7 +3,7 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProductsService } from '@org/shop/data';
 import { Product } from '@org/models';
-import { LoadingSpinnerComponent, ErrorMessageComponent } from '@org/shop/shared-ui';
+import { LoadingSpinnerComponent, ErrorMessageComponent } from '@org/shop/shop-shared-ui';
 
 @Component({
   selector: 'shop-product-detail',

@@ -18,7 +18,7 @@ This repository demonstrates a production-ready Angular monorepo with:
   - `@org/feature-products` - Product listing feature (Angular)
   - `@org/feature-product-detail` - Product detail feature (Angular)
   - `@org/data` - Data access layer for shop features
-  - `@org/shared-ui` - Shared UI components
+  - `@org/shop-shared-ui` - Shared UI components
   - `@org/models` - Shared data models
   - `@org/products` - API product service library
 
@@ -166,7 +166,7 @@ This feature helps maintain a healthy CI pipeline by automatically detecting and
 │   │   ├── feature-products/        [scope:shop,type:feature] - Product listing
 │   │   ├── feature-product-detail/  [scope:shop,type:feature] - Product details
 │   │   ├── data/                    [scope:shop,type:data]    - Data access
-│   │   └── shared-ui/               [scope:shop,type:ui]      - UI components
+│   │   └── shop-shared-ui/               [scope:shop,type:ui]      - UI components
 │   ├── api/
 │   │   └── products/    [scope:api]    - Product service
 │   └── shared/
