@@ -1,49 +1,5 @@
 <div class="flex-1 overflow-y-auto">
-  <header
-    class="bg-white border-b px-8 py-4 flex justify-between items-center sticky top-0 z-10"
-  >
-    <div class="relative w-96">
-      <span
-        class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400"
-      >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-        </svg>
-      </span>
-      <input
-        type="text"
-        class="block w-full pl-10 pr-3 py-2 border border-slate-200 rounded-lg bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        placeholder="Rechercher une demande ou un bénéficiaire..."
-      />
-    </div>
-    <div class="flex items-center space-x-4">
-      <a
-        href="./procedures.html"
-        class="bg-[#3182CE] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition shadow-sm"
-      >
-        + Nouvelle demande
-      </a>
-      <div class="h-8 w-px bg-slate-200"></div>
-      <button class="text-slate-500 hover:text-[#1A365D]">
-        <svg
-          class="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-          ></path>
-        </svg>
-      </button>
-    </div>
-  </header>
-
+  <lib-topbar></lib-topbar>
   <div class="p-8 max-w-7xl mx-auto">
     <!-- statistics -->
         <div class="grid grid-cols-4 gap-6 mb-10">
