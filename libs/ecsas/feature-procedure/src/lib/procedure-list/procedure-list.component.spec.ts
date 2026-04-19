@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FeatureProcedure } from './feature-procedure';
+import { ProcedureListComponent } from './procedure-list.component';
 
-describe('FeatureProcedure', () => {
-  let component: FeatureProcedure;
-  let fixture: ComponentFixture<FeatureProcedure>;
+describe('ProcedureListComponent', () => {
+  let component: ProcedureListComponent;
+  let fixture: ComponentFixture<ProcedureListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FeatureProcedure],
+      imports: [ProcedureListComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(FeatureProcedure);
+    fixture = TestBed.createComponent(ProcedureListComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
-import { FeatureProcedure } from './feature-procedure/feature-procedure';
+import { ProcedureListComponent } from './procedure-list/procedure-list.component';
 
 export const featureProcedureRoutes: Route[] = [
-  { path: '', component: FeatureProcedure },
+  { path: '', component: ProcedureListComponent },
 ];

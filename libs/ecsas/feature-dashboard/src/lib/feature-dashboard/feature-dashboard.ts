@@ -5,6 +5,5 @@ import { SidebarComponent } from '@ord/ecsas/shared-ui';
   selector: 'lib-feature-dashboard',
   imports: [SidebarComponent],
   templateUrl: './feature-dashboard.html',
-  styleUrl: './feature-dashboard.css',
 })
 export class FeatureDashboard {}
