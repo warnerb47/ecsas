@@ -7,9 +7,7 @@
   </div>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
     @for (procedure of procedures; track procedure.id; let i = $index) {
-      <lib-pending-procedure-card 
-          [procedure]="procedure"
-          [count]="counts[i]">
+      <lib-pending-procedure-card [procedure]="procedure">
       </lib-pending-procedure-card>
     }
   </div>

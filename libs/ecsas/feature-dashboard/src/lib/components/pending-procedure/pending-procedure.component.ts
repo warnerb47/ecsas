@@ -18,6 +18,7 @@ export class PendingProcedureComponent {
       end: new Date('2025-06-30'),
       status: 'IN_PROGRESS',
       type: 'LAYENNES',
+      applicationCount: 3,
     },
     {
       id: '2',
@@ -27,6 +28,7 @@ export class PendingProcedureComponent {
       end: new Date('2025-12-31'),
       status: 'IN_PROGRESS',
       type: 'MEDICAL',
+      applicationCount: 4,
     },
     {
       id: '3',
@@ -36,8 +38,8 @@ export class PendingProcedureComponent {
       end: new Date('2024-06-30'),
       status: 'COMPLETED',
       type: 'TABASKI',
+      applicationCount: 0,
     },
   ];
 
-  counts: number[] = [3, 4, 0];
 }

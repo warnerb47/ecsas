@@ -6,4 +6,5 @@ export interface Procedure {
   end: Date;
   status: 'IN_PROGRESS' | 'COMPLETED';
   type: 'MEDICAL' | 'TABASKI' | 'LAYENNES' | 'PAQUE';
+  applicationCount?: number;
 }
