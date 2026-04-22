@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { ButtonComponent, PasswordInputComponent, TextInputComponent } from '@org/ecsas/shared-ui';
+import { ButtonComponent } from '@org/ecsas/shared-ui';
 
 @Component({
   selector: 'lib-export-zip-card',
-  imports: [TextInputComponent, PasswordInputComponent, ButtonComponent],
+  imports: [ButtonComponent],
   templateUrl: './export-zip-card.component.html',
 })
 export class ExportZipCardComponent {}
