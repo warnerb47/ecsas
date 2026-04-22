@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'lib-setting.component',
+  selector: 'lib-setting',
   imports: [],
   templateUrl: './setting.component.html',
 })

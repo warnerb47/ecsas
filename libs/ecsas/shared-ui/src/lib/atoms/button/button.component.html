@@ -1,8 +1,8 @@
 <button class="px-4 w-full text-white text-sm font-medium py-2 rounded-lg transition shadow-sm"
-    [class.bg-slate-300]="disabled"
-    [class.cursor-not-allowed]="disabled"
-    [class.bg-[#1A365D]]="!disabled"
-    [class.hover:bg-blue-800]="!disabled"
-    [disabled]="disabled">
+    [class.bg-slate-300]="disabled()"
+    [class.cursor-not-allowed]="disabled()"
+    [class.bg-[#1A365D]]="!disabled()"
+    [class.hover:bg-blue-800]="!disabled()"
+    [disabled]="disabled()">
     <ng-content></ng-content>
 </button>

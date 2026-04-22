@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, signal } from '@angular/core';
 
 @Component({
   selector: 'lib-button',
@@ -7,6 +7,6 @@ import { Component, Input } from '@angular/core';
   templateUrl: './button.component.html'
 })
 export class ButtonComponent {
-  @Input() type: 'primary' = 'primary';
-  @Input() disabled: boolean = false;
+  type = signal<'primary'>('primary');
+  disabled = signal(false);
 }
