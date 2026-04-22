@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TopbarComponent, TabsComponent, ProcedureCardComponent } from '@ord/ecsas/shared-ui';
+import { TopbarComponent, TabsComponent, ProcedureCardComponent } from '@org/ecsas/shared-ui';
 import { Procedure } from '@org/models';
 
 @Component({

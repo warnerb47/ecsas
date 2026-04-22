@@ -2,14 +2,17 @@ import { Component, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'lib-dropdown',
+  selector: 'lib-password-input',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './dropdown.component.html'
+  templateUrl: './password-input.component.html'
 })
-export class DropdownComponent {
+export class PasswordInputComponent {
   label = input('');
   placeholder = input<string>('');
-  options = input<{label: string; value: string}[]>([]);
-  phonePrefix = signal(+221);
+  visible = signal(false);
+  
+  toggleVisibility() {
+    this.visible.update(value => !value);
+  }
 }

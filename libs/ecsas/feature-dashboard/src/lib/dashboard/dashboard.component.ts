@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TopbarComponent } from '@ord/ecsas/shared-ui';
+import { TopbarComponent } from '@org/ecsas/shared-ui';
 import { StatisticComponent } from '../components/statistic/statistic.component';
 import { PendingProcedureComponent } from '../components/pending-procedure/pending-procedure.component';
 import { RecentApplicationComponent } from '../components/recent-application/recent-application.component';

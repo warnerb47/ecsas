@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Procedure } from '@org/models';
-import { ButtonLinkComponent, ProcedureCardComponent } from '@ord/ecsas/shared-ui';
+import { ButtonLinkComponent, ProcedureCardComponent } from '@org/ecsas/shared-ui';
 
 @Component({
   selector: 'lib-pending-procedure',

@@ -3,8 +3,8 @@
         {{label()}}
     </label>
     <select class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all appearance-none">
-        @for (option of options; track option.value) {
-            <option [value]="option.value">{{option().label}}</option>
+        @for (option of options(); track option.value) {
+            <option [value]="option.value">{{option.label}}</option>
         }
     </select>
 </div>
