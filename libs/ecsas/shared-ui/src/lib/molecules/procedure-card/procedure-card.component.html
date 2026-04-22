@@ -1,0 +1,32 @@
+<div class="group bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-[#3182CE] hover:shadow-md transition-all flex flex-col">
+    <div class="p-6">
+        <div class="flex justify-between items-start mb-4">
+            <div class="p-3 bg-blue-50 rounded-xl text-[#3182CE] group-hover:bg-[#3182CE] group-hover:text-white transition-colors">
+                <i class="{{icons()[procedure().type]}}"></i>
+            </div>
+            @if (procedure().status === 'IN_PROGRESS') {
+                <lib-badge type="primary">Ouvert</lib-badge>
+            } @else if (procedure().status === 'COMPLETED') {
+                <lib-badge type="secondary">Clôturé</lib-badge>
+            }
+        </div>
+        <h3 class="text-lg font-bold text-slate-800">{{ procedure().name }}</h3>
+        <p class="text-sm text-slate-500 mt-2 leading-relaxed line-clamp-2">{{ procedure().description }}</p>
+
+        <div class="mt-4 pt-4 border-t border-slate-50 space-y-2">
+            <div class="flex items-center text-xs text-slate-400">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                {{ procedure().applicationCount }} demandes soumises
+            </div>
+            <div class="flex items-center text-xs text-slate-400">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Date de clôture : {{ procedure().end | date:'dd/MM/yyyy' }}
+            </div>
+        </div>
+    </div>
+    <div class="px-6 py-4 bg-slate-50 rounded-b-2xl border-t border-slate-100 mt-auto">
+        <lib-button type="primary" (click)="onProcedureSelected()">
+            Voir détails
+        </lib-button>
+    </div>
+</div>
