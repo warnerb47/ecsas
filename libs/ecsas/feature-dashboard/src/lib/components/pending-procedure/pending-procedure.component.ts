@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { PendingProcedureCardComponent } from './pending-procedure-card/pending-procedure-card.component';
 import { Procedure } from '@org/models';
-import { RouterLink } from '@angular/router';
+import { ButtonLinkComponent } from '@ord/ecsas/shared-ui';
 
 @Component({
   selector: 'lib-pending-procedure',
-  imports: [RouterLink, PendingProcedureCardComponent],
+  imports: [ButtonLinkComponent, PendingProcedureCardComponent],
   templateUrl: './pending-procedure.component.html',
 })
 export class PendingProcedureComponent {

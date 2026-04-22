@@ -1,9 +1,9 @@
 <div>
   <div class="py-6 border-b border-slate-100 flex justify-between items-center">
     <h2 class="font-bold text-[#1A365D]">Procédures récentes</h2>
-    <button routerLink="/procedure" class="text-sm font-semibold text-[#3182CE] hover:underline">
+    <lib-button-link routerLink="/procedure">
       Voir tout
-    </button>
+    </lib-button-link>
   </div>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
     @for (procedure of procedures; track procedure.id; let i = $index) {
