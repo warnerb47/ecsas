@@ -5,9 +5,9 @@
                 <i class="{{icons()[procedure().type]}}"></i>
             </div>
             @if (procedure().status === 'IN_PROGRESS') {
-                <span class="px-2 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase tracking-wider rounded border border-emerald-100">Ouvert</span>
+                <lib-badge type="primary">Ouvert</lib-badge>
             } @else if (procedure().status === 'COMPLETED') {
-                <span class="px-2 py-1 bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-wider rounded border border-slate-200">Clôturé</span>
+                <lib-badge type="secondary">Clôturé</lib-badge>
             }
         </div>
         <h3 class="text-lg font-bold text-slate-800">{{ procedure().name }}</h3>
@@ -25,8 +25,8 @@
         </div>
     </div>
     <div class="px-6 py-4 bg-slate-50 rounded-b-2xl border-t border-slate-100 mt-auto">
-        <button (click)="onProcedureSelected()" class="px-4 w-full bg-[#1A365D] hover:bg-blue-800 text-white text-sm font-bold py-2 rounded-lg transition shadow-sm">
+        <lib-button type="primary" (click)="onProcedureSelected()">
             Voir détails
-        </button>
+        </lib-button>
     </div>
 </div>

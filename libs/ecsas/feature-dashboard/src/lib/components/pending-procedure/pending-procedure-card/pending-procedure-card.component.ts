@@ -1,10 +1,12 @@
 import { Component, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Procedure } from '@org/models';
+import { BadgeComponent } from '@ord/ecsas/shared-ui';
+import { ButtonComponent } from '@ord/ecsas/shared-ui';
 
 @Component({
   selector: 'lib-pending-procedure-card',
-  imports: [CommonModule],
+  imports: [CommonModule, BadgeComponent, ButtonComponent],
   templateUrl: './pending-procedure-card.component.html'
 })
 export class PendingProcedureCardComponent {
