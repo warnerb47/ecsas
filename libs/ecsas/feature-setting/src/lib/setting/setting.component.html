@@ -8,70 +8,17 @@
 
       <div class="space-y-10">
 
-          <section class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-              <div class="px-8 py-5 bg-slate-50/50 border-b border-slate-100 flex items-center justify-between">
-                  <h3 class="text-lg font-bold text-slate-500">Identifiants d'accès</h3>
-                  <i class="pi pi-lock text-slate-500"></i>
-              </div>
-              <div class="p-8">
-                  <form class="grid grid-cols-2 gap-x-8 gap-y-6">
-                      <div class="col-span-2 space-y-2">
-                        <lib-text-input label="Identifiant de connexion (Login)" placeholder="MaireYoff_Admin"  type="text"></lib-text-input>
-                      </div>
+          <lib-profile-card></lib-profile-card>
+          <lib-export-zip-card></lib-export-zip-card>
 
-                      <div class="space-y-2">
-                        <lib-password-input label="Nouveau mot de passe" placeholder="••••••••••••" ></lib-password-input>
-                      </div>
-
-                      <div class="space-y-2">
-                        <lib-password-input label="Confirmer le mot de passe" placeholder="••••••••••••" ></lib-password-input>
-                      </div>
-
-                      <div class="col-span-2 pt-4 flex justify-end border-t border-slate-50">
-                          <button type="button" class="px-8 py-2.5 bg-[#1A365D] text-white text-[10px] font-black rounded-xl hover:bg-blue-900 shadow-lg shadow-blue-900/20 transition-all uppercase tracking-widest">
-                              Mettre à jour le profil
-                          </button>
-                      </div>
-                  </form>
-              </div>
-          </section>
-
-          <section class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-              <div class="px-8 py-5 bg-slate-50/50 border-b border-slate-100 flex items-center justify-between">
-                  <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Maintenance des données</h3>
-                  <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-              </div>
-              <div class="p-8 flex items-center justify-between space-x-8">
-                  <div class="flex-1">
-                      <h4 class="text-lg font-bold text-slate-800 mb-2">Exporter une sauvegarde ZIP</h4>
-                      <p class="text-sm text-slate-500 leading-relaxed mb-4">
-                          Générez une archive complète de votre base de données locale (**SQLite**) et des fichiers numérisés. Ce fichier pourra être utilisé pour restaurer le système sur une autre machine.
-                      </p>
-                      <div class="flex items-center space-x-2 text-[10px] font-bold text-slate-400 uppercase">
-                          <span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-full">Sécurité AES-256 active</span>
-                          <span>•</span>
-                          <span>Dernier backup : 12/04/2026</span>
-                      </div>
-                  </div>
-                  <div class="shrink-0">
-                      <button class="flex flex-col items-center justify-center w-40 h-40 bg-blue-50 border-2 border-dashed border-blue-200 rounded-3xl hover:bg-blue-100 hover:border-blue-300 transition-all group">
-                          <div class="p-4 bg-white rounded-2xl shadow-sm mb-3 group-hover:scale-110 transition-transform">
-                              <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                          </div>
-                          <span class="text-[10px] font-black text-blue-600 uppercase tracking-widest">Générer ZIP</span>
-                      </button>
-                  </div>
-              </div>
-          </section>
-
-          <div class="p-6 bg-[#1A365D] rounded-3xl text-white flex items-start space-x-4 shadow-lg shadow-blue-900/10">
-              <div class="p-2 bg-blue-500/30 rounded-lg">
-                  <svg class="w-5 h-5 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <div class="p-6 bg-white rounded-3xl text-slate-800 flex items-start space-x-4 border border-slate-200 shadow-sm">
+              <div class="p-2 bg-slate-500 rounded-lg">
+                <i class="pi pi-info-circle text-slate-200"></i>
               </div>
               <div>
-                  <p class="text-[11px] font-bold uppercase tracking-widest text-blue-300 mb-1">Rappel de Confidentialité</p>
-                  <p class="text-xs text-blue-50 opacity-80 leading-relaxed">
-                      Conformément aux directives de la Mairie de Yoff, toutes vos données (CNI, montants d'aide) sont stockées localement sur ce poste. Ne partagez jamais vos sauvegardes ZIP par email non sécurisé.
+                  <p class="font-medium tracking-widest text-slate-800 mb-1">Rappel de Confidentialité</p>
+                  <p class="text-sm text-slate-500 leading-relaxed">
+                      Toutes vos données (CNI, montants d'aide) sont stockées localement sur cette machine. Ne partagez jamais vos sauvegardes ZIP par email non sécurisé.
                   </p>
               </div>
           </div>
