@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TopbarComponent, TabsComponent, ProcedureCardComponent, BreadcrumbItem, ButtonComponent } from '@org/ecsas/shared-ui';
 import { Procedure } from '@org/models';
 
 @Component({
   selector: 'lib-procedure-list-component',
-  imports: [TopbarComponent, TabsComponent, ProcedureCardComponent, ButtonComponent],
+  imports: [RouterLink, TopbarComponent, TabsComponent, ProcedureCardComponent, ButtonComponent],
   templateUrl: './procedure-list.component.html',
 })
 export class ProcedureListComponent {
