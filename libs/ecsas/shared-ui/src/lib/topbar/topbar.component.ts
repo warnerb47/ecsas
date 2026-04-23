@@ -1,10 +1,9 @@
 import { Component, input } from '@angular/core';
-import { RouterLink } from "@angular/router";
-import { ButtonComponent, SearchInputComponent, BreadcumComponent, BreadcrumbItem } from '../atoms';
+import { SearchInputComponent, BreadcumComponent, BreadcrumbItem } from '../atoms';
 
 @Component({
   selector: 'lib-topbar',
-  imports: [RouterLink, ButtonComponent, SearchInputComponent, BreadcumComponent],
+  imports: [SearchInputComponent, BreadcumComponent],
   templateUrl: './topbar.component.html',
 })
 export class TopbarComponent {

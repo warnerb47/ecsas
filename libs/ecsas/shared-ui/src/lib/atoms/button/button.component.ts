@@ -1,12 +1,12 @@
-import { Component, signal } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'lib-button',
   standalone: true,
-  imports: [],
+  imports: [NgClass],
   templateUrl: './button.component.html'
 })
 export class ButtonComponent {
-  type = signal<'primary'>('primary');
-  disabled = signal(false);
+  type = input<'primary' | 'secondary'>();
 }

@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { TopbarComponent, BreadcumComponent, ButtonComponent, BreadcrumbItem } from '@org/ecsas/shared-ui';
+import { TopbarComponent, BreadcrumbItem, ButtonComponent } from '@org/ecsas/shared-ui';
 import { Procedure } from '@org/models';
 import { ApplicationStatisticsComponent, StatCard } from '../../components/application-statistics/application-statistics.component';
+import { ApplicationTableComponent } from '../../components/application-table/application-table.component';
 
 @Component({
   selector: 'lib-detail-procedure-component',
-  imports: [TopbarComponent, BreadcumComponent, ButtonComponent, ApplicationStatisticsComponent],
+  imports: [TopbarComponent, ButtonComponent, ApplicationStatisticsComponent, ApplicationTableComponent],
   templateUrl: './detail-procedure.component.html',
 })
 export class DetailProcedureComponent {
