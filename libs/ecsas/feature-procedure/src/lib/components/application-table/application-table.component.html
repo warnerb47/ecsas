@@ -19,121 +19,131 @@
 <!-- table -->
 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
     <!-- filter -->
-    <div class="bg-white p-4 border border-slate-100 mb-6 flex flex-wrap items-center gap-4">
-        <div class="flex-1 min-w-[300px] relative">
-            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            </span>
-            <input type="text" placeholder="Rechercher par nom, CNI ou numéro de dossier..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
-        </div>
-        <select class="bg-slate-50 border border-slate-200 text-slate-600 text-sm rounded-lg px-4 py-2 focus:outline-none">
-            <option>Toutes les procédures</option>
-            <option>Appel Layenne</option>
-            <option>Aide Tabaski</option>
-            <option>Secours Médical</option>
-        </select>
-        <select class="bg-slate-50 border border-slate-200 text-slate-600 text-sm rounded-lg px-4 py-2 focus:outline-none">
-            <option>Tous les statuts</option>
-            <option>En attente</option>
-            <option>Approuvé</option>
-            <option>Rejeté</option>
-        </select>
-        <button class="p-2 text-slate-500 hover:bg-slate-100 rounded-lg">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
-        </button>
+    <div class="bg-white p-4 border border-slate-100 flex items-end gap-2">
+        <lib-search-input placeholder="Rechercher par nom, CNI ou numéro de dossier..."></lib-search-input>
+        <lib-dropdown [options]="procedureOptions"></lib-dropdown>
+        <lib-dropdown [options]="statusOptions"></lib-dropdown>
+        <lib-button type="secondary">
+            <i class="pi pi-filter"></i>
+        </lib-button>
     </div>
-    <table class="w-full text-left">
-        <thead>
-            <tr class="bg-slate-50 border-b border-slate-200">
-                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Référence</th>
-                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Demandeur</th>
-                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Date Soumission</th>
-                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Type / Commission</th>
-                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Statut</th>
-                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
-            </tr>
+    <table class="w-full text-left text-sm">
+        <thead class="bg-slate-50 text-slate-500 font-medium">
+        <tr>
+            <th class="px-6 py-4">Demandeur</th>
+            <th class="px-6 py-4">Type d'aide</th>
+            <th class="px-6 py-4">Statut</th>
+            <th class="px-6 py-4">Montant</th>
+            <th class="px-6 py-4 text-right">Actions</th>
+        </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
-            <tr class="hover:bg-blue-50/30 transition-colors">
-                <td class="px-6 py-4">
-                    <span class="text-xs font-mono font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">DJK-788</span>
-                </td>
-                <td class="px-6 py-4">
-                    <div class="flex items-center">
-                        <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs mr-3">MS</div>
-                        <div>
-                            <div class="text-sm font-bold text-slate-800">Moussa Sall</div>
-                            <div class="text-[11px] text-slate-500">CNI: 1 234 567 89</div>
-                        </div>
-                    </div>
-                </td>
-                <td class="px-6 py-4 text-sm text-slate-600">
-                    12 Janv. 2025
-                </td>
-                <td class="px-6 py-4">
-                    <div class="text-sm text-slate-700">Appel Layenne</div>
-                    <div class="text-[11px] text-[#3182CE] font-medium italic">Commission Sociale</div>
-                </td>
-                <td class="px-6 py-4">
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-100">
-                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-2"></span>
-                        Validation Maire
-                    </span>
-                </td>
-                <td class="px-6 py-4 text-right">
-                    <div class="flex justify-end space-x-2">
-                        <a href="./detail-demande.html" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Voir les documents">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                        </a>
-                        <button class="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition" title="Traiter la demande">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-
-            <tr class="hover:bg-blue-50/30 transition-colors">
-                <td class="px-6 py-4">
-                    <span class="text-xs font-mono font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">DJK-789</span>
-                </td>
-                <td class="px-6 py-4 text-sm font-bold text-slate-800">
-                    <div class="flex items-center">
-                        <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs mr-3">FD</div>
-                        <div>
-                            <div class="text-sm font-bold text-slate-800">Fatou Diop</div>
-                            <div class="text-[11px] text-slate-500">CNI: 2 988 123 45</div>
-                        </div>
-                    </div>
-                </td>
-                <td class="px-6 py-4 text-sm text-slate-600">10 Janv. 2025</td>
-                <td class="px-6 py-4">
-                    <div class="text-sm text-slate-700">Secours Médical</div>
-                    <div class="text-[11px] text-[#3182CE] font-medium italic">Bureau Santé</div>
-                </td>
-                <td class="px-6 py-4">
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2"></span>
-                        Approuvé
-                    </span>
-                </td>
-                <td class="px-6 py-4 text-right">
-                    <div class="flex justify-end space-x-2">
-                        <a href="./detail-demande.html" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></a>
-                        <button class="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg></button>
-                    </div>
-                </td>
-            </tr>
+        <tr class="hover:bg-slate-50 transition">
+            <td class="px-6 py-4">
+            <div class="flex items-center">
+                <div class="w-8 h-8 rounded bg-slate-100 text-[#1A365D] flex items-center justify-center mr-3 font-bold text-xs">
+                MS
+                </div>
+                <div>
+                <p class="font-bold">Moussa Sall</p>
+                <p class="text-[10px] text-slate-400 uppercase tracking-tighter">
+                    ID: DJK-788
+                </p>
+                </div>
+            </div>
+            </td>
+            <td class="px-6 py-4">
+            <span class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-[11px] font-bold">
+                Appel Layenne
+            </span>
+            </td>
+            <td class="px-6 py-4">
+            <span class="px-3 py-1 bg-amber-50 text-amber-700 rounded-full text-[11px] font-bold border border-amber-100">
+                En cours
+            </span>
+            </td>
+            <td class="px-6 py-4 font-semibold">150,000 FCFA</td>
+            <td class="px-6 py-4 text-right">
+            <a
+                href="./detail-demande.html"
+                class="text-slate-400 hover:text-[#3182CE]">
+                <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                >
+                <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                ></path>
+                </svg>
+            </a>
+            </td>
+        </tr>
+        <tr class="hover:bg-slate-50 transition">
+            <td class="px-6 py-4">
+            <div class="flex items-center">
+                <div
+                class="w-8 h-8 rounded bg-slate-100 text-[#1A365D] flex items-center justify-center mr-3 font-bold text-xs"
+                >
+                FD
+                </div>
+                <div>
+                <p class="font-bold">Fatou Diop</p>
+                <p
+                    class="text-[10px] text-slate-400 uppercase tracking-tighter"
+                >
+                    ID: DJK-789
+                </p>
+                </div>
+            </div>
+            </td>
+            <td class="px-6 py-4">
+            <span
+                class="px-2 py-1 bg-emerald-50 text-emerald-700 rounded text-[11px] font-bold"
+                >Médicale</span
+            >
+            </td>
+            <td class="px-6 py-4">
+            <span
+                class="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-[11px] font-bold border border-emerald-100"
+                >Approuvée</span
+            >
+            </td>
+            <td class="px-6 py-4 font-semibold">75,000 FCFA</td>
+            <td class="px-6 py-4 text-right">
+            <a
+                href="./detail-demande.html"
+                class="text-slate-400 hover:text-[#3182CE]"
+            >
+                <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                >
+                <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                ></path>
+                </svg>
+            </a>
+            </td>
+        </tr>
         </tbody>
     </table>
 
     <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between">
         <span class="text-sm text-slate-500">Affichage de 1 à 10 sur 247 demandes</span>
         <div class="flex space-x-2">
-            <button class="px-3 py-1 border border-slate-300 rounded text-sm disabled:opacity-50">Précédent</button>
-            <button class="px-3 py-1 bg-white border border-slate-300 rounded text-sm font-bold text-[#1A365D]">1</button>
-            <button class="px-3 py-1 border border-slate-300 rounded text-sm hover:bg-white">2</button>
-            <button class="px-3 py-1 border border-slate-300 rounded text-sm hover:bg-white">3</button>
-            <button class="px-3 py-1 border border-slate-300 rounded text-sm">Suivant</button>
+        <lib-button type="secondary">Précédent</lib-button>
+        <lib-button type="secondary">
+            <span class="font-bold text-[#1A365D]">1</span>
+        </lib-button>
+        <lib-button type="secondary">2</lib-button>
+        <lib-button type="secondary">3</lib-button>
+        <lib-button type="secondary">Suivant</lib-button>
         </div>
     </div>
 </div>

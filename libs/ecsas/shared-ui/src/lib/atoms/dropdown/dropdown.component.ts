@@ -11,5 +11,4 @@ export class DropdownComponent {
   label = input('');
   placeholder = input<string>('');
   options = input<{label: string; value: string}[]>([]);
-  phonePrefix = signal(+221);
 }
