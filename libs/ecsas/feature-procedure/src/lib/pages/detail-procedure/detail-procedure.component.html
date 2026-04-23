@@ -1,0 +1,184 @@
+<div class="flex-1 flex flex-col overflow-hidden">
+    <lib-topbar [breadcrumbItems]="breadcrumbItems" searchPlaceholder="Rechercher une demande ou un bénéficiaire...">
+      <lib-button routerLink="." type="primary">
+        <i class="pi pi-plus"></i>
+        Nouvelle procédure
+      </lib-button>
+    </lib-topbar>
+
+    <div class="flex-1 flex flex-col overflow-hidden">
+
+        <div class="flex-1 overflow-y-auto p-8">
+            <div class="max-w-7xl mx-auto">
+
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white border border-slate-200 rounded-xl p-5 flex items-center">
+                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase">En transfert</p>
+                            <h4 class="text-2xl font-black text-[#1A365D]">42 dossiers</h4>
+                        </div>
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-xl p-5 flex items-center">
+                        <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase">Réceptionnés</p>
+                            <h4 class="text-2xl font-black text-[#1A365D]">128 dossiers</h4>
+                        </div>
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-xl p-5 flex items-center">
+                        <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase">Délai moyen</p>
+                            <h4 class="text-2xl font-black text-[#1A365D]">4.2 Heures</h4>
+                        </div>
+                    </div>
+                </div>                    
+                <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800">Gestion des aides sociales</h2>
+                        <p class="text-slate-500 text-sm">Consultez et traitez les dossiers entrants de la commune.</p>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button class="inline-flex items-center px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Exporter (Excel)
+                        </button>
+                        <button class="inline-flex items-center px-4 py-2 bg-[#3182CE] text-white rounded-lg text-sm font-semibold hover:bg-blue-700 shadow-sm transition">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+                            Nouvelle Demande
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 mb-6 flex flex-wrap items-center gap-4">
+                    <div class="flex-1 min-w-[300px] relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </span>
+                        <input type="text" placeholder="Rechercher par nom, CNI ou numéro de dossier..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    </div>
+                    <select class="bg-slate-50 border border-slate-200 text-slate-600 text-sm rounded-lg px-4 py-2 focus:outline-none">
+                        <option>Toutes les procédures</option>
+                        <option>Appel Layenne</option>
+                        <option>Aide Tabaski</option>
+                        <option>Secours Médical</option>
+                    </select>
+                    <select class="bg-slate-50 border border-slate-200 text-slate-600 text-sm rounded-lg px-4 py-2 focus:outline-none">
+                        <option>Tous les statuts</option>
+                        <option>En attente</option>
+                        <option>Approuvé</option>
+                        <option>Rejeté</option>
+                    </select>
+                    <button class="p-2 text-slate-500 hover:bg-slate-100 rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="bg-slate-50 border-b border-slate-200">
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Référence</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Demandeur</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Date Soumission</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Type / Commission</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Statut</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr class="hover:bg-blue-50/30 transition-colors">
+                                <td class="px-6 py-4">
+                                    <span class="text-xs font-mono font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">DJK-788</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs mr-3">MS</div>
+                                        <div>
+                                            <div class="text-sm font-bold text-slate-800">Moussa Sall</div>
+                                            <div class="text-[11px] text-slate-500">CNI: 1 234 567 89</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-slate-600">
+                                    12 Janv. 2025
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-slate-700">Appel Layenne</div>
+                                    <div class="text-[11px] text-[#3182CE] font-medium italic">Commission Sociale</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-100">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-2"></span>
+                                        Validation Maire
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex justify-end space-x-2">
+                                        <a href="./detail-demande.html" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Voir les documents">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                        </a>
+                                        <button class="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition" title="Traiter la demande">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="hover:bg-blue-50/30 transition-colors">
+                                <td class="px-6 py-4">
+                                    <span class="text-xs font-mono font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">DJK-789</span>
+                                </td>
+                                <td class="px-6 py-4 text-sm font-bold text-slate-800">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs mr-3">FD</div>
+                                        <div>
+                                            <div class="text-sm font-bold text-slate-800">Fatou Diop</div>
+                                            <div class="text-[11px] text-slate-500">CNI: 2 988 123 45</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-slate-600">10 Janv. 2025</td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-slate-700">Secours Médical</div>
+                                    <div class="text-[11px] text-[#3182CE] font-medium italic">Bureau Santé</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2"></span>
+                                        Approuvé
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex justify-end space-x-2">
+                                        <a href="./detail-demande.html" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></a>
+                                        <button class="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between">
+                        <span class="text-sm text-slate-500">Affichage de 1 à 10 sur 247 demandes</span>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 border border-slate-300 rounded text-sm disabled:opacity-50">Précédent</button>
+                            <button class="px-3 py-1 bg-white border border-slate-300 rounded text-sm font-bold text-[#1A365D]">1</button>
+                            <button class="px-3 py-1 border border-slate-300 rounded text-sm hover:bg-white">2</button>
+                            <button class="px-3 py-1 border border-slate-300 rounded text-sm hover:bg-white">3</button>
+                            <button class="px-3 py-1 border border-slate-300 rounded text-sm">Suivant</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

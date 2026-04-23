@@ -1,0 +1,14 @@
+<nav class="flex text-sm text-slate-400" aria-label="Breadcrumb">
+    <ol class="flex items-center space-x-2">
+        @for (item of items(); track item.route) {
+            @if (!$last) {
+                <li><a [routerLink]="item.route" class="hover:text-slate-600">{{ item.label }}</a></li>
+                <li class="flex items-center justify-center">
+                    <i class="pi pi-chevron-right"></i>
+                </li>
+            } @else {
+                <li class="text-[#1A365D] font-semibold">{{ item.label }}</li>
+            }
+        }
+    </ol>
+</nav>

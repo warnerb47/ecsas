@@ -1,10 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { RouterLink } from "@angular/router";
-import { ButtonComponent } from '../atoms';
+import { ButtonComponent, SearchInputComponent, BreadcumComponent, BreadcrumbItem } from '../atoms';
 
 @Component({
   selector: 'lib-topbar',
-  imports: [RouterLink, ButtonComponent],
+  imports: [RouterLink, ButtonComponent, SearchInputComponent, BreadcumComponent],
   templateUrl: './topbar.component.html',
 })
-export class TopbarComponent {}
+export class TopbarComponent {
+  breadcrumbItems = input<BreadcrumbItem[] | undefined>();
+  searchPlaceholder = input<string>('Rechercher une demande ou un bénéficiaire...');
+}

@@ -1,20 +1,19 @@
-import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { TopbarComponent, TabsComponent, ProcedureCardComponent, BreadcrumbItem, ButtonComponent } from '@org/ecsas/shared-ui';
+import { Component } from '@angular/core';
+import { TopbarComponent, BreadcumComponent, ButtonComponent, BreadcrumbItem } from '@org/ecsas/shared-ui';
 import { Procedure } from '@org/models';
 
 @Component({
-  selector: 'lib-procedure-list-component',
-  imports: [TopbarComponent, TabsComponent, ProcedureCardComponent, ButtonComponent],
-  templateUrl: './procedure-list.component.html',
+  selector: 'lib-detail-procedure-component',
+  imports: [TopbarComponent, BreadcumComponent, ButtonComponent],
+  templateUrl: './detail-procedure.component.html',
 })
-export class ProcedureListComponent {
-  private readonly router = inject(Router);
+export class DetailProcedureComponent {
   tabs: string[] = ['Toutes', 'Commission Sociale', 'Religieux & Culturel', 'Sport & Loisirs'];
   activeTab: string = 'Toutes';
   breadcrumbItems: BreadcrumbItem[] = [
     {label: 'Accueil', route: '/'},
     {label: 'Procédures', route: '/procedure'},
+    {label: 'Détail', route: '/procedure/detail'},
   ];
   procedures: Procedure[] = [
     {
@@ -54,6 +53,6 @@ export class ProcedureListComponent {
   }
   
   onProcedureSelected(procedure: Procedure) {
-    this.router.navigate(['/procedure/detail', procedure.id]);
+    console.log({ procedure });
   }
 }

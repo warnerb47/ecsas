@@ -1,5 +1,10 @@
 <div class="flex-1 overflow-y-auto">
-  <lib-topbar></lib-topbar>
+  <lib-topbar searchPlaceholder="Rechercher une demande ou un bénéficiaire...">
+      <lib-button routerLink="." type="primary">
+        <i class="pi pi-plus"></i>
+        Nouvelle procédure
+      </lib-button>
+  </lib-topbar>
   <div class="p-8 max-w-7xl mx-auto">
     <lib-statistic></lib-statistic>
     <lib-pending-procedure></lib-pending-procedure>
