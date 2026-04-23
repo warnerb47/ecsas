@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { TopbarComponent, BreadcumComponent, ButtonComponent, BreadcrumbItem } from '@org/ecsas/shared-ui';
 import { Procedure } from '@org/models';
+import { ApplicationStatisticsComponent, StatCard } from '../../components/application-statistics/application-statistics.component';
 
 @Component({
   selector: 'lib-detail-procedure-component',
-  imports: [TopbarComponent, BreadcumComponent, ButtonComponent],
+  imports: [TopbarComponent, BreadcumComponent, ButtonComponent, ApplicationStatisticsComponent],
   templateUrl: './detail-procedure.component.html',
 })
 export class DetailProcedureComponent {
@@ -15,6 +16,30 @@ export class DetailProcedureComponent {
     {label: 'Procédures', route: '/procedure'},
     {label: 'Détail', route: '/procedure/detail'},
   ];
+  statCards: StatCard[] = [
+    {
+      label: 'En transfert',
+      value: '42 dossiers',
+      iconClass: 'pi pi-arrow-right-arrow-left',
+      iconBgColor: 'bg-blue-50',
+      iconTextColor: 'text-blue-600',
+    },
+    {
+      label: 'Réceptionnés',
+      value: '128 dossiers',
+      iconClass: 'pi pi-check-circle',
+      iconBgColor: 'bg-emerald-50',
+      iconTextColor: 'text-emerald-600',
+    },
+    {
+      label: 'Délai moyen',
+      value: '4.2 Heures',
+      iconClass: 'pi pi-clock',
+      iconBgColor: 'bg-amber-50',
+      iconTextColor: 'text-amber-600',
+    },
+  ];
+
   procedures: Procedure[] = [
     {
       id: '1',

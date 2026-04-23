@@ -11,36 +11,7 @@
         <div class="flex-1 overflow-y-auto p-8">
             <div class="max-w-7xl mx-auto">
 
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="bg-white border border-slate-200 rounded-xl p-5 flex items-center">
-                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mr-4">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold text-slate-400 uppercase">En transfert</p>
-                            <h4 class="text-2xl font-black text-[#1A365D]">42 dossiers</h4>
-                        </div>
-                    </div>
-                    <div class="bg-white border border-slate-200 rounded-xl p-5 flex items-center">
-                        <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mr-4">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold text-slate-400 uppercase">Réceptionnés</p>
-                            <h4 class="text-2xl font-black text-[#1A365D]">128 dossiers</h4>
-                        </div>
-                    </div>
-                    <div class="bg-white border border-slate-200 rounded-xl p-5 flex items-center">
-                        <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mr-4">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold text-slate-400 uppercase">Délai moyen</p>
-                            <h4 class="text-2xl font-black text-[#1A365D]">4.2 Heures</h4>
-                        </div>
-                    </div>
-                </div>                    
+                <lib-application-statistics [cards]="statCards"></lib-application-statistics>
                 <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
                     <div>
                         <h2 class="text-2xl font-bold text-slate-800">Gestion des aides sociales</h2>

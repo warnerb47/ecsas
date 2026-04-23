@@ -1,0 +1,5 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    @for (card of cards; track card.label) {
+        <lib-application-statistics-card [card]="card"></lib-application-statistics-card>
+    }
+</div>
