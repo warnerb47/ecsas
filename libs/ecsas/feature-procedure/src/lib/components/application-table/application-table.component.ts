@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { ButtonComponent, DropdownComponent, SearchInputComponent } from '@org/ecsas/shared-ui';
 
 @Component({
   selector: 'lib-application-table',
   standalone: true,
-  imports: [ButtonComponent, DropdownComponent, SearchInputComponent],
+  imports: [RouterLink, ButtonComponent, DropdownComponent, SearchInputComponent],
   templateUrl: './application-table.component.html',
 })
 export class ApplicationTableComponent {

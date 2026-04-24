@@ -9,9 +9,4 @@ import { NgClass } from '@angular/common';
 })
 export class ButtonComponent {
   type = input<'primary' | 'secondary'>();
-  clicked = output<void>();
-  
-  onClick() {
-    this.clicked.emit();
-  }
 }
