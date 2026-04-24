@@ -5,12 +5,44 @@
     <div class="flex-1 flex flex-col overflow-hidden">
 
         <div class="flex-1 overflow-y-auto p-8">
-            <div class="max-w-4xl mx-auto">
-                
-                <form class="space-y-8">
-                    formulaire procedure
+            <div class="max-w-5xl mx-auto">
 
-                </form>
+                <div class="col-span-2 space-y-6">
+                    
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                        <h3 class="text-lg font-bold text-slate-500 mb-8">
+                            Identification de la Procédure
+                        </h3>
+                        <div class="grid grid-cols-2 gap-8">
+                            <lib-text-input class="col-span-2" label="Nom de la procédure" placeholder="Ex: Aide Scolaire Octobre 2026"></lib-text-input>
+                            <lib-dropdown label="Commission Responsable" [options]="commissions"></lib-dropdown>
+                            <lib-dropdown label="Bureau de Traitement" [options]="bureaux"></lib-dropdown>
+                            <lib-text-area class="col-span-2" label="Description / Notes internes" placeholder="Objectif de cette aide..."></lib-text-area>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                        <div class="flex justify-between items-center mb-8">
+                            <h3 class="text-lg font-bold text-slate-500">
+                                Documents Obligatoires
+                            </h3>
+                            <lib-button type="secondary">
+                                <i class="pi pi-plus"></i>
+                                Ajouter un document
+                            </lib-button>
+                        </div>
+                        
+                        <div class="grid gap-4">
+                            <lib-document-card documentName="Demande manuscrite adressée au Maire" icon="pi pi-file" [required]="true"></lib-document-card>
+                            <lib-document-card documentName="Certificat de résidence à Yoff" icon="pi pi-file" [required]="true"></lib-document-card>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 pt-8 border-t border-slate-200 flex justify-end space-x-4">
+                    <lib-button routerLink="/procedure" type="secondary">Annuler</lib-button>
+                    <lib-button type="primary">Créer la procédure</lib-button>
+                </div>
+
             </div>
         </div>
     </div>

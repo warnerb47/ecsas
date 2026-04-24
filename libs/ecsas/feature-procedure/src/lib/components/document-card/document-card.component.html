@@ -1,0 +1,12 @@
+<div class="flex items-center p-3 bg-slate-50 rounded-xl border border-slate-100">
+    <div class="p-2 bg-white rounded shadow-sm mr-4">
+        <i [class]="icon()" class="text-slate-400"></i>
+    </div>
+    <span class="text-sm font-medium flex-1">{{ documentName() }}</span>
+    @if (required()) {
+        <span class="text-[10px] font-bold bg-amber-100 text-amber-700 px-2 py-1 rounded">REQUIS</span>
+    }
+    <button class="ml-4 text-slate-300 hover:text-rose-500" (click)="removed.emit()">
+        <i class="pi pi-times text-xs"></i>
+    </button>
+</div>

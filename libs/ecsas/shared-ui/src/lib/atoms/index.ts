@@ -8,3 +8,4 @@ export * from './dropdown/dropdown.component';
 export * from './password-input/password-input.component';
 export * from './breadcum/breadcum.component';
 export * from './search-input/search-input.component';
+export * from './text-area/text-area.component';

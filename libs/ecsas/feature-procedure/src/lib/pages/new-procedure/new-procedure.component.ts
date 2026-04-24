@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { BreadcrumbItem, TopbarComponent, TextInputComponent, PhoneInputComponent, DropdownComponent, ButtonComponent, UploadDocumentCardComponent } from '@org/ecsas/shared-ui';
+import { BreadcrumbItem, TopbarComponent, TextInputComponent, PhoneInputComponent, DropdownComponent, ButtonComponent, TextAreaComponent } from '@org/ecsas/shared-ui';
+import { DocumentCardComponent } from '../../components/document-card/document-card.component';
 
 @Component({
   selector: 'lib-new-procedure-component',
-  imports: [TopbarComponent, RouterLink, TextInputComponent, PhoneInputComponent, DropdownComponent, ButtonComponent, UploadDocumentCardComponent],
+  imports: [RouterLink, TopbarComponent, TextInputComponent, PhoneInputComponent, DropdownComponent, ButtonComponent, TextAreaComponent, DocumentCardComponent],
   templateUrl: './new-procedure.component.html',
 })
 export class NewProcedureComponent {
@@ -14,10 +15,15 @@ export class NewProcedureComponent {
       {label: 'Nouvelle procédure', route: '/procedure/new-procedure'},
     ];
 
-    quartiers = [
-      {label: 'Yoff Layenne', value: 'yoff_layenne'},
-      {label: 'Ndénate', value: 'ndenate'},
-      {label: 'Dagoudane', value: 'dagoudane'},
-      {label: 'Mbenguène', value: 'mbenguene'},
+    commissions = [
+      {label: 'Commission Sociale', value: 'commission_sociale'},
+      {label: 'Commission Sport & Culture', value: 'commission_sport_culture'},
+      {label: 'Commission Environnement', value: 'commission_environnement'},
+    ];
+
+    bureaux = [
+      {label: 'Bureau Santé', value: 'bureau_sante'},
+      {label: 'Bureau Aide Sociale', value: 'bureau_aide_sociale'},
+      {label: 'Bureau du Courrier', value: 'bureau_courrier'},
     ];
 }
