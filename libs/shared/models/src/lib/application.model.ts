@@ -7,4 +7,5 @@ export interface Application {
   createdAt: Date;
   status: string;
   state: string;
+  amount: number;
 }

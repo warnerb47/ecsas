@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { BreadcrumbItem, TopbarComponent, TextInputComponent, PhoneInputComponent, DropdownComponent, ButtonComponent, TextAreaComponent } from '@org/ecsas/shared-ui';
+import { BreadcrumbItem, TopbarComponent, TextInputComponent, DropdownComponent, ButtonComponent, TextAreaComponent } from '@org/ecsas/shared-ui';
 import { DocumentCardComponent } from '../../components/document-card/document-card.component';
 
 @Component({
   selector: 'lib-new-procedure-component',
-  imports: [RouterLink, TopbarComponent, TextInputComponent, PhoneInputComponent, DropdownComponent, ButtonComponent, TextAreaComponent, DocumentCardComponent],
+  imports: [RouterLink, TopbarComponent, TextInputComponent, DropdownComponent, ButtonComponent, TextAreaComponent, DocumentCardComponent],
   templateUrl: './new-procedure.component.html',
 })
 export class NewProcedureComponent {
