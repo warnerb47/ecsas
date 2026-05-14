@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { BreadcrumbItem, TopbarComponent, TextInputComponent, PhoneInputComponent, DropdownComponent, ButtonComponent, UploadDocumentCardComponent, TextAreaComponent } from '@org/ecsas/shared-ui';
+import { BreadcrumbItem, TopbarComponent, DropdownComponent, ButtonComponent, TextAreaComponent } from '@org/ecsas/shared-ui';
 
 @Component({
   selector: 'lib-detail-application-component',
-  imports: [RouterLink, TopbarComponent, TextInputComponent, PhoneInputComponent, DropdownComponent, ButtonComponent, UploadDocumentCardComponent, TextAreaComponent],
+  imports: [RouterLink, TopbarComponent, DropdownComponent, ButtonComponent, TextAreaComponent],
   templateUrl: './detail-application.component.html',
 })
 export class DetailApplicationComponent {

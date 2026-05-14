@@ -1,4 +1,4 @@
-import { DatePipe, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Application } from '@org/models';
@@ -7,7 +7,7 @@ import { ButtonComponent, DropdownComponent, SearchInputComponent } from '@org/e
 @Component({
   selector: 'lib-application-table',
   standalone: true,
-  imports: [RouterLink, DatePipe, NgClass, ButtonComponent, DropdownComponent, SearchInputComponent],
+  imports: [RouterLink, NgClass, ButtonComponent, DropdownComponent, SearchInputComponent],
   templateUrl: './application-table.component.html',
 })
 export class ApplicationTableComponent {
