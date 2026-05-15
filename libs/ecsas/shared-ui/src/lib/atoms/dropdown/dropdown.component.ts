@@ -1,5 +1,6 @@
-import { Component, input } from '@angular/core';
+import { Component, input, model } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {FormValueControl} from '@angular/forms/signals';
 
 @Component({
   selector: 'lib-dropdown',
@@ -7,8 +8,9 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   templateUrl: './dropdown.component.html'
 })
-export class DropdownComponent {
+export class DropdownComponent implements FormValueControl<string>{
   label = input('');
   placeholder = input<string>('');
   options = input<{label: string; value: string}[]>([]);
+  value = model('');
 }

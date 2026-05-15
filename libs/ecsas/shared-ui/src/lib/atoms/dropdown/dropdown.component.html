@@ -2,7 +2,8 @@
     <label class="block text-xs font-bold text-slate-500 uppercase mb-2">
         {{label()}}
     </label>
-    <select class="w-full px-4 py-3 pr-10 bg-slate-50 border border-slate-200 text-slate-600 rounded-lg focus:outline-none">
+    <select class="w-full px-4 py-3 pr-10 bg-slate-50 border border-slate-200 text-slate-600 rounded-lg focus:outline-none"
+        [value]="value()">
         @for (option of options(); track option.value) {
             <option [value]="option.value">{{option.label}}</option>
         }

@@ -14,9 +14,9 @@
                             Identification de la Procédure
                         </h3>
                         <div class="grid grid-cols-2 gap-8">
-                            <lib-text-input class="col-span-2" label="Nom de la procédure" placeholder="Ex: Aide Scolaire Octobre 2026"></lib-text-input>
-                            <lib-dropdown label="Commission Responsable" [options]="commissions"></lib-dropdown>
-                            <lib-dropdown label="Bureau de Traitement" [options]="bureaux"></lib-dropdown>
+                            <lib-text-input [formField]="procedureForm.name"  label="Nom de la procédure" placeholder="Ex: Secours Tabaski Octobre 2026"></lib-text-input>
+                            <lib-text-input label="Date de clôture" type="date"></lib-text-input>
+                            <lib-dropdown label="Type de procédure" [options]="procedureTypes"></lib-dropdown>
                             <lib-text-area class="col-span-2" label="Description / Notes internes" placeholder="Objectif de cette aide..."></lib-text-area>
                         </div>
                     </div>
