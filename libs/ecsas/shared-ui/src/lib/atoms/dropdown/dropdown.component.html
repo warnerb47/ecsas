@@ -3,7 +3,7 @@
         {{label()}}
     </label>
     <select class="w-full px-4 py-3 pr-10 bg-slate-50 border border-slate-200 text-slate-600 rounded-lg focus:outline-none"
-        [value]="value()">
+        [value]="value()" (input)="setValue($event)">
         @for (option of options(); track option.value) {
             <option [value]="option.value">{{option.label}}</option>
         }

@@ -15,9 +15,9 @@
                         </h3>
                         <div class="grid grid-cols-2 gap-8">
                             <lib-text-input [formField]="procedureForm.name"  label="Nom de la procédure" placeholder="Ex: Secours Tabaski Octobre 2026"></lib-text-input>
-                            <lib-text-input label="Date de clôture" type="date"></lib-text-input>
-                            <lib-dropdown label="Type de procédure" [options]="procedureTypes"></lib-dropdown>
-                            <lib-text-area class="col-span-2" label="Description / Notes internes" placeholder="Objectif de cette aide..."></lib-text-area>
+                            <lib-date-input [formField]="procedureForm.end" label="Date de clôture"></lib-date-input>
+                            <lib-dropdown [formField]="procedureForm.type" label="Type de procédure" [options]="procedureTypes"></lib-dropdown>
+                            <lib-text-area [formField]="procedureForm.description" class="col-span-2" label="Description / Notes internes" placeholder="Objectif de cette aide..."></lib-text-area>
                         </div>
                     </div>
 
@@ -40,7 +40,7 @@
                 </div>
                 <div class="mt-8 pt-8 border-t border-slate-200 flex justify-end space-x-4">
                     <lib-button routerLink="/procedure" type="secondary">Annuler</lib-button>
-                    <lib-button type="primary">Créer la procédure</lib-button>
+                    <lib-button (click)="onSubmit()" type="primary">Créer la procédure</lib-button>
                 </div>
 
             </div>

@@ -1,26 +1,30 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { BreadcrumbItem, TopbarComponent, TextInputComponent, DropdownComponent, ButtonComponent, TextAreaComponent } from '@org/ecsas/shared-ui';
+import { BreadcrumbItem, TopbarComponent, TextInputComponent, DropdownComponent, ButtonComponent, TextAreaComponent, DateInputComponent } from '@org/ecsas/shared-ui';
 import { DocumentCardComponent } from '../../components/document-card/document-card.component';
 import { Procedure } from '@org/models';
-import {form, FormField} from '@angular/forms/signals';
+import {form, FormField, required, submit} from '@angular/forms/signals';
 
 @Component({
   selector: 'lib-new-procedure-component',
-  imports: [RouterLink, TopbarComponent, FormField, TextInputComponent, DropdownComponent, ButtonComponent, TextAreaComponent, DocumentCardComponent],
+  imports: [RouterLink, TopbarComponent, DateInputComponent, FormField, TextInputComponent, DropdownComponent, ButtonComponent, TextAreaComponent, DocumentCardComponent],
   templateUrl: './new-procedure.component.html',
 })
 export class NewProcedureComponent {
   procedure: Procedure | null = null;
-  procedureForm = form(signal<Procedure>({
+  procedureModel = signal<Procedure>({
     name: '',
-    type: 'TABASKI',
+    type: 'MEDICAL',
     description: '',
-    begin: new Date(),
-    end: null,
+    begin: new Date().toISOString(),
+    end: '',
     id: '',
     status: 'IN_PROGRESS'
-  }))
+  });
+  procedureForm = form(this.procedureModel, (schemaPath) => {
+    required(schemaPath.name, {message: 'Ce champ est obligatoire'});
+    required(schemaPath.type, {message: 'Ce champ est obligatoire'});
+  })
   breadcrumbItems: BreadcrumbItem[] = [
     { label: 'Accueil', route: '/' },
     { label: 'Procédures', route: '/procedure' },
@@ -33,5 +37,9 @@ export class NewProcedureComponent {
     { label: 'Secours appelle des layennes', value: 'LAYENNES' },
     { label: 'secours pâque', value: 'PAQUE' },
   ];
+
+  onSubmit() {
+    console.log({procedure: this.procedureModel()});
+  }
 
 }
