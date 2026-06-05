@@ -1,8 +1,11 @@
 {
   "name": "@org/source",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "dev": "npx nx run ecsas:serve",
+    "build": "npx nx run ecsas:build"
+  },
   "private": true,
   "dependencies": {
     "@angular-devkit/build-angular": "21.2.5",
@@ -48,6 +51,7 @@
     "@swc-node/register": "1.11.1",
     "@swc/core": "1.15.8",
     "@swc/helpers": "0.5.18",
+    "@tauri-apps/cli": "^2.11.2",
     "@types/express": "^4.17.21",
     "@types/node": "20.19.9",
     "@types/supertest": "^6.0.3",
