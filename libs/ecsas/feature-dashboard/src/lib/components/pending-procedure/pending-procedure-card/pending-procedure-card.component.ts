@@ -1,8 +1,8 @@
 import { Component, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Procedure } from '@org/models';
-import { BadgeComponent } from '@ord/ecsas/shared-ui';
-import { ButtonComponent } from '@ord/ecsas/shared-ui';
+import { BadgeComponent } from '@org/ecsas/shared-ui';
+import { ButtonComponent } from '@org/ecsas/shared-ui';
 
 @Component({
   selector: 'lib-pending-procedure-card',
