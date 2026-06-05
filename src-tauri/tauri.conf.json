@@ -2,12 +2,12 @@
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "ecsas",
   "version": "0.1.0",
-  "identifier": "com.tauri.dev",
+  "identifier": "org.warnerb47.ecsas",
   "build": {
     "frontendDist": "../dist/apps/ecsas/browser",
-    "devUrl": "http://localhost:4201",
-    "beforeDevCommand": "npm run dev",
-    "beforeBuildCommand": "npm run build"
+    "devUrl": "http://localhost:4200",
+    "beforeDevCommand": "pnpm run dev",
+    "beforeBuildCommand": "pnpm run build"
   },
   "app": {
     "windows": [
