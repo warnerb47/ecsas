@@ -5,24 +5,5 @@
   "prefix": "lib",
   "projectType": "library",
   "tags": ["scope:ecsas", "type:feature"],
-  "targets": {
-    "build": {
-      "executor": "@nx/angular:ng-packagr-lite",
-      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
-      "options": {
-        "project": "libs/ecsas/feature-dashboard/ng-package.json",
-        "tsConfig": "libs/ecsas/feature-dashboard/tsconfig.lib.json"
-      },
-      "configurations": {
-        "production": {
-          "tsConfig": "libs/ecsas/feature-dashboard/tsconfig.lib.prod.json"
-        },
-        "development": {}
-      },
-      "defaultConfiguration": "production"
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint"
-    }
-  }
+  "targets": {}
 }
