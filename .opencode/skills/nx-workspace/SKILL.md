@@ -155,7 +155,7 @@ nx show projects --json
 Example output:
 
 ```json
-["my-app", "my-app-e2e", "shop-shared-ui", "shared-utils", "api"]
+["my-app", "my-app-e2e", "shared-ui", "shared-utils", "api"]
 ```
 
 Common operations:
@@ -237,15 +237,15 @@ Example output:
         "type": "app",
         "data": { "root": "apps/my-app", "tags": ["type:app"] }
       },
-      "shop-shared-ui": {
-        "name": "shop-shared-ui",
+      "shared-ui": {
+        "name": "shared-ui",
         "type": "lib",
-        "data": { "root": "libs/shop-shared-ui", "tags": ["type:ui"] }
+        "data": { "root": "libs/shared-ui", "tags": ["type:ui"] }
       }
     },
     "dependencies": {
-      "my-app": [{ "source": "my-app", "target": "shop-shared-ui", "type": "static" }],
-      "shop-shared-ui": []
+      "my-app": [{ "source": "my-app", "target": "shared-ui", "type": "static" }],
+      "shared-ui": []
     }
   }
 }
@@ -261,7 +261,7 @@ nx graph --print | jq '.graph.nodes | keys'
 nx graph --print | jq '.graph.dependencies["my-app"]'
 
 # Find projects that depend on a library
-nx graph --print | jq '.graph.dependencies | to_entries[] | select(.value[].target == "shop-shared-ui") | .key'
+nx graph --print | jq '.graph.dependencies | to_entries[] | select(.value[].target == "shared-ui") | .key'
 ```
 
 ## Troubleshooting
