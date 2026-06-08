@@ -15,7 +15,6 @@ export class RepositoryService {
   async initDB() {
     const db = await Database.load('sqlite:ecsas.db');
     this.db = db;
-    console.log({db});
   }
 
   async closeDB() {
@@ -23,6 +22,14 @@ export class RepositoryService {
       await this.db.close();
       this.db = null;
     }
+  }
+
+  async getProcedures() {
+    if (!this.db) {
+      return null;
+    }
+    const procedures = await this.db.select("SELECT * FROM core_procedure");
+    return procedures;
   }
 
   async createProcedure(procedure: Procedure) {

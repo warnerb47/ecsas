@@ -10,6 +10,12 @@ pub fn run() {
             sql: include_str!("../migrations/V1.0.0__init.sql"),
             kind: MigrationKind::Up,
         },
+        Migration {
+            version: 2,
+            description: "create_initial_tables",
+            sql: include_str!("../migrations/V1.0.1__insert_procedures.sql"),
+            kind: MigrationKind::Up,
+        },
     ];
     tauri::Builder::default()
         .plugin(tauri_plugin_sql::Builder::new().add_migrations("sqlite:ecsas.db", migrations).build())

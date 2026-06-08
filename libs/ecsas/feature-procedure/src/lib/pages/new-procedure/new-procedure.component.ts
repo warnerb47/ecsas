@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   BreadcrumbItem,
@@ -12,7 +12,6 @@ import {
 import { DocumentCardComponent } from '../../components/document-card/document-card.component';
 import { Procedure } from '@org/models';
 import { form, FormField, required } from '@angular/forms/signals';
-import { RepositoryService } from '@org/api/products';
 
 @Component({
   selector: 'lib-new-procedure-component',
@@ -29,7 +28,7 @@ import { RepositoryService } from '@org/api/products';
   ],
   templateUrl: './new-procedure.component.html',
 })
-export class NewProcedureComponent implements OnInit {
+export class NewProcedureComponent {
   procedure: Procedure | null = null;
   procedureModel = signal<Procedure>({
     name: '',
@@ -56,12 +55,6 @@ export class NewProcedureComponent implements OnInit {
     { label: 'Secours appelle des layennes', value: 'LAYENNES' },
     { label: 'secours pâque', value: 'PAQUE' },
   ];
-
-  private readonly _repositoryService = inject(RepositoryService);
-
-  ngOnInit(): void {
-    this._repositoryService.initDB();
-  }
 
   onSubmit() {
     console.log({ procedure: this.procedureModel() });
