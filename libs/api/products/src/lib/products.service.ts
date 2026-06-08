@@ -41,13 +41,13 @@ export class ProductsService {
 
       if (filter.minPrice !== undefined) {
         filteredProducts = filteredProducts.filter(
-          p => p.price >= filter.minPrice
+          p => p.price >= (filter?.minPrice ?? 0)
         );
       }
 
       if (filter.maxPrice !== undefined) {
         filteredProducts = filteredProducts.filter(
-          p => p.price <= filter.maxPrice
+          p => p.price <= (filter?.maxPrice ?? 0)
         );
       }
 

@@ -13,8 +13,9 @@ export class RepositoryService {
   }
 
   async initDB() {
-    const db = await Database.load('sqlite:test.db');
+    const db = await Database.load('sqlite:ecsas.db');
     this.db = db;
+    console.log({db});
   }
 
   async closeDB() {
