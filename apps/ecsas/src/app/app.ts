@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SidebarComponent } from '@org/ecsas/shared-ui';
-import {  DocumentManager } from '@org/api/products';
+import {  DatabaseRepository } from '@org/api/products';
 
 @Component({
   imports: [RouterModule, SidebarComponent],
@@ -10,13 +10,16 @@ import {  DocumentManager } from '@org/api/products';
 })
 export class App implements OnInit {
   protected title = 'ecsas';
-  private readonly _documentManager = new DocumentManager();
+  private readonly _repositoryService = new DatabaseRepository();
 
   ngOnInit() {
     this.initState();
   }
 
   async initState(){
-    this._documentManager.initAppFolder();
+    console.log('init state')
+    await this._repositoryService.initDB();
+    const procedures = await this._repositoryService.getProcedures();
+    console.log({procedures});
   }
 }
