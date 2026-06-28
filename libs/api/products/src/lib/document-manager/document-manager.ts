@@ -4,6 +4,8 @@ import {
   mkdir,
   BaseDirectory,
   writeFile,
+  readFile,
+  remove,
 } from '@tauri-apps/plugin-fs';
 
 export class DocumentManager {
@@ -68,8 +70,49 @@ export class DocumentManager {
     }
   }
 
+  async fetchFile(params: {
+    fullPath: string;
+    mimeType: string;
+  }): Promise<File> {
+    const { fullPath, mimeType } = params;
+    try {
+      const uint8Array = await readFile(fullPath, {
+        baseDir: BaseDirectory.AppLocalData,
+      });
+
+      const blob = new Blob([uint8Array], { type: mimeType });
+
+      const fileName =
+        fullPath.split('/').pop() ||
+        fullPath.split('\\').pop() ||
+        'unknown_file';
+
+      const file = new File([blob], fileName, {
+        type: mimeType,
+        lastModified: Date.now(),
+      });
+
+      return file;
+    } catch (error) {
+      console.error(`Failed to fetch file ${fullPath}:`, error);
+      throw error;
+    }
+  }
+
+  async removeFile(fullPath: string): Promise<void> {
+    try {
+      await remove(fullPath, {
+        baseDir: BaseDirectory.AppLocalData,
+      });
+      console.log(`File removed successfully: ${fullPath}`);
+    } catch (error) {
+      console.error(`Failed to remove file ${fullPath}:`, error);
+      throw error;
+    }
+  }
+
   // exemple of file upload from component form
-    async uploadExemple(event: Event) {
+  async uploadExempleFromComponent(event: Event) {
     const input = event.target as HTMLInputElement;
     if (!(input.files && input.files.length > 0)) {
       console.log('No file selected');

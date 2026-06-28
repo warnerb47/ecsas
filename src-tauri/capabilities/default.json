@@ -16,6 +16,7 @@
     "fs:allow-create",
     "fs:allow-write",
     "fs:allow-write-file",
+    "fs:allow-remove",
     {
       "identifier": "fs:scope",
       "allow": [{ "path": "$APPLOCALDATA/**" }]
