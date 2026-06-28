@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "license": "MIT",
   "scripts": {
-    "dev": "npx nx run ecsas:serve",
-    "build": "npx nx run ecsas:build"
+    "dev": "pnpx nx run ecsas:serve",
+    "build": "pnpx nx run ecsas:build"
   },
   "private": true,
   "dependencies": {
