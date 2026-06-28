@@ -11,7 +11,7 @@ import { Procedure } from '@org/models';
 export class ProcedureListComponent {
   private readonly router = inject(Router);
   tabs: string[] = ['Toutes', 'Commission Sociale', 'Religieux & Culturel', 'Sport & Loisirs'];
-  activeTab: string = 'Toutes';
+  activeTab = 'Toutes';
   breadcrumbItems: BreadcrumbItem[] = [
     {label: 'Accueil', route: '/'},
     {label: 'Procédures', route: '/procedure'},
@@ -52,7 +52,7 @@ export class ProcedureListComponent {
   onTabChange(tab: string) {
     this.activeTab = tab;
   }
-  
+
   onProcedureSelected(procedure: Procedure) {
     this.router.navigate(['/procedure/detail', procedure.id]);
   }
