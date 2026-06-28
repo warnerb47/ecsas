@@ -12,7 +12,6 @@ export class DocumentManager {
   appDataConfig = {
     applicantFolder: { path: 'Documents/Demandeurs', exist: false },
     applicationFolder: { path: 'Documents/Demandes', exist: false },
-    databaseFile: { path: 'ecsas.db', exist: false },
   };
   async initAppFolder() {
     this.appDataConfig.applicantFolder.exist = await this.checkExist(
@@ -21,17 +20,11 @@ export class DocumentManager {
     this.appDataConfig.applicationFolder.exist = await this.checkExist(
       this.appDataConfig.applicationFolder.path,
     );
-    this.appDataConfig.databaseFile.exist = await this.checkExist(
-      this.appDataConfig.databaseFile.path,
-    );
     if (!this.appDataConfig.applicantFolder.exist) {
       this.createFolder(this.appDataConfig.applicantFolder.path);
     }
     if (!this.appDataConfig.applicationFolder.exist) {
       this.createFolder(this.appDataConfig.applicationFolder.path);
-    }
-    if (!this.appDataConfig.databaseFile.exist) {
-      this.createFile(this.appDataConfig.databaseFile.path);
     }
   }
 
