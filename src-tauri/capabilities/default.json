@@ -9,6 +9,17 @@
     "sql:allow-load",
     "sql:allow-execute",
     "sql:allow-select",
-    "sql:allow-close"
+    "sql:allow-close",
+    "fs:default",
+    "fs:allow-mkdir",
+    "fs:allow-exists",
+    "fs:allow-create",
+    "fs:allow-write",
+    "fs:allow-write-file",
+    "fs:allow-remove",
+    {
+      "identifier": "fs:scope",
+      "allow": [{ "path": "$APPLOCALDATA/**" }]
+    }
   ]
 }

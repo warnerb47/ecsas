@@ -2,7 +2,7 @@
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "ecsas",
   "version": "0.1.0",
-  "identifier": "org.warnerb47.ecsas",
+  "identifier": "ecsas",
   "build": {
     "frontendDist": "../dist/apps/ecsas/browser",
     "devUrl": "http://localhost:4200",
