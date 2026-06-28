@@ -8,10 +8,6 @@ import Database from '@tauri-apps/plugin-sql';
 export class RepositoryService {
   db: Database | null = null;
 
-  constructor() {
-    this.initDB();
-  }
-
   async initDB() {
     const db = await Database.load('sqlite:ecsas.db');
     this.db = db;
