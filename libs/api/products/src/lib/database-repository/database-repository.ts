@@ -1,11 +1,8 @@
-import { Injectable } from '@angular/core';
+
 import { Procedure } from '@org/models';
 import Database from '@tauri-apps/plugin-sql';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class RepositoryService {
+export class DatabaseRepository {
   db: Database | null = null;
 
   async initDB() {
