@@ -7,4 +7,10 @@ export interface Procedure {
   status: 'IN_PROGRESS' | 'COMPLETED';
   type: 'MEDICAL' | 'TABASKI' | 'LAYENNES' | 'PAQUE';
   applicationCount?: number;
+  documents?: ProcedureDocument[];
+}
+
+export interface ProcedureDocument {
+  name: string;
+  required: boolean;
 }

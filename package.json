@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "license": "MIT",
   "scripts": {
-    "dev": "pnpx nx run ecsas:serve",
-    "build": "pnpx nx run ecsas:build"
+    "dev": "pnpm exec nx run ecsas:serve",
+    "build": "pnpm exec nx run ecsas:build",
+    "start": "pnpm exec tauri dev"
   },
   "private": true,
   "dependencies": {
