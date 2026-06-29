@@ -1,6 +1,6 @@
-
 import { Procedure } from '@org/models';
 import Database from '@tauri-apps/plugin-sql';
+import { GET_PROCEDURES_QUERY } from './queries';
 
 export class DatabaseRepository {
   db: Database | null = null;
@@ -21,33 +21,14 @@ export class DatabaseRepository {
     if (!this.db) {
       return null;
     }
-    const query= `
-      SELECT
-          p.id,
-          p.name,
-          p.description,
-          p.start_date,
-          p.end_date,
-          p.status,
-          p.type,
-          p.created_at,
-          p.updated_at,
-          -- Aggregate documents into a JSON array
-          COALESCE(
-              json_group_array(
-                  json_object(
-                      'name', d.name,
-                      'required', d.required
-                  )
-              ) FILTER (WHERE d.id IS NOT NULL),
-              '[]'
-          ) as documents
-      FROM core_procedure p
-      LEFT JOIN core_procedure_document d ON p.id = d.procedure_id
-      GROUP BY p.id;
-    `;
-    const procedures = await this.db.select(query);
-    return procedures;
+    const procedures: Partial<Procedure>[] = await this.db.select(GET_PROCEDURES_QUERY);
+    return procedures.map((procedure) => this.parseProcedure(procedure));
+  }
+
+  parseProcedure(procedure: Partial<Procedure>) {
+    const documents = JSON.parse(procedure?.documents as unknown as string);
+    const parsedProcedures = { ...procedure, documents };
+    return parsedProcedures;
   }
 
   async createProcedure(procedure: Procedure) {
