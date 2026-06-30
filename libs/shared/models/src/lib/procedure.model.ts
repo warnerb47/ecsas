@@ -22,3 +22,14 @@ export interface ProcedureType {
   color: string;
   icon: string;
 }
+
+export interface ProcedurePayload {
+  name: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  status: 'IN_PROGRESS' | 'COMPLETED';
+  type: string;
+  applicationCount?: number;
+  documents?: ProcedureDocument[];
+}

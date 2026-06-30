@@ -14,7 +14,7 @@ export class DateInputComponent implements FormValueControl<string> {
   value = model<string>('');
 
   setValue(value: string): void {
-    this.value.set(new Date(value).toISOString());
+    this.value.set(value);
   }
 
 }
