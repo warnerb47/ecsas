@@ -16,7 +16,6 @@ export class DropdownComponent implements FormValueControl<string> {
 
   setValue(event: Event) {
     const selectedValue = (event.target as HTMLSelectElement).value;
-    console.log(selectedValue);
     this.value.set(selectedValue);
   }
 }

@@ -10,3 +10,4 @@ export * from './breadcum/breadcum.component';
 export * from './search-input/search-input.component';
 export * from './text-area/text-area.component';
 export * from './date-input/date-input.component';
+export * from './toggle-input/toggle-input.component';

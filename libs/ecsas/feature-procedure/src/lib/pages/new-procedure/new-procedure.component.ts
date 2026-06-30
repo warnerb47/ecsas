@@ -61,8 +61,17 @@ export class NewProcedureComponent implements OnInit {
 
   async fetchProcedureTypes() {
     try {
-      const procedureTypes = (await this._procedureGateway.getProcedureTypes()) as ProcedureType[];
-      this.procedureTypes.set(procedureTypes);
+      const procedureTypes =
+        (await this._procedureGateway.getProcedureTypes()) as ProcedureType[];
+      const formattedProcedureTypes = procedureTypes.map((type) => {
+        return {
+          ...type,
+          label: type.label,
+          value: type.id,
+        };
+      });
+      this.procedureTypes.set(formattedProcedureTypes);
+      this.procedureModel().type = formattedProcedureTypes[0].value;
     } catch (error) {
       console.error(error);
     }
@@ -71,7 +80,7 @@ export class NewProcedureComponent implements OnInit {
   addDocument() {
     this._dialogService.open(ProcedureDocumentComponent, {
       header: 'Ajouter un document',
-      width: '30vw',
+      width: '40vw',
       focusOnShow: false,
       closable: true,
       closeOnEscape: true,
