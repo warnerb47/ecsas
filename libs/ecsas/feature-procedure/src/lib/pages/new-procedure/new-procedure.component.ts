@@ -32,16 +32,15 @@ export class NewProcedureComponent {
   procedure: Procedure | null = null;
   procedureModel = signal<Procedure>({
     name: '',
-    type: 'MEDICAL',
+    type: undefined,
     description: '',
-    begin: new Date().toISOString(),
-    end: '',
+    startDate: new Date().toISOString(),
+    endDate: '',
     id: '',
     status: 'IN_PROGRESS',
   });
   procedureForm = form(this.procedureModel, (schemaPath) => {
     required(schemaPath.name, { message: 'Ce champ est obligatoire' });
-    required(schemaPath.type, { message: 'Ce champ est obligatoire' });
   });
   breadcrumbItems: BreadcrumbItem[] = [
     { label: 'Accueil', route: '/' },

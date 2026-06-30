@@ -2,10 +2,10 @@ export interface Procedure {
   id: string;
   name: string;
   description: string;
-  begin: string;
-  end: string;
+  startDate: string;
+  endDate: string;
   status: 'IN_PROGRESS' | 'COMPLETED';
-  type: 'MEDICAL' | 'TABASKI' | 'LAYENNES' | 'PAQUE';
+  type?: Partial<ProcedureType>;
   applicationCount?: number;
   documents?: ProcedureDocument[];
 }
@@ -13,4 +13,12 @@ export interface Procedure {
 export interface ProcedureDocument {
   name: string;
   required: boolean;
+}
+
+export interface ProcedureType {
+  id: string;
+  label: string;
+  value: string;
+  color: string;
+  icon: string;
 }

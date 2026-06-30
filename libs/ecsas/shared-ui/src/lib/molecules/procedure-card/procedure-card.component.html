@@ -2,7 +2,7 @@
     <div class="p-6">
         <div class="flex justify-between items-start mb-4">
             <div class="p-3 bg-blue-50 rounded-xl text-[#3182CE] group-hover:bg-[#3182CE] group-hover:text-white transition-colors">
-                <i class="{{icons()[procedure().type]}}"></i>
+                <i class="{{procedure()?.type?.icon ?? 'pi pi-folder'}}"></i>
             </div>
             @if (procedure().status === 'IN_PROGRESS') {
                 <lib-badge type="primary">Ouvert</lib-badge>
@@ -20,7 +20,7 @@
             </div>
             <div class="flex items-center text-xs text-slate-400">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                Date de clôture : {{ procedure().end | date:'dd/MM/yyyy' }}
+                Date de clôture : {{ procedure().endDate| date:'dd/MM/yyyy' }}
             </div>
         </div>
     </div>

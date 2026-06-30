@@ -11,9 +11,8 @@ import { ButtonComponent } from '../../atoms';
   templateUrl: './procedure-card.component.html'
 })
 export class ProcedureCardComponent {
-  procedure = input.required<Procedure>();
-  count = input<number>(0);
-  procedureSelected = output<Procedure>();
+  procedure = input.required<Partial<Procedure>>();
+  procedureSelected = output<Partial<Procedure>>();
 
   icons = signal({
     'MEDICAL': 'pi pi-heart',
