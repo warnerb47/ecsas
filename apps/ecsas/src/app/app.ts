@@ -17,9 +17,10 @@ export class App implements OnInit {
   }
 
   async initState(){
-    console.log('init state')
     await this._repositoryService.initDB();
-    const procedures = await this._repositoryService.getProcedures();
-    console.log({procedures});
+    const result = await this._repositoryService.seedQuery(`
+      SELECT * FROM core_procedure_document;
+      `);
+    console.log({result});
   }
 }

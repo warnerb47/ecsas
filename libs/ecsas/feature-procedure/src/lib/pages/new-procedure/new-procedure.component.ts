@@ -53,7 +53,7 @@ export class NewProcedureComponent {
     { label: 'Prise en charge médicale', value: 'MEDICAL' },
     { label: 'Secours Tabaski', value: 'TABASKI' },
     { label: 'Secours appelle des layennes', value: 'LAYENNES' },
-    { label: 'secours pâque', value: 'PAQUE' },
+    { label: 'Secours pâque', value: 'PAQUE' },
   ];
 
   onSubmit() {

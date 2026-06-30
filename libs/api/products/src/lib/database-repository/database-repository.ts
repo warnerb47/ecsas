@@ -25,6 +25,13 @@ export class DatabaseRepository {
     return procedures.map((procedure) => this.parseProcedure(procedure));
   }
 
+  async seedQuery(query: string) {
+    if (!this.db) {
+      return null;
+    }
+    return await this.db.select(query);
+  }
+
   parseProcedure(procedure: Partial<Procedure>) {
     const documents = JSON.parse(procedure?.documents as unknown as string);
     const parsedProcedures = { ...procedure, documents };
