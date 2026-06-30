@@ -1,8 +1,8 @@
 # Module procedure
 ✅ update procedure schema add documents field
-- add migrations for mock procedures with documents field
+✅ add migrations for mock procedures with documents field
 - update procedure interface
-- update database repository with the new procedure schema
+✅ update database repository with the new procedure schema
 - update procedureGateway: add CRUD
 - Fix category types
 - implement category filter

@@ -6,7 +6,7 @@ export const GET_PROCEDURES_QUERY = `
           p.start_date,
           p.end_date,
           p.status,
-          p.type,
+          json_object('id', pt.id, 'label', pt.label, 'value', pt.value, 'color', pt.color, 'icon', pt.icon) as type,
           p.created_at,
           p.updated_at,
           -- Aggregate documents into a JSON array
@@ -21,5 +21,6 @@ export const GET_PROCEDURES_QUERY = `
           ) as documents
       FROM core_procedure p
       LEFT JOIN core_procedure_document d ON p.id = d.procedure_id
+      LEFT JOIN core_procedure_type pt ON p.type = pt.id
       GROUP BY p.id;
     `;

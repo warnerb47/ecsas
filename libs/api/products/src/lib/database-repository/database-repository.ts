@@ -21,8 +21,15 @@ export class DatabaseRepository {
     if (!this.db) {
       return null;
     }
-    const procedures: Partial<Procedure>[] = await this.db.select(GET_PROCEDURES_QUERY);
-    return procedures.map((procedure) => this.parseProcedure(procedure));
+    const procedures: Partial<Procedure>[] =
+      await this.db.select(GET_PROCEDURES_QUERY);
+    return procedures.map((procedure) => {
+      return {
+        ...procedure,
+        ...{documents: this.parseKey({ entity: procedure, key: 'documents' })['documents']},
+        ...{type:this.parseKey({ entity: procedure, key: 'type' })['type']},
+      };
+    });
   }
 
   async seedQuery(query: string) {
@@ -36,6 +43,16 @@ export class DatabaseRepository {
     const documents = JSON.parse(procedure?.documents as unknown as string);
     const parsedProcedures = { ...procedure, documents };
     return parsedProcedures;
+  }
+
+  parseKey(params: { entity: Record<string, unknown>; key: string }) {
+    const { entity, key } = params;
+    if (key in entity) {
+      const pasedValue = JSON.parse(entity[key] as unknown as string);
+      const parsedResult = { ...entity, [key]: pasedValue };
+      return parsedResult;
+    }
+    return {}
   }
 
   async createProcedure(procedure: Procedure) {
