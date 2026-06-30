@@ -1,11 +1,11 @@
 # Module procedure
 ✅ update procedure schema add documents field
 ✅ add migrations for mock procedures with documents field
-- update procedure interface
+✅ update procedure interface
 ✅ update database repository with the new procedure schema
-- update procedureGateway: add CRUD
-- Fix category types
-- implement category filter
+✅ Fix category types
+✅ implement category filter
+✅ add migrations for category (color, icon, label)
 - implement modal to add required documents for procedure
-- add migrations for category (color, icon, label)
+- update procedureGateway: add CRUD
 - add btn to manage category
