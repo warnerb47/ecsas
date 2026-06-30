@@ -1,8 +1,7 @@
 <div class="flex flex-col space-y-4">
   <div class="flex items-center justify-center w-full space-x-4">
-    <lib-text-input class="w-full" placeholder="Nom du document"></lib-text-input>
-    <!-- <lib-badge class="cursor-pointer" (click)="toggleActive()" [type]="badgeType()">Obligatoire</lib-badge> -->
-    <lib-toggle-input label="Obligatoire"></lib-toggle-input>
+    <lib-text-input [formField]="docForm.name" class="w-full" placeholder="Nom du document"></lib-text-input>
+    <lib-toggle-input [formField]="docForm.required" label="Obligatoire"></lib-toggle-input>
   </div>
   <lib-button class="w-full" (click)="addDocument()" type="primary">
       Valider

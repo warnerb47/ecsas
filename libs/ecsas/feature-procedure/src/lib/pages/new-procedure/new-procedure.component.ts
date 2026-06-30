@@ -10,7 +10,7 @@ import {
   DateInputComponent,
 } from '@org/ecsas/shared-ui';
 import { DocumentCardComponent } from '../../components/document-card/document-card.component';
-import { Procedure, ProcedurePayload, ProcedureType } from '@org/models';
+import { Procedure, ProcedureDocument, ProcedurePayload, ProcedureType } from '@org/models';
 import { form, FormField, required } from '@angular/forms/signals';
 import { ProcedureGateway } from '@org/ecsas/ecsas-data';
 import { ProcedureDocumentComponent } from './procedure-document/procedure-document.component';
@@ -54,6 +54,7 @@ export class NewProcedureComponent implements OnInit {
   ];
 
   procedureTypes = signal<ProcedureType[]>([]);
+  documents = signal<ProcedureDocument[]>([]);
 
   ngOnInit(): void {
     this.fetchProcedureTypes();
@@ -84,13 +85,24 @@ export class NewProcedureComponent implements OnInit {
       focusOnShow: false,
       closable: true,
       closeOnEscape: true,
+    })?.onClose.pipe(
+    ).subscribe((document) => {
+      if (!document) return;
+      this.documents.update((documents) => [...documents, document]);
     });
+  }
+
+  removeDocument(document: ProcedureDocument) {
+    this.documents.update((documents) =>
+      documents.filter((doc) => doc.name !== document.name)
+    );
   }
 
   onSubmit() {
     const payload = {
       ...this.procedureModel(),
       endDate: new Date(this.procedureModel().endDate).toISOString(),
+      documents: this.documents(),
     };
     console.log({ procedure: payload });
   }

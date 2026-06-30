@@ -24,7 +24,7 @@
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
                         <div class="flex justify-between items-center mb-8">
                             <h3 class="text-lg font-bold text-slate-500">
-                                Documents Obligatoires
+                                Documents à soumettre
                             </h3>
                             <lib-button (click)="addDocument()" type="secondary">
                                 <i class="pi pi-plus"></i>
@@ -32,10 +32,23 @@
                             </lib-button>
                         </div>
 
-                        <div class="grid gap-4">
-                            <lib-document-card documentName="Demande manuscrite adressée au Maire" icon="pi pi-file" [required]="true"></lib-document-card>
-                            <lib-document-card documentName="Certificat de résidence à Yoff" icon="pi pi-file" [required]="true"></lib-document-card>
-                        </div>
+                        @if (documents().length) {
+                          <div class="grid gap-4">
+                              @for (document of documents(); track $index) {
+                                <lib-document-card documentName="{{document.name}}" icon="pi pi-file" [required]="document.required" (removed)="removeDocument(document)"></lib-document-card>
+                              }
+                          </div>
+                        }@else{
+                          <div class="flex flex-col space-y-4 w-full  items-center justify-center border-slate-100">
+                              <div class="text-secondary text-sm w-100 text-center">
+                                  Aucun document disponible. Cliquez sur le bouton pour commencer.
+                              </div>
+                              <lib-button (click)="addDocument()" type="secondary">
+                                  <i class="pi pi-plus"></i>
+                                  Ajouter un document
+                              </lib-button>
+                          </div>
+                        }
                     </div>
                 </div>
                 <div class="mt-8 pt-8 border-t border-slate-200 flex justify-end space-x-4">

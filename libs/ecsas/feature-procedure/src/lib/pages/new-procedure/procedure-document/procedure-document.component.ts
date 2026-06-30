@@ -1,27 +1,36 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { form, required, FormField, submit } from '@angular/forms/signals';
 import {
-  BadgeComponent,
   ButtonComponent,
   TextInputComponent,
   ToggleInputComponent,
 } from '@org/ecsas/shared-ui';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+
 
 @Component({
   selector: 'lib-procedure-document-component',
-  imports: [TextInputComponent, BadgeComponent, ButtonComponent, ToggleInputComponent],
+  imports: [TextInputComponent, ButtonComponent, ToggleInputComponent, FormField],
   templateUrl: './procedure-document.component.html',
+  providers: [DialogService]
 })
 export class ProcedureDocumentComponent {
-  required = signal(false);
+    private readonly _dialogRef = inject(DynamicDialogRef);
 
-  badgeType = computed<'primary' | 'secondary'>(() =>
-    this.required() ? 'primary' : 'secondary',
-  );
-  toggleActive() {
-    this.required.update((value) => !value);
-  }
+  documentModel = signal({
+    name: '',
+    required: false
+  });
 
-  addDocument() {
-    console.log('add document');
+   docForm = form(this.documentModel, (f) => {
+    required(f.name, { message: 'Le nom du document est requis' });
+  });
+
+  async addDocument() {
+    await submit(this.docForm, async () => {
+      if(this.docForm().valid()) {
+        this._dialogRef?.close(this.documentModel());
+      }
+    });
   }
 }
