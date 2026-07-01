@@ -1,24 +1,41 @@
 import { Component, inject, input, OnInit, signal } from '@angular/core';
-import { TopbarComponent, BreadcrumbItem, ButtonComponent } from '@org/ecsas/shared-ui';
+import {
+  TopbarComponent,
+  BreadcrumbItem,
+  ButtonComponent,
+} from '@org/ecsas/shared-ui';
 import { Procedure } from '@org/models';
-import { ApplicationStatisticsComponent, StatCard } from './application-statistics/application-statistics.component';
+import {
+  ApplicationStatisticsComponent,
+  StatCard,
+} from './application-statistics/application-statistics.component';
 import { ApplicationTableComponent } from './application-table/application-table.component';
 import { ProcedureGateway } from '@org/ecsas/ecsas-data';
 import { ProcedureStateService } from '../../state/procedure-state.service';
 
 @Component({
   selector: 'lib-detail-procedure-component',
-  imports: [ TopbarComponent, ApplicationStatisticsComponent, ApplicationTableComponent, ButtonComponent ],
+  imports: [
+    TopbarComponent,
+    ApplicationStatisticsComponent,
+    ApplicationTableComponent,
+    ButtonComponent,
+  ],
   templateUrl: './detail-procedure.component.html',
 })
 export class DetailProcedureComponent implements OnInit {
   procedureId = input<string>('');
-  tabs: string[] = ['Toutes', 'Commission Sociale', 'Religieux & Culturel', 'Sport & Loisirs'];
+  tabs: string[] = [
+    'Toutes',
+    'Commission Sociale',
+    'Religieux & Culturel',
+    'Sport & Loisirs',
+  ];
   activeTab = 'Toutes';
   breadcrumbItems: BreadcrumbItem[] = [
-    {label: 'Accueil', route: '/'},
-    {label: 'Procédures', route: '/procedure'},
-    {label: 'Détail', route: '/procedure/detail'},
+    { label: 'Accueil', route: '/' },
+    { label: 'Procédures', route: '/procedure' },
+    { label: 'Détail', route: '/procedure/detail' },
   ];
   statCards: StatCard[] = [
     {
@@ -52,10 +69,12 @@ export class DetailProcedureComponent implements OnInit {
     this.fetchProcedureById();
   }
 
-    async fetchProcedureById() {
+  async fetchProcedureById() {
     try {
       this.loadingProcudre.set(true);
-      const procedure = await this._procedureGateway.getProcedureById(this.procedureId());
+      const procedure = await this._procedureGateway.getProcedureById(
+        this.procedureId(),
+      );
       this.procedure.set(procedure);
       this._procedureStateService.procedure.set(procedure);
     } catch (error) {
@@ -66,6 +85,6 @@ export class DetailProcedureComponent implements OnInit {
   }
 
   editProcedure() {
-    console.log({edit: this.procedureId()});
+    console.log({ edit: this.procedureId() });
   }
 }

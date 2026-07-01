@@ -6,15 +6,31 @@
 
         <div class="flex-1 overflow-y-auto p-8">
             <div class="max-w-4xl mx-auto">
-                
+
                 <form class="space-y-8">
-                    
+
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                         <div class="px-6 py-4 bg-slate-50 border-b border-slate-100">
                             <h3 class="text-sm font-black text-[#1A365D] uppercase tracking-wider">1. Informations du Bénéficiaire</h3>
                         </div>
                         <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="col-span-1">
+                                <lib-button type="primary" (click)="searchApplicant()">
+                                    <div class="flex items-center justify-center space-x-2">
+                                      <i class="pi pi-search"></i>
+                                      <span>Rechercher un bénéficiaire</span>
+                                    </div>
+                                  </lib-button>
+                            </div>
+                            <div class="col-span-1">
+                                <lib-button type="secondary" (click)="createApplicant()">
+                                    <div class="flex items-center justify-center space-x-2">
+                                      <i class="pi pi-plus"></i>
+                                      <span>Créer un bénéficiaire</span>
+                                    </div>
+                                  </lib-button>
+                            </div>
+                            <!-- <div class="col-span-1">
                                 <lib-text-input label="Prénom & Nom" placeholder="Ex: Moussa Sall"></lib-text-input>
                             </div>
                             <div class="col-span-1">
@@ -25,7 +41,7 @@
                             </div>
                             <div class="col-span-1">
                                 <lib-dropdown label="Quartier (Yoff)" placeholder="Sélectionner le quartier" [options]="quartiers"></lib-dropdown>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
 

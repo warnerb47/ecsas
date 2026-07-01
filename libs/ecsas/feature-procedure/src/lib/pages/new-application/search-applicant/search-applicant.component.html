@@ -1,0 +1,13 @@
+<div class="flex flex-col justify-between h-full">
+  <div class="flex items-center justify-center w-full">
+    <p-autocomplete class="w-full" placeholder="Rechercher par nom, CNI ou numéro de téléphone"
+      [dropdown]="true" [(ngModel)]="value" [suggestions]="items"
+      (completeMethod)="search($event)"
+      emptyMessage="Aucun resultat trouvé"
+    />
+  </div>
+  <lib-button class="w-full" (click)="addDocument()" type="primary">
+      Valider
+  </lib-button>
+
+</div>

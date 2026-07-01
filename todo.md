@@ -17,11 +17,15 @@
 
 # Module application
 ✅ add migration for application
-- init applicationRepository
-- init applicationGateway
-- Get applications on detail-procedure pages
-- plug new-application-form
-- 
+✅ init applicationRepository
+✅ init applicationGateway
+✅ Get applications on detail-procedure pages
+- plug new-application-form:
+ - create applicant
+ - search applicant
+ - remove selected applicant
+- plug detail application
+- add application status filter
 
 
 # Module Dashboard

@@ -28,7 +28,7 @@ export class ApplicationTableComponent implements OnInit {
   private readonly _procedureStateService = inject(ProcedureStateService);
   private readonly _applicationGateway = inject(ApplicationGateway);
   private readonly _procedureGateway = inject(ProcedureGateway);
-  private _activatedRoute = inject(ActivatedRoute);
+  private readonly _activatedRoute = inject(ActivatedRoute);
 
   procedureId = toSignal(
     this._activatedRoute.paramMap.pipe(map((p) => p.get('procedureId'))),
@@ -81,7 +81,6 @@ export class ApplicationTableComponent implements OnInit {
           this.procedure()?.id ?? '',
         );
       this.applications.set(applications);
-      console.log({ applications });
     } catch (error) {
       console.error(error);
     } finally {
@@ -117,18 +116,6 @@ export class ApplicationTableComponent implements OnInit {
     return map[status] ?? 'En attente';
   }
 
-  getProcedureClasses(procedure: Partial<Procedure> | undefined | null): string {
-    if (!procedure) return 'bg-slate-50 text-slate-700';
-    const procedureType = procedure.type?.value ?? 'DEFAULT';
-    const map: Record<string, string> = {
-      PAQUE: 'bg-blue-50 text-blue-700',
-      LAYENNES: 'bg-amber-50 text-amber-700',
-      MEDICAL: 'bg-emerald-50 text-emerald-700',
-      TABASKI: 'bg-purple-50 text-purple-700',
-      DEFAULT: 'bg-slate-50 text-slate-700',
-    };
-    return map[procedureType];
-  }
 
   formatAmount(amount: number): string {
     return amount.toLocaleString('fr-FR') + ' FCFA';
