@@ -1,7 +1,7 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Application } from '@org/models';
+import { Application, Procedure } from '@org/models';
 import { ButtonComponent, DropdownComponent, SearchInputComponent } from '@org/ecsas/shared-ui';
 
 @Component({
@@ -25,30 +25,7 @@ export class ApplicationTableComponent {
     { label: 'Rejeté', value: 'rejected' },
   ];
 
-  applications: Application[] = [
-    {
-      id: 'DJK-788',
-      applicant: 'Moussa Sall',
-      files: [],
-      procedure: 'Appel Layenne',
-      mailRef: '',
-      createdAt: new Date(),
-      status: 'En cours',
-      state: 'pending',
-      amount: 150000,
-    },
-    {
-      id: 'DJK-789',
-      applicant: 'Fatou Diop',
-      files: [],
-      procedure: 'Médicale',
-      mailRef: '',
-      createdAt: new Date(),
-      status: 'Approuvée',
-      state: 'approved',
-      amount: 75000,
-    },
-  ];
+  applications: Application[] = [];
 
   getInitials(name: string): string {
     return name
@@ -69,13 +46,16 @@ export class ApplicationTableComponent {
     return map[status] ?? 'bg-slate-50 text-slate-700 border-slate-100';
   }
 
-  getProcedureClasses(procedure: string): string {
+  getProcedureClasses(procedure: Partial<Procedure>): string {
+    const procedureType = procedure.type?.value ?? 'DEFAULT';
     const map: Record<string, string> = {
-      'Appel Layenne': 'bg-blue-50 text-blue-700',
-      'Médicale': 'bg-emerald-50 text-emerald-700',
-      'Aide Tabaski': 'bg-purple-50 text-purple-700',
+      'PAQUE': 'bg-blue-50 text-blue-700',
+      'LAYENNES': 'bg-amber-50 text-amber-700',
+      'MEDICAL': 'bg-emerald-50 text-emerald-700',
+      'TABASKI': 'bg-purple-50 text-purple-700',
+      'DEFAULT': 'bg-slate-50 text-slate-700',
     };
-    return map[procedure] ?? 'bg-slate-50 text-slate-700';
+    return map[procedureType];
   }
 
   formatAmount(amount: number): string {

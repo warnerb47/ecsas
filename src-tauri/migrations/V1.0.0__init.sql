@@ -10,16 +10,6 @@ CREATE TABLE IF NOT EXISTS core_user (
     created_at TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS core_applicant (
-    id         TEXT                        NOT NULL PRIMARY KEY,
-    full_name  TEXT                        NOT NULL,
-    nin        TEXT                        NOT NULL UNIQUE,
-    address    TEXT,
-    status     TEXT                        NOT NULL,
-    created_at TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
 CREATE TABLE IF NOT EXISTS core_procedure_type (
   id TEXT NOT NULL PRIMARY KEY,
   label TEXT NOT NULL,
@@ -32,8 +22,8 @@ CREATE TABLE IF NOT EXISTS core_procedure (
     id          TEXT                        NOT NULL PRIMARY KEY,
     name        TEXT                        NOT NULL,
     description TEXT,
-    start_date  TEXT,                      -- Renamed from 'begin' (reserved keyword)
-    end_date    TEXT,                      -- Renamed from 'end' (reserved keyword)
+    start_date  TEXT,
+    end_date    TEXT,
     status      TEXT                        NOT NULL,
     type        TEXT                        NOT NULL,
     created_at  TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -46,48 +36,96 @@ CREATE TABLE IF NOT EXISTS core_procedure (
         ON DELETE RESTRICT
 );
 
--- Create the new child table with a Foreign Key
 CREATE TABLE IF NOT EXISTS core_procedure_document (
   id TEXT NOT NULL PRIMARY KEY,
   procedure_id TEXT NOT NULL,
   name TEXT NOT NULL,
   required INTEGER NOT NULL DEFAULT 0,
-  -- Define Foreign Key Constraint
-  CONSTRAINT fk_procedure FOREIGN KEY (procedure_id) REFERENCES core_procedure(id) ON DELETE CASCADE ON UPDATE NO ACTION
+  CONSTRAINT fk_procedure
+    FOREIGN KEY (procedure_id)
+    REFERENCES core_procedure(id)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION
 );
 
--- Create an index on the foreign key column for faster lookups
 CREATE INDEX IF NOT EXISTS idx_procedure_document_procedure_id ON core_procedure_document(procedure_id);
 
-
-CREATE TABLE IF NOT EXISTS core_application (
-    id           TEXT                        NOT NULL PRIMARY KEY,
-    applicant_id TEXT                        NOT NULL,
-    procedure_id TEXT                        NOT NULL,
-    mail_ref     TEXT,
-    status       TEXT                        NOT NULL,
-    state        TEXT                        NOT NULL,
-    amount       REAL,                       -- Changed from numeric(12,2); SQLite ignores precision
-    created_at   TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at   TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (applicant_id) REFERENCES core_applicant(id) ON UPDATE CASCADE ON DELETE RESTRICT,
-    FOREIGN KEY (procedure_id) REFERENCES core_procedure(id) ON UPDATE CASCADE ON DELETE RESTRICT
+-- ✅ FIXED: Removed trailing comma after 'uploaded_at'
+CREATE TABLE IF NOT EXISTS core_source (
+    id             TEXT                        NOT NULL PRIMARY KEY,
+    name           TEXT                        NOT NULL,
+    path           TEXT                        NOT NULL,
+    mime_type      TEXT,
+    uploaded_at    TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS core_application_file (
+CREATE TABLE IF NOT EXISTS core_applicant (
     id             TEXT                        NOT NULL PRIMARY KEY,
-    application_id TEXT                        NOT NULL,
-    file_name      TEXT                        NOT NULL,
-    file_path      TEXT                        NOT NULL,
-    mime_type      TEXT,
-    uploaded_at    TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (application_id) REFERENCES core_application(id) ON DELETE CASCADE
+    full_name      TEXT                        NOT NULL,
+    nin            TEXT                        NOT NULL,
+    phone_number   TEXT,
+    address        TEXT,
+    status         TEXT,
+    created_at     TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS core_applicant_source (
+    applicant_id TEXT NOT NULL,
+    source_id    TEXT NOT NULL,
+    PRIMARY KEY (applicant_id, source_id),
+    CONSTRAINT fk__core_applicant_source__applicant_id
+        FOREIGN KEY (applicant_id)
+        REFERENCES core_applicant(id)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION,
+    CONSTRAINT fk__core_applicant_source__source_id
+        FOREIGN KEY (source_id)
+        REFERENCES core_source(id)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION
+);
+
+-- ✅ FIXED: Added missing comma between the two CONSTRAINT definitions
+CREATE TABLE IF NOT EXISTS core_application (
+    id             TEXT                        NOT NULL PRIMARY KEY,
+    applicant_id   TEXT                        NOT NULL,
+    procedure_id   TEXT                        NOT NULL,
+    mail_ref       TEXT,
+    created_at     TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status         TEXT,
+    state          TEXT,
+    amount         REAL                        NOT NULL,
+    CONSTRAINT fk__core_application__applicant_id
+        FOREIGN KEY (applicant_id)
+        REFERENCES core_applicant(id)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION,
+    CONSTRAINT fk__core_application__procedure_id
+        FOREIGN KEY (procedure_id)
+        REFERENCES core_procedure(id)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION
+);
+
+CREATE TABLE IF NOT EXISTS core_application_source (
+    application_id TEXT NOT NULL,
+    source_id      TEXT NOT NULL,
+    PRIMARY KEY (application_id, source_id),
+    CONSTRAINT fk__core_application_source__application_id
+        FOREIGN KEY (application_id)
+        REFERENCES core_application(id)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION,
+    CONSTRAINT fk__core_application_source__source_id
+        FOREIGN KEY (source_id)
+        REFERENCES core_source(id)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION
 );
 
 /* Create indexes for better query performance */
 CREATE INDEX IF NOT EXISTS idx_application_applicant_id ON core_application(applicant_id);
 CREATE INDEX IF NOT EXISTS idx_application_procedure_id ON core_application(procedure_id);
-CREATE INDEX IF NOT EXISTS idx_application_file_application_id ON core_application_file(application_id);
 CREATE INDEX IF NOT EXISTS idx_applicant_nin ON core_applicant(nin);
 CREATE INDEX IF NOT EXISTS idx_user_login ON core_user(login);
 

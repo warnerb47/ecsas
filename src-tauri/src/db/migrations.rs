@@ -25,5 +25,17 @@ pub fn get_migrations() -> Vec<Migration> {
             sql: include_str!("../../migrations/V1.0.3__insert_core_procedure_document.sql"),
             kind: MigrationKind::Up,
         },
+        Migration {
+            version: 5,
+            description: "V1.0.4__insert_core_applicant.sql",
+            sql: include_str!("../../migrations/V1.0.4__insert_core_applicant.sql"),
+            kind: MigrationKind::Up,
+        },
+        Migration {
+            version: 6,
+            description: "V1.0.5__insert_core_application.sql",
+            sql: include_str!("../../migrations/V1.0.5__insert_core_application.sql"),
+            kind: MigrationKind::Up,
+        },
     ]
 }

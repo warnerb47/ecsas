@@ -1,7 +1,11 @@
+import { Source } from "./source.model";
+
 export interface Applicant {
   id: string;
   fullName: string;
-  NIN: string;
+  nin: string;
+  phoneNumber: string;
   address: string;
-  status: string;
+  status: 'SOCIAL_CASE' | 'NON_ESSENTIAL' | 'RECENTLY_SUPPORTED' | 'INAPPROPRIATE_AGE';
+  sources: Partial<Source>[];
 }
