@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
   BreadcrumbItem,
   TopbarComponent,
@@ -10,8 +10,13 @@ import {
   DateInputComponent,
 } from '@org/ecsas/shared-ui';
 import { DocumentCardComponent } from '../../components/document-card/document-card.component';
-import { Procedure, ProcedureDocument, ProcedurePayload, ProcedureType } from '@org/models';
-import { form, FormField, required } from '@angular/forms/signals';
+import {
+  Procedure,
+  ProcedureDocument,
+  ProcedurePayload,
+  ProcedureType,
+} from '@org/models';
+import { form, FormField, required, submit } from '@angular/forms/signals';
 import { ProcedureGateway } from '@org/ecsas/ecsas-data';
 import { ProcedureDocumentComponent } from './procedure-document/procedure-document.component';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -35,6 +40,8 @@ import { DialogService } from 'primeng/dynamicdialog';
 export class NewProcedureComponent implements OnInit {
   private readonly _procedureGateway = inject(ProcedureGateway);
   private readonly _dialogService = inject(DialogService);
+  private readonly _router = inject(Router);
+
   procedure: Procedure | null = null;
   procedureModel = signal<ProcedurePayload>({
     name: '',
@@ -55,6 +62,7 @@ export class NewProcedureComponent implements OnInit {
 
   procedureTypes = signal<ProcedureType[]>([]);
   documents = signal<ProcedureDocument[]>([]);
+  loadingSubmit = signal(false);
 
   ngOnInit(): void {
     this.fetchProcedureTypes();
@@ -79,31 +87,52 @@ export class NewProcedureComponent implements OnInit {
   }
 
   addDocument() {
-    this._dialogService.open(ProcedureDocumentComponent, {
-      header: 'Ajouter un document',
-      width: '40vw',
-      focusOnShow: false,
-      closable: true,
-      closeOnEscape: true,
-    })?.onClose.pipe(
-    ).subscribe((document) => {
-      if (!document) return;
-      this.documents.update((documents) => [...documents, document]);
-    });
+    this._dialogService
+      .open(ProcedureDocumentComponent, {
+        header: 'Ajouter un document',
+        width: '40vw',
+        focusOnShow: false,
+        closable: true,
+        closeOnEscape: true,
+      })
+      ?.onClose.pipe()
+      .subscribe((document) => {
+        if (!document) return;
+        this.documents.update((documents) => [...documents, document]);
+      });
   }
 
   removeDocument(document: ProcedureDocument) {
     this.documents.update((documents) =>
-      documents.filter((doc) => doc.name !== document.name)
+      documents.filter((doc) => doc.name !== document.name),
     );
   }
 
-  onSubmit() {
-    const payload = {
-      ...this.procedureModel(),
-      endDate: new Date(this.procedureModel().endDate).toISOString(),
-      documents: this.documents(),
-    };
-    console.log({ procedure: payload });
+  async onSubmit() {
+    await submit(this.procedureForm, async () => {
+      if (this.procedureForm().valid()) {
+        this.createProcedure();
+      }
+    });
+  }
+
+  async createProcedure() {
+    try {
+      this.loadingSubmit.set(true);
+      const payload = {
+        ...this.procedureModel(),
+        endDate: new Date(this.procedureModel().endDate).toISOString(),
+        documents: this.documents(),
+      };
+      console.log({ procedure: payload });
+      const result =
+        await this._procedureGateway.createProcedureWithDocuments(payload);
+      console.log({ result });
+      this._router.navigateByUrl('/procedure');
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.loadingSubmit.set(false);
+    }
   }
 }

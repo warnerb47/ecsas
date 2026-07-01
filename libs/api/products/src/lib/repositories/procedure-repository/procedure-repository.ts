@@ -1,6 +1,7 @@
-import { Procedure, ProcedureType } from '@org/models';
+import { Procedure, ProcedurePayload, ProcedureType } from '@org/models';
 import Database from '@tauri-apps/plugin-sql';
 import { GET_PROCEDURE_TYPE_QUERY, GET_PROCEDURES_QUERY } from './queries';
+import { v4 as uuidv4 } from 'uuid';
 
 export class ProcedureRepository {
   db: Database | null = null;
@@ -33,14 +34,14 @@ export class ProcedureRepository {
     return results;
   }
 
-
   async getProcedureTypes() {
     const db = await this.openConnection();
     if (!db) {
       throw new Error('No database connection');
     }
-    const procedureTypes: Partial<ProcedureType>[] =
-      await db.select(GET_PROCEDURE_TYPE_QUERY);
+    const procedureTypes: Partial<ProcedureType>[] = await db.select(
+      GET_PROCEDURE_TYPE_QUERY,
+    );
     await this.closeConnection(db);
     return procedureTypes;
   }
@@ -65,22 +66,55 @@ export class ProcedureRepository {
     return {};
   }
 
-  // async createProcedure(procedure: Procedure) {
-  //   if (!this.db) {
-  //     return null;
-  //   }
-  //   const result = await this.db.execute(
-  //     'INSERT into procedures (id, name, description, status, type, begin, end) VALUES ($1, $2, $3, $4, $5, $6, $7)',
-  //     [
-  //       procedure.id,
-  //       procedure.name,
-  //       procedure.description,
-  //       procedure.status,
-  //       procedure.type,
-  //       procedure.begin,
-  //       procedure.end,
-  //     ],
-  //   );
-  //   return result;
-  // }
+  async createProcedureWithDocuments(procedure: ProcedurePayload) {
+    const db = await this.openConnection();
+    if (!db) {
+      throw new Error('No database connection');
+    }
+    const p = procedure;
+    // Utilise l'ID fourni ou en génère un nouveau
+    const procedureId = uuidv4();
+
+    try {
+      // 1. Insertion de la procédure parente
+      const procedureResult = await db.execute(
+        `INSERT INTO core_procedure (id, name, description, start_date, end_date, status, type)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+        [
+          procedureId,
+          p.name,
+          p.description,
+          p.startDate,
+          p.endDate,
+          p.status,
+          p.type,
+        ],
+      );
+
+      // 2. Insertion des documents enfants s'ils existent
+      if (p.documents && Array.isArray(p.documents)) {
+        for (const doc of p.documents) {
+          const docId = uuidv4();
+          // SQLite ne stocke pas les booléens, on transforme true/false en 1/0
+          const isRequired = doc.required ? 1 : 0;
+
+          await db.execute(
+            `INSERT INTO core_procedure_document (id, procedure_id, name, required)
+           VALUES ($1, $2, $3, $4)`,
+            [
+              docId,
+              procedureId, // Clé étrangère liée à la procédure créée juste au-dessus
+              doc.name,
+              isRequired,
+            ],
+          );
+        }
+      }
+
+      return procedureResult;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
 }
