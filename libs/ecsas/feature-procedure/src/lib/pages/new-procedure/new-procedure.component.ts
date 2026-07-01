@@ -9,7 +9,7 @@ import {
   TextAreaComponent,
   DateInputComponent,
 } from '@org/ecsas/shared-ui';
-import { DocumentCardComponent } from '../../components/document-card/document-card.component';
+import { DocumentCardComponent } from './document-card/document-card.component';
 import {
   Procedure,
   ProcedureDocument,

@@ -1,9 +1,10 @@
 import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { TopbarComponent, BreadcrumbItem, ButtonComponent } from '@org/ecsas/shared-ui';
 import { Procedure } from '@org/models';
-import { ApplicationStatisticsComponent, StatCard } from '../../components/application-statistics/application-statistics.component';
-import { ApplicationTableComponent } from '../../components/application-table/application-table.component';
+import { ApplicationStatisticsComponent, StatCard } from './application-statistics/application-statistics.component';
+import { ApplicationTableComponent } from './application-table/application-table.component';
 import { ProcedureGateway } from '@org/ecsas/ecsas-data';
+import { ProcedureStateService } from '../../state/procedure-state.service';
 
 @Component({
   selector: 'lib-detail-procedure-component',
@@ -45,6 +46,7 @@ export class DetailProcedureComponent implements OnInit {
   loadingProcudre = signal(false);
   procedure = signal<Partial<Procedure> | null>(null);
   private readonly _procedureGateway = inject(ProcedureGateway);
+  private readonly _procedureStateService = inject(ProcedureStateService);
 
   ngOnInit() {
     this.fetchProcedureById();
@@ -55,7 +57,7 @@ export class DetailProcedureComponent implements OnInit {
       this.loadingProcudre.set(true);
       const procedure = await this._procedureGateway.getProcedureById(this.procedureId());
       this.procedure.set(procedure);
-      console.log({ procedure });
+      this._procedureStateService.procedure.set(procedure);
     } catch (error) {
       console.error(error);
     } finally {
