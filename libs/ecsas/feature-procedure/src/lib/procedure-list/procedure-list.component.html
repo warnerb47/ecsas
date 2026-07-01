@@ -10,18 +10,48 @@
         <div class="max-w-6xl mx-auto">
 
             <div class="mb-10">
-                <h2 class="text-3xl font-bold text-[#1A365D]">Catalogue des Procédures</h2>
-                <p class="text-slate-500 mt-2">Sélectionnez une procédure pour enclencher un nouveau dossier de demande.</p>
+                <h2 class="text-3xl font-bold text-[#1A365D]">Procédures</h2>
+                <p class="text-slate-500 mt-2">Sélectionnez une procédure pour créer une nouvelle demande.</p>
             </div>
 
-            <lib-tabs [tabs]="tabs" [activeTabInput]="activeTab" (activeTabChange)="onTabChange($event)"></lib-tabs>
+            @if (loadingProcudreTypes()) {
+              <div class="flex space-x-2 items-center">
+                <i class="pi pi-spin pi-spinner"></i>
+                <div>
+                  Chargement des onglets
+                </div>
+              </div>
+            } @else{
+              <lib-tabs [tabs]="tabs()" [activeTabInput]="activeTab()" (activeTabChange)="onTabChange($event)"></lib-tabs>
+            }
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @for (procedure of procedures; track procedure.id) {
-                    <lib-procedure-card [procedure]="procedure" (procedureSelected)="onProcedureSelected($event)">
-                    </lib-procedure-card>
-                }
-            </div>
+            @if(loadingProcudres()) {
+              <div class="flex flex-col items-center justify-center">
+                <div class="text-secondary w-100 text-center">
+                    Chargement des procédures...
+                </div>
+                <i class="pi pi-spin pi-spinner text-2xl"></i>
+              </div>
+            }@else {
+              @if (filteredProcedures().length) {
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @for (procedure of filteredProcedures(); track procedure.id) {
+                      <lib-procedure-card [procedure]="procedure" (procedureSelected)="onProcedureSelected($event)">
+                      </lib-procedure-card>
+                    }
+                </div>
+              }@else {
+                <div class="flex flex-col space-y-4 w-full  items-center justify-center border-slate-100">
+                    <div class="text-secondary w-100 text-center">
+                        Aucune procédure disponible. Cliquez sur le bouton pour commencer.
+                    </div>
+                    <lib-button routerLink="/procedure/new-procedure" type="primary">
+                      <i class="pi pi-plus"></i>
+                      Nouvelle procédure
+                  </lib-button>
+                </div>
+              }
+            }
         </div>
     </div>
 </div>

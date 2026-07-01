@@ -1,6 +1,6 @@
-import { Component, input, model } from '@angular/core';
+import { Component, input, model, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {FormValueControl} from '@angular/forms/signals';
+import {FormValueControl, ValidationError, WithOptionalFieldTree} from '@angular/forms/signals';
 
 @Component({
   selector: 'lib-text-input',
@@ -13,4 +13,12 @@ export class TextInputComponent implements FormValueControl<string>{
   type = input<'text' | 'email' | 'password' | 'number' | 'date'>('text');
   placeholder = input<string>('');
   value = model('');
+
+  // Interaction state (touched)
+  readonly touched = model<boolean>(false);
+
+  // State inputs automatically populated by [formField]
+  readonly invalid = input<boolean>(false);
+  readonly errors = input<readonly WithOptionalFieldTree<ValidationError>[]>([]);
+  readonly disabled = input<boolean>(false);
 }

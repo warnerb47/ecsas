@@ -9,5 +9,5 @@ import { CommonModule } from '@angular/common';
 })
 export class BadgeComponent {
   @Input() type: 'primary' | 'secondary' = 'primary';
-  @Input() rounded: boolean = false;
+  @Input() rounded = false;
 }

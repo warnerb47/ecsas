@@ -1,59 +1,105 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { TopbarComponent, TabsComponent, ProcedureCardComponent, BreadcrumbItem, ButtonComponent } from '@org/ecsas/shared-ui';
-import { Procedure } from '@org/models';
+import {
+  TopbarComponent,
+  TabsComponent,
+  ProcedureCardComponent,
+  BreadcrumbItem,
+  ButtonComponent,
+} from '@org/ecsas/shared-ui';
+import { Procedure, ProcedureType } from '@org/models';
+import { ProcedureGateway } from '@org/ecsas/ecsas-data';
 
 @Component({
   selector: 'lib-procedure-list-component',
-  imports: [RouterLink, TopbarComponent, TabsComponent, ProcedureCardComponent, ButtonComponent],
+  imports: [
+    RouterLink,
+    TopbarComponent,
+    TabsComponent,
+    ProcedureCardComponent,
+    ButtonComponent,
+  ],
   templateUrl: './procedure-list.component.html',
 })
-export class ProcedureListComponent {
-  private readonly router = inject(Router);
-  tabs: string[] = ['Toutes', 'Commission Sociale', 'Religieux & Culturel', 'Sport & Loisirs'];
-  activeTab = 'Toutes';
+export class ProcedureListComponent implements OnInit {
+  private readonly _router = inject(Router);
+  private readonly _procedureGateway = inject(ProcedureGateway);
+  tabs = signal<string[]>([]);
+  activeTab = signal('Touts');
   breadcrumbItems: BreadcrumbItem[] = [
-    {label: 'Accueil', route: '/'},
-    {label: 'Procédures', route: '/procedure'},
-  ];
-  procedures: Procedure[] = [
-    {
-      id: '1',
-      name: 'Appel des Layennes',
-      description: 'Aide sociale exceptionnelle destinée aux pèlerins et résidents pour la célébration annuelle.',
-      begin: new Date('2025-01-15').toISOString(),
-      end: new Date('2025-06-30').toISOString(),
-      status: 'IN_PROGRESS',
-      type: 'LAYENNES',
-      applicationCount: 3,
-    },
-    {
-      id: '2',
-      name: 'Secours Médical',
-      description: "Prise en charge des frais d'hospitalisation et d'achat de médicaments pour les nécessiteux.",
-      begin: new Date('2025-02-01').toISOString(),
-      end: new Date('2025-12-31').toISOString(),
-      status: 'IN_PROGRESS',
-      type: 'MEDICAL',
-      applicationCount: 4,
-    },
-    {
-      id: '3',
-      name: 'Aide Tabaski 2024',
-      description: "Soutien aux familles vulnérables pour l'achat du bélier de la Tabaski.",
-      begin: new Date('2024-06-01').toISOString(),
-      end: new Date('2024-06-30').toISOString(),
-      status: 'COMPLETED',
-      type: 'TABASKI',
-      applicationCount: 0,
-    },
+    { label: 'Accueil', route: '/' },
+    { label: 'Procédures', route: '/procedure' },
   ];
 
-  onTabChange(tab: string) {
-    this.activeTab = tab;
+  procedures = signal<Partial<Procedure>[]>([]);
+  filteredProcedures = signal<Partial<Procedure>[]>([]);
+  loadingProcudres = signal(false);
+
+  procedureTypes = signal<Partial<ProcedureType>[]>([]);
+  loadingProcudreTypes = signal(false);
+
+  ngOnInit(): void {
+    this.initState();
   }
 
-  onProcedureSelected(procedure: Procedure) {
-    this.router.navigate(['/procedure/detail', procedure.id]);
+  async initState() {
+    this.fetchProcedureTypes();
+    this.fetchProcedures();
+  }
+
+  async fetchProcedures() {
+    try {
+      this.loadingProcudres.set(true);
+      const procedures = await this._procedureGateway.getProcedures();
+      this.procedures.set(procedures);
+      this.filteredProcedures.set(procedures);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.loadingProcudres.set(false);
+    }
+  }
+
+  async fetchProcedureTypes() {
+    try {
+      this.loadingProcudreTypes.set(true);
+      const procedureTypes = await this._procedureGateway.getProcedureTypes();
+      this.procedureTypes.set(procedureTypes);
+      const tabs: string[] = ['Touts'];
+      procedureTypes.forEach((type) => {
+        if (type.label) {
+          tabs.push(type.label);
+        }
+      });
+      this.tabs.set(tabs);
+      this.activeTab.set(tabs[0]);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.loadingProcudreTypes.set(false);
+    }
+  }
+
+  onTabChange(tab: string) {
+    this.activeTab.set(tab);
+    const procedureType = this.procedureTypes().find((type) => type.label === tab);
+    if (procedureType) {
+      this.filterByProcedureType(procedureType);
+    } else {
+      this.filteredProcedures.set(this.procedures());
+    }
+  }
+
+  filterByProcedureType(procedureType: Partial<ProcedureType>) {
+    this.filteredProcedures.set(
+      this.procedures().filter((procedure) => {
+        return procedure.type?.id === procedureType.id;
+      })
+    );
+
+  }
+
+  onProcedureSelected(procedure: Partial<Procedure>) {
+    this._router.navigate(['/procedure/detail', procedure.id]);
   }
 }

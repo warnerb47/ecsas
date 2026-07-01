@@ -20,6 +20,14 @@ CREATE TABLE IF NOT EXISTS core_applicant (
     updated_at TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS core_procedure_type (
+  id TEXT NOT NULL PRIMARY KEY,
+  label TEXT NOT NULL,
+  value TEXT NOT NULL,
+  color TEXT,
+  icon TEXT
+);
+
 CREATE TABLE IF NOT EXISTS core_procedure (
     id          TEXT                        NOT NULL PRIMARY KEY,
     name        TEXT                        NOT NULL,
@@ -29,8 +37,28 @@ CREATE TABLE IF NOT EXISTS core_procedure (
     status      TEXT                        NOT NULL,
     type        TEXT                        NOT NULL,
     created_at  TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at  TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP
+    updated_at  TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_procedure_type
+        FOREIGN KEY (type)
+        REFERENCES core_procedure_type(id)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT
 );
+
+-- Create the new child table with a Foreign Key
+CREATE TABLE IF NOT EXISTS core_procedure_document (
+  id TEXT NOT NULL PRIMARY KEY,
+  procedure_id TEXT NOT NULL,
+  name TEXT NOT NULL,
+  required INTEGER NOT NULL DEFAULT 0,
+  -- Define Foreign Key Constraint
+  CONSTRAINT fk_procedure FOREIGN KEY (procedure_id) REFERENCES core_procedure(id) ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
+-- Create an index on the foreign key column for faster lookups
+CREATE INDEX IF NOT EXISTS idx_procedure_document_procedure_id ON core_procedure_document(procedure_id);
+
 
 CREATE TABLE IF NOT EXISTS core_application (
     id           TEXT                        NOT NULL PRIMARY KEY,
