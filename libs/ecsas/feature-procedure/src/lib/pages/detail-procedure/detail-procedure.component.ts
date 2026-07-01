@@ -1,15 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { TopbarComponent, BreadcrumbItem, ButtonComponent } from '@org/ecsas/shared-ui';
 import { Procedure } from '@org/models';
 import { ApplicationStatisticsComponent, StatCard } from '../../components/application-statistics/application-statistics.component';
 import { ApplicationTableComponent } from '../../components/application-table/application-table.component';
+import { ProcedureGateway } from '@org/ecsas/ecsas-data';
 
 @Component({
   selector: 'lib-detail-procedure-component',
   imports: [ TopbarComponent, ApplicationStatisticsComponent, ApplicationTableComponent, ButtonComponent ],
   templateUrl: './detail-procedure.component.html',
 })
-export class DetailProcedureComponent {
+export class DetailProcedureComponent implements OnInit {
+  procedureId = input<string>('');
   tabs: string[] = ['Toutes', 'Commission Sociale', 'Religieux & Culturel', 'Sport & Loisirs'];
   activeTab = 'Toutes';
   breadcrumbItems: BreadcrumbItem[] = [
@@ -40,16 +42,28 @@ export class DetailProcedureComponent {
       iconTextColor: 'text-amber-600',
     },
   ];
+  loadingProcudre = signal(false);
+  procedure = signal<Partial<Procedure> | null>(null);
+  private readonly _procedureGateway = inject(ProcedureGateway);
 
-  onTabChange(tab: string) {
-    this.activeTab = tab;
+  ngOnInit() {
+    this.fetchProcedureById();
   }
 
-  onProcedureSelected(procedure: Procedure) {
-    console.log({ procedure });
+    async fetchProcedureById() {
+    try {
+      this.loadingProcudre.set(true);
+      const procedure = await this._procedureGateway.getProcedureById(this.procedureId());
+      this.procedure.set(procedure);
+      console.log({ procedure });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.loadingProcudre.set(false);
+    }
   }
 
   editProcedure() {
-    console.log('editProcedure');
+    console.log({edit: this.procedureId()});
   }
 }

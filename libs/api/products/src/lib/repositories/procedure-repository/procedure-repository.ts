@@ -1,6 +1,6 @@
 import { Procedure, ProcedurePayload, ProcedureType } from '@org/models';
 import Database from '@tauri-apps/plugin-sql';
-import { GET_PROCEDURE_TYPE_QUERY, GET_PROCEDURES_QUERY } from './queries';
+import { GET_PROCEDURE_QUERY_BY_ID, GET_PROCEDURE_TYPE_QUERY, GET_PROCEDURES_QUERY } from './queries';
 import { v4 as uuidv4 } from 'uuid';
 
 export class ProcedureRepository {
@@ -15,6 +15,24 @@ export class ProcedureRepository {
     await db.close();
   }
 
+  async getProcedureById(procedureId: string) {
+    const db = await this.openConnection();
+    if (!db) {
+      throw new Error('No database connection');
+    }
+    const procedures: Partial<Procedure>[] =
+      await db.select(GET_PROCEDURE_QUERY_BY_ID, [procedureId]);
+    const results =
+      (procedures.map((procedure) => {
+        return {
+          ...procedure,
+          ...this.parseKey({ entity: procedure, key: 'documents' }),
+          ...this.parseKey({ entity: procedure, key: 'type' }),
+        };
+      }) as Partial<Procedure>[]) ?? [];
+    await this.closeConnection(db);
+    return results[0];
+  }
   async getProcedures() {
     const db = await this.openConnection();
     if (!db) {
