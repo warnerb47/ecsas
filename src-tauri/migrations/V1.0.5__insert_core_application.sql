@@ -1,5 +1,13 @@
 INSERT INTO
-  core_application (id, applicant_id, procedure_id, mail_ref, status, state, amount)
+  core_application (
+    id,
+    applicant_id,
+    procedure_id,
+    mail_ref,
+    status,
+    state,
+    amount
+  )
 VALUES
   (
     'ccb69e44-f55e-4a11-b365-ff882b2ad6dc',

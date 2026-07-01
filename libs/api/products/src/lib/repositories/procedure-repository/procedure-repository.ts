@@ -1,22 +1,12 @@
 import { Procedure, ProcedurePayload, ProcedureType } from '@org/models';
-import Database from '@tauri-apps/plugin-sql';
 import { GET_PROCEDURE_QUERY_BY_ID, GET_PROCEDURE_TYPE_QUERY, GET_PROCEDURES_QUERY } from './queries';
 import { v4 as uuidv4 } from 'uuid';
+import { closeConnection, openConnection, parseKey } from '../db.utils';
 
 export class ProcedureRepository {
-  db: Database | null = null;
-
-  async openConnection() {
-    const db = await Database.load('sqlite:ecsas.db');
-    return db;
-  }
-
-  async closeConnection(db: Database) {
-    await db.close();
-  }
 
   async getProcedureById(procedureId: string) {
-    const db = await this.openConnection();
+    const db = await openConnection();
     if (!db) {
       throw new Error('No database connection');
     }
@@ -26,15 +16,15 @@ export class ProcedureRepository {
       (procedures.map((procedure) => {
         return {
           ...procedure,
-          ...this.parseKey({ entity: procedure, key: 'documents' }),
-          ...this.parseKey({ entity: procedure, key: 'type' }),
+          ...parseKey({ entity: procedure, key: 'documents' }),
+          ...parseKey({ entity: procedure, key: 'type' }),
         };
       }) as Partial<Procedure>[]) ?? [];
-    await this.closeConnection(db);
+    await closeConnection(db);
     return results[0];
   }
   async getProcedures() {
-    const db = await this.openConnection();
+    const db = await openConnection();
     if (!db) {
       throw new Error('No database connection');
     }
@@ -44,48 +34,38 @@ export class ProcedureRepository {
       (procedures.map((procedure) => {
         return {
           ...procedure,
-          ...this.parseKey({ entity: procedure, key: 'documents' }),
-          ...this.parseKey({ entity: procedure, key: 'type' }),
+          ...parseKey({ entity: procedure, key: 'documents' }),
+          ...parseKey({ entity: procedure, key: 'type' }),
         };
       }) as Partial<Procedure>[]) ?? [];
-    await this.closeConnection(db);
+    await closeConnection(db);
     return results;
   }
 
   async getProcedureTypes() {
-    const db = await this.openConnection();
+    const db = await openConnection();
     if (!db) {
       throw new Error('No database connection');
     }
     const procedureTypes: Partial<ProcedureType>[] = await db.select(
       GET_PROCEDURE_TYPE_QUERY,
     );
-    await this.closeConnection(db);
+    await closeConnection(db);
     return procedureTypes;
   }
 
   async seedQuery(query: string) {
-    const db = await this.openConnection();
+    const db = await openConnection();
     if (!db) {
       throw new Error('No database connection');
     }
     const result = await db.select(query);
-    await this.closeConnection(db);
+    await closeConnection(db);
     return result;
   }
 
-  private parseKey(params: { entity: Record<string, unknown>; key: string }) {
-    const { entity, key } = params;
-    if (key in entity) {
-      const pasedValue = JSON.parse(entity[key] as unknown as string);
-      const parsedResult = { [key]: pasedValue };
-      return parsedResult;
-    }
-    return {};
-  }
-
   async createProcedureWithDocuments(procedure: ProcedurePayload) {
-    const db = await this.openConnection();
+    const db = await openConnection();
     if (!db) {
       throw new Error('No database connection');
     }

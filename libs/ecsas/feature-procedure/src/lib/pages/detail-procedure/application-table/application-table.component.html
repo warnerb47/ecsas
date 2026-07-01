@@ -38,12 +38,12 @@
         </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
-        @for (app of applications; track app.id) {
+        @for (app of applications(); track app.id) {
         <tr class="hover:bg-slate-50 transition">
             <td class="px-6 py-4">
             <div class="flex items-center">
                 <div class="w-8 h-8 rounded bg-slate-100 text-[#1A365D] flex items-center justify-center mr-3 font-bold text-xs">
-                {{ getInitials(app.applicant.fullName ?? '') }}
+                {{ getInitials(app.applicant?.fullName ?? '') }}
                 </div>
                 <div>
                 <p class="font-bold">{{ app.applicant }}</p>
@@ -63,7 +63,7 @@
                 {{ app.status }}
             </span>
             </td>
-            <td class="px-6 py-4 font-semibold">{{ formatAmount(app.amount) }}</td>
+            <td class="px-6 py-4 font-semibold">{{ formatAmount(app?.amount ?? 0) }}</td>
             <td class="px-6 py-4">
                 <i class="pi pi-eye cursor-pointer"
                     [routerLink]="['/procedure/detail-application', app.id]"></i>

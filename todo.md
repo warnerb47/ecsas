@@ -16,7 +16,7 @@
 
 
 # Module application
-- add migration for application
+✅ add migration for application
 - init applicationRepository
 - init applicationGateway
 - Get applications on detail-procedure pages
