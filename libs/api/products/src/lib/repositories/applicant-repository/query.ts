@@ -1,6 +1,12 @@
 export const SEARCH_APPLICANT = `
 SELECT
-  id, full_name, nin, phone_number, address, status, created_at
+  id,
+  full_name as fullName,
+  nin,
+  phone_number as phoneNumber,
+  address,
+  status,
+  created_at
 FROM
   core_applicant
 WHERE

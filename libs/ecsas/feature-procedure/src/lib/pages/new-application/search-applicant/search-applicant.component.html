@@ -1,10 +1,71 @@
 <div class="flex flex-col justify-between h-full">
   <div class="flex items-center justify-center w-full">
-    <p-autocomplete class="w-full" placeholder="Rechercher par nom, CNI ou numéro de téléphone"
-      [dropdown]="true" [(ngModel)]="value" [suggestions]="items"
-      (completeMethod)="search($event)"
+    <p-select class="w-full" placeholder="Rechercher par nom, CNI ou numéro de téléphone"
+      [options]="applicants()"
+      [loading]="loadingApplicants()"
+      optionLabel="fullName"
+      [(ngModel)]="selectedApplicant"
+      filter="true"
+      (onFilter)="onFilter($event)"
       emptyMessage="Aucun resultat trouvé"
-    />
+      emptyFilterMessage="Aucun resultat trouve"
+    >
+    <ng-template let-selectedOption #selectedItem>
+      @if (selectedOption) {
+        <div class="flex items-center">
+            <div class="w-8 h-8 rounded bg-blue-100 text-blue-900 flex items-center justify-center mr-3 font-medium text-xs">
+              {{ selectedOption?.fullName[0].toUpperCase() + selectedOption?.fullName[1].toUpperCase() }}
+            </div>
+            <div>
+              <p class="font-bold">{{ selectedOption?.fullName }}</p>
+              <div class="flex space-x-4">
+                <div class="text-xs text-slate-400">
+                    <i class="pi pi-id-card mr-1" style="font-size: 0.7rem"></i>
+                    <span class="font-medium">
+                      {{ selectedOption?.nin }}
+                    </span>
+                </div>
+                <div class="text-xs text-slate-400">
+                    <i class="text-[5px] pi pi-phone mr-1" style="font-size: 0.7rem"></i>
+                    <span class="font-medium">
+                      {{ selectedOption?.phoneNumber }}
+                    </span>
+                </div>
+
+              </div>
+            </div>
+        </div>
+      }
+    </ng-template>
+
+    <ng-template let-applicant #item>
+      @if (applicant) {
+        <div class="flex items-center">
+            <div class="w-8 h-8 rounded bg-blue-100 text-blue-900 flex items-center justify-center mr-3 font-medium text-xs">
+              {{ applicant?.fullName[0].toUpperCase() + applicant?.fullName[1].toUpperCase() }}
+            </div>
+            <div>
+              <p class="font-bold">{{ applicant?.fullName }}</p>
+              <div class="flex space-x-4">
+                <div class="text-xs text-slate-400">
+                    <i class="pi pi-id-card mr-1" style="font-size: 0.7rem"></i>
+                    <span class="font-medium">
+                      {{ applicant?.nin }}
+                    </span>
+                </div>
+                <div class="text-xs text-slate-400">
+                    <i class="text-[5px] pi pi-phone mr-1" style="font-size: 0.7rem"></i>
+                    <span class="font-medium">
+                      {{ applicant?.phoneNumber }}
+                    </span>
+                </div>
+
+              </div>
+            </div>
+        </div>
+      }
+    </ng-template>
+</p-select>
   </div>
   <lib-button class="w-full" (click)="addDocument()" type="primary">
       Valider
