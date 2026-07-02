@@ -13,36 +13,85 @@
                         <div class="px-6 py-4 bg-slate-50 border-b border-slate-100">
                             <h3 class="text-sm font-black text-[#1A365D] uppercase tracking-wider">1. Informations du Bénéficiaire</h3>
                         </div>
-                        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="col-span-1">
-                                <lib-button type="primary" (click)="searchApplicant()">
-                                    <div class="flex items-center justify-center space-x-2">
-                                      <i class="pi pi-search"></i>
-                                      <span>Rechercher un bénéficiaire</span>
-                                    </div>
+                        @if (applicant()?.id) {
+                          <div class="p-6">
+                              <div class="flex justify-between items-start mb-4">
+                                  <div>
+                                      <h2 class="text-2xl font-bold font-black text-slate-800 uppercase tracking-tight">
+                                        {{applicant()?.fullName}}
+                                      </h2>
+                                      <p class="text-blue-600 font-bold text-sm">
+                                        {{applicant()?.status}}
+                                      </p>
+                                  </div>
+                                  <lib-button type="secondary" (click)="applicant.set(null)">
+                                    <i class="text-red-500 pi pi-trash"></i>
                                   </lib-button>
-                            </div>
-                            <div class="col-span-1">
-                                <lib-button type="secondary" (click)="createApplicant()">
-                                    <div class="flex items-center justify-center space-x-2">
-                                      <i class="pi pi-plus"></i>
-                                      <span>Créer un bénéficiaire</span>
+                              </div>
+
+                              <div class="grid grid-cols-2 gap-y-6 gap-x-4 border-t border-slate-50 pt-6">
+                                  <div>
+                                      <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Numéro d'identification National</p>
+                                      <p class="text-sm font-semibold text-slate-700">{{ applicant()?.nin }}</p>
+                                  </div>
+                                  <div>
+                                      <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Téléphone</p>
+                                      <p class="text-sm font-semibold text-slate-700">{{ applicant()?.phoneNumber }}</p>
+                                  </div>
+                                  <div>
+                                      <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Adresse Résidentielle</p>
+                                      <p class="text-sm font-semibold text-slate-700">{{ applicant()?.address }}</p>
+                                  </div>
+                                  @for (source of (applicant()?.sources ?? []); track $index) {
+                                    <div class="col-span-2 flex  items-center justify-between p-3 border border-slate-100 rounded-xl hover:border-blue-500 transition group cursor-pointer">
+                                        <div class="flex items-center">
+                                            <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded flex items-center justify-center font-bold text-xs mr-3">
+                                                <i class="pi pi-file text-lg"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-bold text-slate-700">{{ source?.name }}</p>
+                                                <p class="text-[10px] text-slate-400 uppercase font-medium">Ajouté le {{ source?.uploadedAt | date: 'dd/MM/yyyy' }}</p>
+                                            </div>
+                                        </div>
+                                        <button type="button" (click)="displaySource(source)" class="p-2 text-slate-400" type="button">
+                                            <i class="pi pi-eye"></i>
+                                        </button>
                                     </div>
-                                  </lib-button>
-                            </div>
-                            <!-- <div class="col-span-1">
-                                <lib-text-input label="Prénom & Nom" placeholder="Ex: Moussa Sall"></lib-text-input>
-                            </div>
-                            <div class="col-span-1">
-                                <lib-text-input label="Numéro CNI" placeholder="1 234 567 89 012"></lib-text-input>
-                            </div>
-                            <div class="col-span-1">
-                                <lib-phone-input label="Téléphone" placeholder="77 123 45 67"></lib-phone-input>
-                            </div>
-                            <div class="col-span-1">
-                                <lib-dropdown label="Quartier (Yoff)" placeholder="Sélectionner le quartier" [options]="quartiers"></lib-dropdown>
-                            </div> -->
-                        </div>
+                                  }
+                              </div>
+                          </div>
+                        }@else{
+                          <div class="p-6 grid grid-cols-2 gap-6">
+                              <div class="col-span-1">
+                                  <lib-button type="primary" (click)="searchApplicant()">
+                                      <div class="flex items-center justify-center space-x-2">
+                                        <i class="pi pi-search"></i>
+                                        <span>Rechercher un bénéficiaire</span>
+                                      </div>
+                                    </lib-button>
+                              </div>
+                              <div class="col-span-1">
+                                  <lib-button type="secondary" (click)="createApplicant()">
+                                      <div class="flex items-center justify-center space-x-2">
+                                        <i class="pi pi-plus"></i>
+                                        <span>Créer un bénéficiaire</span>
+                                      </div>
+                                    </lib-button>
+                              </div>
+                              <!-- <div class="col-span-1">
+                                  <lib-text-input label="Prénom & Nom" placeholder="Ex: Moussa Sall"></lib-text-input>
+                              </div>
+                              <div class="col-span-1">
+                                  <lib-text-input label="Numéro CNI" placeholder="1 234 567 89 012"></lib-text-input>
+                              </div>
+                              <div class="col-span-1">
+                                  <lib-phone-input label="Téléphone" placeholder="77 123 45 67"></lib-phone-input>
+                              </div>
+                              <div class="col-span-1">
+                                  <lib-dropdown label="Quartier (Yoff)" placeholder="Sélectionner le quartier" [options]="quartiers"></lib-dropdown>
+                              </div> -->
+                          </div>
+                        }
                     </div>
 
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">

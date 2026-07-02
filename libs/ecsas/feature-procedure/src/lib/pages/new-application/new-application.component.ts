@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   BreadcrumbItem,
@@ -8,10 +8,13 @@ import {
   DropdownComponent,
   ButtonComponent,
   UploadDocumentCardComponent,
+  PdfViewerComponent,
 } from '@org/ecsas/shared-ui';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SearchApplicantComponent } from './search-applicant/search-applicant.component';
 import { CreateApplicantComponent } from './create-applicant/create-applicant.component';
+import { Applicant, Source } from '@org/models';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'lib-new-application-component',
@@ -22,6 +25,7 @@ import { CreateApplicantComponent } from './create-applicant/create-applicant.co
     PhoneInputComponent,
     DropdownComponent,
     ButtonComponent,
+    DatePipe,
     UploadDocumentCardComponent,
   ],
   providers: [DialogService],
@@ -43,6 +47,8 @@ export class NewApplicationComponent {
     { label: 'Mbenguène', value: 'mbenguene' },
   ];
 
+  applicant = signal<Partial<Applicant> | null>(null);
+
   searchApplicant() {
     this._dialogService
       .open(SearchApplicantComponent, {
@@ -55,8 +61,7 @@ export class NewApplicationComponent {
       })
       ?.onClose.pipe()
       .subscribe((result) => {
-        if (!result) return;
-        console.log({ result });
+        this.applicant.set(result);
       });
   }
 
@@ -73,6 +78,20 @@ export class NewApplicationComponent {
       .subscribe((result) => {
         if (!result) return;
         console.log({ result });
+      });
+  }
+
+  displaySource(source: Partial<Source>) {
+    this._dialogService
+      .open(PdfViewerComponent, {
+        header: source.name,
+        width: '80vw',
+        height: '100vh',
+        focusOnShow: false,
+        closable: true,
+        closeOnEscape: true,
+        maximizable: true,
+        data: source,
       });
   }
 }

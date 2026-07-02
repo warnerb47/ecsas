@@ -10,4 +10,10 @@ export class ApplicantGateway {
   searchApplicant(query: string) {
     return this._applicantRepository.searchApplicant(query);
   }
+
+
+
+  getApplicantById(applicantId: string) {
+    return this._applicantRepository.getApplicantById(applicantId);
+  }
 }

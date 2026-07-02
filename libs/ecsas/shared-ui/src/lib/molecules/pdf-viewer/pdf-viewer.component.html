@@ -1,0 +1,13 @@
+@if (source()?.mimeType === 'application/pdf') {
+  <div class="flex items-center justify-center w-full h-full">
+    <iframe
+      class="h-full w-full p-0 m-0"
+      [src]="safeUrl()"
+      frameborder="0"
+    ></iframe>
+  </div>
+} @else if (source()?.mimeType?.includes('image')) {
+  <div class="flex items-center justify-center h-screen">
+    <img class="h-full object-contain" [src]="safeUrl()" alt="file" />
+  </div>
+}

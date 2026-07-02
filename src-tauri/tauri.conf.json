@@ -38,5 +38,10 @@
     "android": {
       "debugApplicationIdSuffix": ".debug"
     }
+  },
+    "plugins": {
+    "asset": {
+      "scope": ["$APPLOCALDATA/**/*"]
+    }
   }
 }
