@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { Source } from '@org/models';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { readFile } from '@tauri-apps/plugin-fs';
+import { DocumentManager } from '@org/api/products';
 
 @Component({
   selector: 'lib-pdf-viewer',
@@ -14,6 +14,7 @@ import { readFile } from '@tauri-apps/plugin-fs';
 export class PdfViewerComponent implements OnInit {
   private readonly _dialogConfig = inject(DynamicDialogConfig);
   private readonly _sanitizer = inject(DomSanitizer);
+  private readonly _documentManager = new DocumentManager();
 
   source = signal<Partial<Source> | null>(null);
   safeUrl = signal<SafeUrl | null>(null);
@@ -27,28 +28,23 @@ export class PdfViewerComponent implements OnInit {
     this.source.set(dialogData);
 
     const assetUrl = await this.getAssetUrl();
-    console.log({ assetUrl });
     this.safeUrl.set(
       this._sanitizer.bypassSecurityTrustResourceUrl(assetUrl ?? ''),
     );
-    console.log({ dialogData });
   }
 
   async getAssetUrl() {
-    // 1. Fetch file bytes from disk via Tauri
-    if (!this.source()?.path) {
+    const file = await this._documentManager.fetchFile({
+      fullPath: this.source()?.path ?? '',
+      mimeType: this.source()?.mimeType ?? '',
+    });
+    if (!file) {
       return null;
     }
-
-    const fileContents = await readFile(this.source()?.path ?? '');
-
-    // 2. Wrap it into a browser-native PDF blob
-    const blob = new Blob([fileContents], { type: this.source()?.mimeType });
-
-    // 3. Generate a standard, local blob:// URL
+    const arrayBuffer = await file.arrayBuffer();
+    const fileData = new Uint8Array(arrayBuffer);
+    const blob = new Blob([fileData], { type: file?.type });
     const generatedBlobUrl = URL.createObjectURL(blob);
     return generatedBlobUrl;
-
   }
-
 }

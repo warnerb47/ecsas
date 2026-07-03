@@ -16,5 +16,5 @@ export interface ApplicantPayload {
   phoneNumber: string;
   address: string;
   status: 'SOCIAL_CASE' | 'NON_ESSENTIAL' | 'RECENTLY_SUPPORTED' | 'INAPPROPRIATE_AGE' | 'DEFAULT';
-  sources: File | null;
+  source: File | null;
 }

@@ -54,16 +54,6 @@ export class ProcedureRepository {
     return procedureTypes;
   }
 
-  async seedQuery(query: string) {
-    const db = await openConnection();
-    if (!db) {
-      throw new Error('No database connection');
-    }
-    const result = await db.select(query);
-    await closeConnection(db);
-    return result;
-  }
-
   async createProcedureWithDocuments(procedure: ProcedurePayload) {
     const db = await openConnection();
     if (!db) {

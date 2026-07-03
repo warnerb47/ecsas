@@ -27,6 +27,7 @@ export class UploadDocumentCardComponent implements FormValueControl<File | null
   placeholder = input('');
   value = model<File | null>(null);
   accept = input<string>('');
+  rawFileName = input<string>('');
 
   // Interaction state (touched)
   readonly touched = model<boolean>(false);
@@ -53,6 +54,19 @@ export class UploadDocumentCardComponent implements FormValueControl<File | null
     const file = (event.target as HTMLInputElement).files?.[0] ?? null;
     this.selectedFile.emit(file ?? null);
     this.selectedFileName.set(file?.name ?? '');
-    this.value.set(file);
+    if (file && this.rawFileName()) {
+      const extension = file.type
+        ? `.${file.type.split('/').pop()}`
+        : '';
+      const newName = `${this.rawFileName()}${extension}`;
+      const renamedFile = new File([file], newName, {
+        type: file.type,
+        lastModified: file.lastModified,
+      });
+      this.value.set(renamedFile);
+      console.log({renamedFile, rawFileName: this.rawFileName(), mimeType: file.type, newName});
+    } else {
+      this.value.set(file);
+    }
   }
 }

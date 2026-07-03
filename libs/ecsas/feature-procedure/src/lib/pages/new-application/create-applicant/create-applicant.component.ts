@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { form, FormField, required, submit } from '@angular/forms/signals';
+import { ApplicantGateway } from '@org/ecsas/ecsas-data';
 import {
   ButtonComponent,
   DropdownComponent,
@@ -25,6 +26,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 })
 export class CreateApplicantComponent {
   private readonly _dialogRef = inject(DynamicDialogRef);
+  private readonly _applicantGateway = inject(ApplicantGateway);
   document = signal<{
     name: string;
     hint: string;
@@ -48,25 +50,35 @@ export class CreateApplicantComponent {
     nin: '',
     phoneNumber: '',
     address: '',
-    sources: null,
+    source: null,
     status: 'DEFAULT',
   });
 
   applicantForm = form(this.applicantModel, (f) => {
     required(f.fullName, { message: 'Le prénom et nom est requis' });
     required(f.nin, { message: 'Le NIN est requis' });
-    required(f.sources, { message: 'La CNI ou l\'extrait de naissance est requis' });
+    required(f.source, {
+      message: "La CNI ou l'extrait de naissance est requis",
+    });
   });
 
   async createApplicant() {
     console.log({ applicant: this.applicantModel() });
+    const applicantId = await this._applicantGateway.createApplicant(
+      this.applicantModel(),
+    );
+    return applicantId;
   }
 
   async submitForm() {
     await submit(this.applicantForm, async () => {
       if (this.applicantForm().valid()) {
-        await this.createApplicant();
-        // this._dialogRef?.close(this.applicantModel());
+        const applicantId = await this.createApplicant();
+        if (!applicantId) {
+          return;
+        }
+        const applicant = await this._applicantGateway.getApplicantById(applicantId);
+        this._dialogRef?.close(applicant);
       }
     });
   }

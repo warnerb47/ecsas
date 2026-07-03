@@ -1,11 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnDestroy, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   BreadcrumbItem,
   TopbarComponent,
-  TextInputComponent,
-  PhoneInputComponent,
-  DropdownComponent,
   ButtonComponent,
   UploadDocumentCardComponent,
   PdfViewerComponent,
@@ -15,6 +12,7 @@ import { SearchApplicantComponent } from './search-applicant/search-applicant.co
 import { CreateApplicantComponent } from './create-applicant/create-applicant.component';
 import { Applicant, Source } from '@org/models';
 import { DatePipe } from '@angular/common';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-new-application-component',
@@ -23,13 +21,14 @@ import { DatePipe } from '@angular/common';
     RouterLink,
     ButtonComponent,
     DatePipe,
-    UploadDocumentCardComponent
-],
+    UploadDocumentCardComponent,
+  ],
   providers: [DialogService],
   templateUrl: './new-application.component.html',
 })
-export class NewApplicationComponent {
+export class NewApplicationComponent implements OnDestroy {
   private readonly _dialogService = inject(DialogService);
+  private readonly _unsubscribe = new Subject<void>();
 
   breadcrumbItems: BreadcrumbItem[] = [
     { label: 'Accueil', route: '/' },
@@ -46,6 +45,11 @@ export class NewApplicationComponent {
 
   applicant = signal<Partial<Applicant> | null>(null);
 
+  ngOnDestroy() {
+    this._unsubscribe.next();
+    this._unsubscribe.complete();
+  }
+
   searchApplicant() {
     this._dialogService
       .open(SearchApplicantComponent, {
@@ -56,7 +60,7 @@ export class NewApplicationComponent {
         closable: true,
         closeOnEscape: true,
       })
-      ?.onClose.pipe()
+      ?.onClose.pipe(takeUntil(this._unsubscribe))
       .subscribe((result) => {
         this.applicant.set(result);
       });
@@ -71,24 +75,24 @@ export class NewApplicationComponent {
         closable: true,
         closeOnEscape: true,
       })
-      ?.onClose.pipe()
+      ?.onClose.pipe(takeUntil(this._unsubscribe))
       .subscribe((result) => {
         if (!result) return;
+        this.applicant.set(result);
         console.log({ result });
       });
   }
 
   displaySource(source: Partial<Source>) {
-    this._dialogService
-      .open(PdfViewerComponent, {
-        header: source.name,
-        width: '80vw',
-        height: '100vh',
-        focusOnShow: false,
-        closable: true,
-        closeOnEscape: true,
-        maximizable: true,
-        data: source,
-      });
+    this._dialogService.open(PdfViewerComponent, {
+      header: source.name,
+      width: '80vw',
+      height: '100vh',
+      focusOnShow: false,
+      closable: true,
+      closeOnEscape: true,
+      maximizable: true,
+      data: source,
+    });
   }
 }
