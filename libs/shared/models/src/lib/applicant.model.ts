@@ -6,6 +6,15 @@ export interface Applicant {
   nin: string;
   phoneNumber: string;
   address: string;
-  status: 'SOCIAL_CASE' | 'NON_ESSENTIAL' | 'RECENTLY_SUPPORTED' | 'INAPPROPRIATE_AGE';
+  status: 'SOCIAL_CASE' | 'NON_ESSENTIAL' | 'RECENTLY_SUPPORTED' | 'INAPPROPRIATE_AGE' | 'DEFAULT';
   sources: Partial<Source>[];
+}
+
+export interface ApplicantPayload {
+  fullName: string;
+  nin: string;
+  phoneNumber: string;
+  address: string;
+  status: 'SOCIAL_CASE' | 'NON_ESSENTIAL' | 'RECENTLY_SUPPORTED' | 'INAPPROPRIATE_AGE' | 'DEFAULT';
+  sources: File | null;
 }

@@ -1,7 +1,8 @@
-<div class="flex items-center justify-between p-4 mb-4 border-2 border-dashed rounded-2xl transition-all"
+<div class="flex items-center justify-between p-4 border-2 border-dashed rounded-2xl transition-all"
   [ngClass]="selectedFileName()
     ? 'border-emerald-200 bg-emerald-50/30'
-    : 'border-slate-100 hover:bg-blue-50/50 hover:border-blue-200 cursor-pointer group'">
+    : 'border-slate-100 hover:bg-blue-50/50 hover:border-blue-200 cursor-pointer group'"
+    [class.border-red-200]="invalid() && touched()">
   <div class="flex items-center" [ngClass]="selectedFileName() ? 'text-emerald-600' : ''">
     <div class="w-10 h-10 rounded flex items-center justify-center mr-4"
       [ngClass]="selectedFileName()
@@ -14,18 +15,32 @@
       }
     </div>
     <div>
-      <p class="text-sm font-bold text-slate-700">{{ documentName() }}</p>
-      @if (selectedFileName()) {
+      <p class="text-sm font-bold text-slate-700">{{ label() }}</p>
+      @if (value()) {
         <p class="text-[10px] text-emerald-600 font-bold uppercase">{{ selectedFileName() }}</p>
       } @else {
-        <p class="text-[10px] text-slate-400 font-medium uppercase">{{ formatHint() }}</p>
+        <p class="text-[10px] text-slate-400 font-medium uppercase">{{ placeholder() }}</p>
       }
     </div>
   </div>
-  @if (selectedFileName()) {
+  @if (value()) {
     <lib-button type="secondary" (click)="onUpload()">Modifier</lib-button>
   } @else {
     <lib-button type="primary" (click)="onUpload()">Charger</lib-button>
   }
-  <input #fileInput type="file" class="hidden" (change)="onFileSelected($event)" />
+  <input
+    #fileInput type="file" class="hidden" (change)="onFileSelected($event)"
+    (blur)="touched.set(true)"
+    [disabled]="disabled()"
+    [accept]="accept()"
+  />
 </div>
+
+  <!-- Internal Error Display -->
+  @if (invalid() && touched()) {
+    <div class="text-red-500 text-xs mt-1">
+      @for (error of errors(); track error.kind) {
+        <span>{{ error.message }}</span>
+      }
+    </div>
+  }

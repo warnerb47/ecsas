@@ -21,13 +21,10 @@ import { DatePipe } from '@angular/common';
   imports: [
     TopbarComponent,
     RouterLink,
-    TextInputComponent,
-    PhoneInputComponent,
-    DropdownComponent,
     ButtonComponent,
     DatePipe,
-    UploadDocumentCardComponent,
-  ],
+    UploadDocumentCardComponent
+],
   providers: [DialogService],
   templateUrl: './new-application.component.html',
 })
