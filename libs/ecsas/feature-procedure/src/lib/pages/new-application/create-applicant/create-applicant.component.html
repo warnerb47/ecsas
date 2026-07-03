@@ -1,7 +1,23 @@
 <div class="flex flex-col space-y-4">
-  <div class="flex items-center justify-center w-full space-x-4">
-    <lib-text-input [formField]="docForm.name" class="w-full" placeholder="Nom du document"></lib-text-input>
-    <lib-toggle-input [formField]="docForm.required" label="Obligatoire"></lib-toggle-input>
+  <div class="grid grid-cols-2 gap-y-6 gap-x-4 border-t border-slate-50 pt-6">
+    <div class="col-span-2">
+        <lib-text-input label="Prénom & Nom" placeholder="Ex: Moussa Sall"></lib-text-input>
+    </div>
+    <div class="col-span-2">
+        <lib-text-input label="Numéro d'Identification National (NIN)" placeholder="1 234 567 89 012"></lib-text-input>
+    </div>
+    <div class="col-span-2">
+        <lib-phone-input label="Téléphone" placeholder="77 123 45 67"></lib-phone-input>
+    </div>
+    <div class="col-span-2">
+        <lib-text-input label="Adresse" placeholder="Yoff Dagoudane, Dakar, Sénégal"></lib-text-input>
+    </div>
+    <div class="col-span-2">
+      <h1 class="text-xs font-bold text-slate-500 uppercase mb-2">
+        Liste des documents
+      </h1>
+      <lib-upload-document-card documentName="Photocopie CNI" formatHint="Recto et verso de la CNI"></lib-upload-document-card>
+    </div>
   </div>
   <lib-button class="w-full" (click)="addDocument()" type="primary">
       Valider

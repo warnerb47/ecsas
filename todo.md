@@ -22,8 +22,8 @@
 ✅ Get applications on detail-procedure pages
 - plug new-application-form:
  - create applicant
- - search applicant
- - remove selected applicant
+ ✅ search applicant
+ ✅ remove selected applicant
 - plug detail application
 - add application status filter
 
