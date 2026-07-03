@@ -1,4 +1,11 @@
-import { Component, input, OnInit, output, signal } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  input,
+  output,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../../atoms';
 
@@ -6,27 +13,27 @@ import { ButtonComponent } from '../../atoms';
   selector: 'lib-upload-document-card',
   standalone: true,
   imports: [CommonModule, ButtonComponent],
-  templateUrl: './upload-document-card.component.html'
+  templateUrl: './upload-document-card.component.html',
 })
-export class UploadDocumentCardComponent implements OnInit {
+export class UploadDocumentCardComponent {
   documentName = input.required<string>();
   documentHint = input<string>('');
   fileName = input<string>('');
   formatHint = input<string>('Format PDF ou JPG uniquement');
-  uploaded = output<void>();
-  modified = output<void>();
+  selectedFile = output<File | null>();
+  selectedFileName = signal(this.fileName() || '');
 
-  isUploaded = signal(false);
-
-  ngOnInit() {
-    this.isUploaded.set(!!this.fileName());
-  }
+  @ViewChild('fileInput', { static: false }) fileInput:
+    | ElementRef<HTMLInputElement>
+    | undefined;
 
   onUpload() {
-    this.uploaded.emit();
+    this.fileInput?.nativeElement?.click();
   }
 
-  onModify() {
-    this.modified.emit();
+  onFileSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    this.selectedFile.emit(file ?? null);
+    this.selectedFileName.set(file?.name ?? '');
   }
 }

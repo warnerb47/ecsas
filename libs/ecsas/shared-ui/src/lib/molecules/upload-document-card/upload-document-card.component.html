@@ -1,13 +1,13 @@
 <div class="flex items-center justify-between p-4 mb-4 border-2 border-dashed rounded-2xl transition-all"
-  [ngClass]="fileName()
+  [ngClass]="selectedFileName()
     ? 'border-emerald-200 bg-emerald-50/30'
     : 'border-slate-100 hover:bg-blue-50/50 hover:border-blue-200 cursor-pointer group'">
-  <div class="flex items-center" [ngClass]="fileName() ? 'text-emerald-600' : ''">
+  <div class="flex items-center" [ngClass]="selectedFileName() ? 'text-emerald-600' : ''">
     <div class="w-10 h-10 rounded flex items-center justify-center mr-4"
-      [ngClass]="fileName()
+      [ngClass]="selectedFileName()
         ? 'bg-emerald-50'
         : 'bg-white shadow-sm border border-slate-100 text-blue-600'">
-      @if (fileName()) {
+      @if (selectedFileName()) {
         <i class="pi pi-file-check text-bold"></i>
       } @else {
         <i class="pi pi-file text-bold"></i>
@@ -15,16 +15,17 @@
     </div>
     <div>
       <p class="text-sm font-bold text-slate-700">{{ documentName() }}</p>
-      @if (fileName()) {
-        <p class="text-[10px] text-emerald-600 font-bold uppercase">Fichier téléchargé : {{ fileName() }}</p>
+      @if (selectedFileName()) {
+        <p class="text-[10px] text-emerald-600 font-bold uppercase">{{ selectedFileName() }}</p>
       } @else {
         <p class="text-[10px] text-slate-400 font-medium uppercase">{{ formatHint() }}</p>
       }
     </div>
   </div>
-  @if (fileName()) {
-    <lib-button type="secondary" (click)="onModify()">Modifier</lib-button>
+  @if (selectedFileName()) {
+    <lib-button type="secondary" (click)="onUpload()">Modifier</lib-button>
   } @else {
     <lib-button type="primary" (click)="onUpload()">Charger</lib-button>
   }
+  <input #fileInput type="file" class="hidden" (change)="onFileSelected($event)" />
 </div>
