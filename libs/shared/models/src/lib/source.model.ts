@@ -4,4 +4,5 @@ export interface Source {
   path: string;
   mimeType: string;
   uploadedAt: string;
+  required: boolean;
 }

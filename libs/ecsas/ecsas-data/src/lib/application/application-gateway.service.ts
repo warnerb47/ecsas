@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApplicationRepository } from '@org/api/products';
+import { ApplicationPayload } from '@org/models';
 
 @Injectable({
   providedIn: 'root',
@@ -9,5 +10,9 @@ export class ApplicationGateway {
 
   getApplicationsByProcedureId(procedureId: string) {
     return this._applicationRepository.getApplicationsByProcedureId(procedureId);
+  }
+
+  createApplication(application: ApplicationPayload) {
+    return this._applicationRepository.createApplication(application);
   }
 }

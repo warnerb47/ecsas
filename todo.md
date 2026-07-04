@@ -20,10 +20,11 @@
 ✅ init applicationRepository
 ✅ init applicationGateway
 ✅ Get applications on detail-procedure pages
-- plug new-application-form:
- - create applicant
+✅ plug new-application-form:
+ ✅ create applicant
  ✅ search applicant
  ✅ remove selected applicant
+✅ create application
 - plug detail application
 - add application status filter
 

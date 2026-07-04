@@ -35,7 +35,7 @@ export class DetailProcedureComponent implements OnInit {
   breadcrumbItems: BreadcrumbItem[] = [
     { label: 'Accueil', route: '/' },
     { label: 'Procédures', route: '/procedure' },
-    { label: 'Détail', route: '/procedure/detail' },
+    { label: 'Détail', route: '.' },
   ];
   statCards: StatCard[] = [
     {

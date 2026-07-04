@@ -7,11 +7,11 @@
         <div class="flex-1 overflow-y-auto p-8">
             <div class="max-w-4xl mx-auto">
 
-                <form class="space-y-8">
+                <div class="space-y-8">
 
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                         <div class="px-6 py-4 bg-slate-50 border-b border-slate-100">
-                            <h3 class="text-sm font-black text-[#1A365D] uppercase tracking-wider">1. Informations du Bénéficiaire</h3>
+                            <h3 class="text-sm font-black text-[#1A365D] uppercase tracking-wider">1. Bénéficiaire</h3>
                         </div>
                         @if (applicant()?.id) {
                           <div class="p-6">
@@ -84,23 +84,39 @@
 
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                         <div class="px-6 py-4 bg-slate-50 border-b border-slate-100">
-                            <h3 class="text-sm font-black text-[#1A365D] uppercase tracking-wider">2. Documents à fournir</h3>
+                            <h3 class="text-sm font-black text-[#1A365D] uppercase tracking-wider">2. Demande</h3>
                         </div>
-                        <div class="p-6 space-y-4">
-                            <lib-upload-document-card label="Demande Manuscrite" placeholder="Format PDF ou JPG uniquement"></lib-upload-document-card>
-                            <lib-upload-document-card label="Certificat de Domicile" placeholder="Preuve de résidence à Yoff"></lib-upload-document-card>
-                            <lib-upload-document-card label="Photocopie CNI"></lib-upload-document-card>
-                        </div>
+                        @if (loadingProcedure()) {
+                          chargement...
+                        } @else {
+                          <div class="grid grid-cols-2 p-6 gap-4">
+                              <div class="col-span-1">
+                                  <lib-text-input [formField]="applicationForm.mailRef" label="Référence du courrier" placeholder="REF784G"></lib-text-input>
+                              </div>
+                              <div class="col-span-1">
+                                  <lib-number-input [formField]="applicationForm.amount" label="Montant" placeholder="25000"></lib-number-input>
+                              </div>
+                              @for (document of procedure()?.documents ?? []; track $index) {
+                                <div class="col-span-2">
+                                  <lib-upload-document-card
+                                    [label]="document?.name ??''"
+                                    [placeholder]="document.required ? 'Obligatoire' : 'Facultatif'"
+                                    (selectedFile)="addDocument($event, document)">
+                                  </lib-upload-document-card>
+                                </div>
+                              }
+                          </div>
+                        }
                     </div>
 
                     <div class="flex items-center justify-end space-x-4 pb-12">
                         <a routerLink="/procedure" class="inline-block">
                             <lib-button type="secondary">Annuler</lib-button>
                         </a>
-                        <lib-button type="primary">Enregistrer la demande</lib-button>
+                        <lib-button (click)="submitApplication()" type="primary">Enregistrer la demande</lib-button>
                     </div>
 
-                </form>
+                  </div>
             </div>
         </div>
     </div>
