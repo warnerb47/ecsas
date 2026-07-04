@@ -33,3 +33,8 @@
 
 # Module Setting
 
+# PoC
+- OCR & LLM
+- Backup
+- Qrcode mobile transferring 
+- P2P transfert

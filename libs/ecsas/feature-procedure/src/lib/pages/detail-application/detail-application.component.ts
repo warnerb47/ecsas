@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
@@ -21,19 +21,24 @@ import { map } from 'rxjs';
   ],
   templateUrl: './detail-application.component.html',
 })
-export class DetailApplicationComponent {
+export class DetailApplicationComponent implements OnInit {
   private readonly _activatedRoute = inject(ActivatedRoute);
   procedureId = toSignal(
     this._activatedRoute.paramMap.pipe(map((p) => p.get('procedureId'))),
     { initialValue: null },
   );
+  applicationId = toSignal(
+    this._activatedRoute.paramMap.pipe(map((p) => p.get('applicationId'))),
+    { initialValue: null },
+  );
+
   breadcrumbItems: BreadcrumbItem[] = [
     { label: 'Procédures', route: '/procedure' },
     {
       label: 'Détail procedure',
       route: `/procedure/detail/${this.procedureId()}`,
     },
-    { label: 'Détail demande', route: '/procedure/detail-application' },
+    { label: 'Détail demande', route: '.' },
   ];
 
   statuts = [
@@ -48,4 +53,11 @@ export class DetailApplicationComponent {
     { label: 'Dossier incomplet', value: 'incomplete' },
     { label: 'Demande du Maire', value: 'maire_request' },
   ];
+
+  ngOnInit(): void {
+    console.log({
+      procedureId: this.procedureId(),
+      applicationId: this.applicationId(),
+    })
+  }
 }

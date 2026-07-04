@@ -10,5 +10,5 @@ export const featureProcedureRoutes: Route[] = [
   { path: 'detail/:procedureId', component: DetailProcedureComponent },
   { path: 'new-procedure', component: NewProcedureComponent },
   { path: 'detail/:procedureId/new-application', component: NewApplicationComponent },
-  { path: 'detail-application/:id', component: DetailApplicationComponent },
+  { path: 'detail/:procedureId/detail-application/:applicationId', component: DetailApplicationComponent },
 ];

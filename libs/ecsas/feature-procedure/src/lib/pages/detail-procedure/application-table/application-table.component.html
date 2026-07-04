@@ -63,7 +63,7 @@
             <td class="px-6 py-4 font-semibold">{{ formatAmount(app?.amount ?? 0) }}</td>
             <td class="px-6 py-4">
                 <i class="pi pi-eye cursor-pointer"
-                    [routerLink]="['/procedure/detail-application', app.id]"></i>
+                    routerLink="/procedure/detail/{{procedureId()}}/detail-application/{{app.id}}"></i>
             </td>
         </tr>
         }
