@@ -9,10 +9,16 @@ export class ApplicationGateway {
   private readonly _applicationRepository = new ApplicationRepository();
 
   getApplicationsByProcedureId(procedureId: string) {
-    return this._applicationRepository.getApplicationsByProcedureId(procedureId);
+    return this._applicationRepository.getApplicationsByProcedureId(
+      procedureId,
+    );
   }
 
   createApplication(application: ApplicationPayload) {
     return this._applicationRepository.createApplication(application);
+  }
+
+  getApplicationById(applicationId: string) {
+    return this._applicationRepository.getApplicationById(applicationId);
   }
 }

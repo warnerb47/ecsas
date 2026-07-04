@@ -35,6 +35,7 @@
 
 # PoC
 - OCR & LLM
+- excel export
 - Backup
 - Qrcode mobile transferring 
 - P2P transfert

@@ -1,6 +1,6 @@
 import { Application, ApplicationDocument, ApplicationPayload } from '@org/models';
 import { closeConnection, openConnection, parseKey } from '../db.utils';
-import { GET_APPLICATIONS_BY_PROCEDURE_ID } from './query';
+import { GET_APPLICATION_BY_ID, GET_APPLICATIONS_BY_PROCEDURE_ID } from './query';
 import { v4 as uuidv4 } from 'uuid';
 import { DocumentManager } from '@org/api/products';
 
@@ -25,6 +25,27 @@ export class ApplicationRepository {
       }) ?? [];
     await closeConnection(db);
     return results;
+  }
+
+  async getApplicationById(applicationId: string) {
+    const db = await openConnection();
+    if (!db) {
+      throw new Error('No database connection');
+    }
+    const applications: Partial<Application>[] = await db.select(
+      GET_APPLICATION_BY_ID,
+      [applicationId],
+    );
+    const results =
+      applications.map((application) => {
+        return {
+          ...application,
+          ...parseKey({ entity: application, key: 'applicant' }),
+          ...parseKey({ entity: application, key: 'sources' }),
+        };
+      }) ?? [];
+    await closeConnection(db);
+    return results[0];
   }
 
   async createCoreSources(documents: ApplicationDocument[]) {

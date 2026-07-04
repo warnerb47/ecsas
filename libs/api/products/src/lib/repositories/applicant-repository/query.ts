@@ -24,7 +24,6 @@ SELECT
   core_applicant.phone_number as phoneNumber,
   core_applicant.address,
   core_applicant.status,
-  GROUP_CONCAT(core_source.name) AS sources,
   COALESCE(
       json_group_array(
           json_object(
