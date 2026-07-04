@@ -1,34 +1,46 @@
-<div class="flex items-center justify-between p-4 mb-4 border-2 border-dashed rounded-2xl transition-all"
-  [ngClass]="fileName()
+<div class="flex items-center justify-between p-4 border-2 border-dashed rounded-2xl transition-all"
+  [ngClass]="selectedFileName()
     ? 'border-emerald-200 bg-emerald-50/30'
-    : 'border-slate-100 hover:bg-blue-50/50 hover:border-blue-200 cursor-pointer group'">
-  <div class="flex items-center" [ngClass]="fileName() ? 'text-emerald-600' : ''">
+    : 'border-slate-100 hover:bg-blue-50/50 hover:border-blue-200 cursor-pointer group'"
+    [class.border-red-200]="invalid() && touched()">
+  <div class="flex items-center" [ngClass]="selectedFileName() ? 'text-emerald-600' : ''">
     <div class="w-10 h-10 rounded flex items-center justify-center mr-4"
-      [ngClass]="fileName()
+      [ngClass]="selectedFileName()
         ? 'bg-emerald-50'
-        : 'bg-white shadow-sm border border-slate-100 text-blue-600 group-hover:scale-110 transition-transform'">
-      @if (fileName()) {
-        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-        </svg>
+        : 'bg-white shadow-sm border border-slate-100 text-blue-600'">
+      @if (selectedFileName()) {
+        <i class="pi pi-file-check text-bold"></i>
       } @else {
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-        </svg>
+        <i class="pi pi-file text-bold"></i>
       }
     </div>
     <div>
-      <p class="text-sm font-bold text-slate-700">{{ documentName() }}</p>
-      @if (fileName()) {
-        <p class="text-[10px] text-emerald-600 font-bold uppercase">Fichier téléchargé : {{ fileName() }}</p>
+      <p class="text-sm font-bold text-slate-700">{{ label() }}</p>
+      @if (value()) {
+        <p class="text-[10px] text-emerald-600 font-bold uppercase">{{ selectedFileName() }}</p>
       } @else {
-        <p class="text-[10px] text-slate-400 font-medium uppercase">{{ formatHint() }}</p>
+        <p class="text-[10px] text-slate-400 font-medium uppercase">{{ placeholder() }}</p>
       }
     </div>
   </div>
-  @if (fileName()) {
-    <lib-button type="secondary" (click)="onModify()">Modifier</lib-button>
+  @if (value()) {
+    <lib-button type="secondary" (click)="onUpload()">Modifier</lib-button>
   } @else {
     <lib-button type="primary" (click)="onUpload()">Charger</lib-button>
   }
+  <input
+    #fileInput type="file" class="hidden" (change)="onFileSelected($event)"
+    (blur)="touched.set(true)"
+    [disabled]="disabled()"
+    [accept]="accept()"
+  />
 </div>
+
+  <!-- Internal Error Display -->
+  @if (invalid() && touched()) {
+    <div class="text-red-500 text-xs mt-1">
+      @for (error of errors(); track error.kind) {
+        <span>{{ error.message }}</span>
+      }
+    </div>
+  }

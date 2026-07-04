@@ -13,3 +13,34 @@
 - U
 - D
 - add btn to manage category
+
+
+# Module application
+✅ add migration for application
+✅ init applicationRepository
+✅ init applicationGateway
+✅ Get applications on detail-procedure pages
+✅ plug new-application-form:
+ ✅ create applicant
+ ✅ search applicant
+ ✅ remove selected applicant
+✅ create application
+✅ plug detail application
+- add update application status and state
+- add update applicant
+- add application status filter
+- add application-table pagination
+- add application-table search
+- add application-table advance filter
+
+
+# Module Dashboard
+
+# Module Setting
+
+# PoC
+- OCR & LLM
+- excel export
+- Backup
+- Qrcode mobile transferring 
+- P2P transfert

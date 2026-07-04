@@ -12,6 +12,10 @@ export class ProcedureGateway {
     return this._procedureRepository.getProcedures();
   }
 
+  getProcedureById(procedureId: string) {
+    return this._procedureRepository.getProcedureById(procedureId);
+  }
+
   getProcedureTypes() {
     return this._procedureRepository.getProcedureTypes();
   }

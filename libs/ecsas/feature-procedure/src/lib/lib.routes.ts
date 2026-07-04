@@ -7,8 +7,8 @@ import { DetailApplicationComponent } from './pages/detail-application/detail-ap
 
 export const featureProcedureRoutes: Route[] = [
   { path: '', component: ProcedureListComponent, pathMatch: 'full' },
-  { path: 'detail/:id', component: DetailProcedureComponent },
+  { path: 'detail/:procedureId', component: DetailProcedureComponent },
   { path: 'new-procedure', component: NewProcedureComponent },
-  { path: 'new-application', component: NewApplicationComponent },
-  { path: 'detail-application/:id', component: DetailApplicationComponent },
+  { path: 'detail/:procedureId/new-application', component: NewApplicationComponent },
+  { path: 'detail/:procedureId/detail-application/:applicationId', component: DetailApplicationComponent },
 ];

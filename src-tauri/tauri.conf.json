@@ -5,7 +5,7 @@
   "identifier": "ecsas",
   "build": {
     "frontendDist": "../dist/apps/ecsas/browser",
-    "devUrl": "http://localhost:4200",
+    "devUrl": "http://localhost:4201",
     "beforeDevCommand": "pnpm run dev",
     "beforeBuildCommand": "pnpm run build"
   },
@@ -37,6 +37,11 @@
     ],
     "android": {
       "debugApplicationIdSuffix": ".debug"
+    }
+  },
+    "plugins": {
+    "asset": {
+      "scope": ["$APPLOCALDATA/**/*"]
     }
   }
 }

@@ -1,0 +1,29 @@
+<div class="flex flex-col space-y-4">
+  <div class="grid grid-cols-2 gap-y-6 gap-x-4 border-t border-slate-50 pt-6">
+    <div class="col-span-2">
+        <lib-text-input [formField]="applicantForm.fullName" label="Prénom & Nom" placeholder="Ex: Moussa Fall"></lib-text-input>
+    </div>
+    <div class="col-span-2">
+        <lib-text-input [formField]="applicantForm.nin" label="Numéro d'Identification National (NIN)" placeholder="1 234 567 89 012"></lib-text-input>
+    </div>
+    <div class="col-span-2">
+        <lib-phone-input [formField]="applicantForm.phoneNumber" label="Téléphone" placeholder="77 123 45 67"></lib-phone-input>
+    </div>
+    <div class="col-span-2">
+        <lib-text-input [formField]="applicantForm.address" label="Adresse" placeholder="Yoff Dagoudane, Dakar, Sénégal"></lib-text-input>
+    </div>
+    <div class="col-span-2">
+        <lib-dropdown [formField]="applicantForm.status" label="Status" [options]="applicantStatus"></lib-dropdown>
+    </div>
+    <div class="col-span-2">
+      <h1 class="text-xs font-bold text-slate-500 uppercase mb-2">
+        Document
+      </h1>
+      <lib-upload-document-card [formField]="applicantForm.source" rawFileName="photocopie_cni" label="{{document().name}}" placeholder="{{document().hint}}"></lib-upload-document-card>
+    </div>
+  </div>
+  <lib-button class="w-full" (click)="submitForm()" type="primary">
+      Valider
+  </lib-button>
+
+</div>

@@ -1,32 +1,72 @@
-import { Component, input, OnInit, output, signal } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  input,
+  model,
+  OnInit,
+  output,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../../atoms';
+import {
+  FormValueControl,
+  ValidationError,
+  WithOptionalFieldTree,
+} from '@angular/forms/signals';
 
 @Component({
   selector: 'lib-upload-document-card',
   standalone: true,
   imports: [CommonModule, ButtonComponent],
-  templateUrl: './upload-document-card.component.html'
+  templateUrl: './upload-document-card.component.html',
 })
-export class UploadDocumentCardComponent implements OnInit {
-  documentName = input.required<string>();
-  documentHint = input<string>('');
-  fileName = input<string>('');
-  formatHint = input<string>('Format PDF ou JPG uniquement');
-  uploaded = output<void>();
-  modified = output<void>();
+export class UploadDocumentCardComponent implements FormValueControl<File | null> {
+  label = input('');
+  placeholder = input('');
+  value = model<File | null>(null);
+  accept = input<string>('');
+  rawFileName = input<string>('');
 
-  isUploaded = signal(false);
+  // Interaction state (touched)
+  readonly touched = model<boolean>(false);
 
-  ngOnInit() {
-    this.isUploaded.set(!!this.fileName());
-  }
+  // State inputs automatically populated by [formField]
+  readonly invalid = input<boolean>(false);
+  readonly errors = input<readonly WithOptionalFieldTree<ValidationError>[]>(
+    [],
+  );
+  readonly disabled = input<boolean>(false);
+
+  selectedFileName = signal('');
+  selectedFile = output<File | null>();
+
+  @ViewChild('fileInput', { static: false }) fileInput:
+    | ElementRef<HTMLInputElement>
+    | undefined;
 
   onUpload() {
-    this.uploaded.emit();
+    this.fileInput?.nativeElement?.click();
   }
 
-  onModify() {
-    this.modified.emit();
+  onFileSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0] ?? null;
+    this.selectedFile.emit(file ?? null);
+    this.selectedFileName.set(file?.name ?? '');
+    if (file && this.rawFileName()) {
+      const extension = file.type
+        ? `.${file.type.split('/').pop()}`
+        : '';
+      const newName = `${this.rawFileName()}${extension}`;
+      const renamedFile = new File([file], newName, {
+        type: file.type,
+        lastModified: file.lastModified,
+      });
+      this.value.set(renamedFile);
+      console.log({renamedFile, rawFileName: this.rawFileName(), mimeType: file.type, newName});
+    } else {
+      this.value.set(file);
+    }
   }
 }

@@ -1,15 +1,15 @@
 <!-- header -->
 <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
     <div>
-        <h2 class="text-2xl font-bold text-slate-800">Gestion des aides sociales</h2>
-        <p class="text-slate-500 text-sm">Consultez et traitez les dossiers entrants de la commune.</p>
+        <h2 class="text-2xl font-bold text-slate-800">{{ procedure()?.name }}</h2>
+        <p class="text-slate-500 text-sm">{{ procedure()?.description }}</p>
     </div>
     <div class="flex space-x-3">
         <lib-button routerLink="." type="secondary">
             <i class="pi pi-download"></i>
             Exporter (Excel)
         </lib-button>
-        <lib-button routerLink="/procedure/new-application" type="primary">
+        <lib-button routerLink="/procedure/detail/{{procedure()?.id}}/new-application" type="primary">
             <i class="pi pi-plus"></i>
             Nouvelle Demande
         </lib-button>
@@ -21,7 +21,6 @@
     <!-- filter -->
     <div class="bg-white p-4 border border-slate-100 flex items-end gap-2">
         <lib-search-input placeholder="Rechercher par nom, CNI ou numéro de dossier..."></lib-search-input>
-        <lib-dropdown [options]="procedureOptions"></lib-dropdown>
         <lib-dropdown [options]="statusOptions"></lib-dropdown>
         <lib-button type="secondary">
             <i class="pi pi-filter"></i>
@@ -31,42 +30,40 @@
         <thead class="bg-slate-50 text-slate-500 font-medium">
         <tr>
             <th class="px-6 py-4">Demandeur</th>
-            <th class="px-6 py-4">Type d'aide</th>
+            <th class="px-6 py-4">Téléphone</th>
             <th class="px-6 py-4">Statut</th>
             <th class="px-6 py-4">Montant</th>
             <th class="px-6 py-4">Actions</th>
         </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
-        @for (app of applications; track app.id) {
+        @for (app of applications(); track app.id) {
         <tr class="hover:bg-slate-50 transition">
             <td class="px-6 py-4">
             <div class="flex items-center">
                 <div class="w-8 h-8 rounded bg-slate-100 text-[#1A365D] flex items-center justify-center mr-3 font-bold text-xs">
-                {{ getInitials(app.applicant) }}
+                {{ getInitials(app.applicant?.fullName ?? '') }}
                 </div>
                 <div>
-                <p class="font-bold">{{ app.applicant }}</p>
-                <p class="text-[10px] text-slate-400 uppercase tracking-tighter">
-                    ID: {{ app.id }}
+                <p class="font-bold">{{ app.applicant?.fullName }}</p>
+                <p class="text-xs text-slate-400">
+                    {{ app.applicant?.nin }}
                 </p>
                 </div>
             </div>
             </td>
             <td class="px-6 py-4">
-            <span class="px-2 py-1 rounded text-[11px] font-bold" [ngClass]="getProcedureClasses(app.procedure)">
-                {{ app.procedure }}
-            </span>
+              {{app.applicant?.phoneNumber}}
             </td>
             <td class="px-6 py-4">
             <span class="px-3 py-1 rounded-full text-[11px] font-bold border" [ngClass]="getStatusClasses(app.status)">
-                {{ app.status }}
+                {{ getStatusLabel(app.status) }}
             </span>
             </td>
-            <td class="px-6 py-4 font-semibold">{{ formatAmount(app.amount) }}</td>
+            <td class="px-6 py-4 font-semibold">{{ formatAmount(app?.amount ?? 0) }}</td>
             <td class="px-6 py-4">
                 <i class="pi pi-eye cursor-pointer"
-                    [routerLink]="['/procedure/detail-application', app.id]"></i>
+                    routerLink="/procedure/detail/{{procedureId()}}/detail-application/{{app.id}}"></i>
             </td>
         </tr>
         }
