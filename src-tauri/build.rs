@@ -3,10 +3,9 @@ use std::io::Write;
 use std::path::Path;
 
 fn main() {
-    create_migrations();
+    // create_migrations();
     tauri_build::build()
 }
-
 
 // this method creates a migrations.rs file when building app
 fn create_migrations() {

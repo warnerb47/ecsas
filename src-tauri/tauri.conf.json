@@ -28,6 +28,8 @@
   "bundle": {
     "active": true,
     "targets": "all",
+    "resources": ["resources/mmproj-Qwen3VL-2B-Instruct-F16.gguf", "resources/Qwen3VL-2B-Instruct-Q8_0.gguf"],
+    "externalBin": ["binaries/llama-server/llama-server"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
