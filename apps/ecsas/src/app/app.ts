@@ -1,8 +1,7 @@
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { LlamaService } from '@org/api/products';
 import { SidebarComponent } from '@org/ecsas/shared-ui';
-import { Command, Child } from '@tauri-apps/plugin-shell';
 
 @Component({
   imports: [RouterModule, SidebarComponent],

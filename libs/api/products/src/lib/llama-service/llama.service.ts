@@ -1,5 +1,6 @@
 import { readFile } from '@tauri-apps/plugin-fs';
 import { Child, Command } from '@tauri-apps/plugin-shell';
+import { invoke } from '@tauri-apps/api/core';
 
 export class LlamaService {
   private apiUrl = 'http://localhost:8080/v1/chat/completions';
@@ -32,6 +33,15 @@ export class LlamaService {
       console.error(`Failed to start: ${error}`);
     }
   }
+  //   async startLlamaServer() {
+  //   try {
+  //     const result = await invoke<string>('start_llama_server');
+  //     console.log(result);
+  //   } catch (error) {
+  //     console.error(`Failed to start: ${error}`);
+  //     throw error;
+  //   }
+  // }
 
   stopLlamaServer() {
     if (this.llamaProcess) {
@@ -44,6 +54,15 @@ export class LlamaService {
       }
     }
   }
+
+  // async stopLlamaServer() {
+  //   try {
+  //     const result = await invoke<string>('stop_llama_server');
+  //     console.log(result);
+  //   } catch (error) {
+  //     console.error(`Failed to stop: ${error}`);
+  //   }
+  // }
 
   async test() {
     console.log('Testing llama-server...');

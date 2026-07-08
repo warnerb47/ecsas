@@ -1,4 +1,6 @@
 mod db;
+mod server;
+use std::sync::Mutex;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -21,6 +23,13 @@ pub fn run() {
             }
             Ok(())
         })
+        .manage(server::llama::LlamaState {
+            process: Mutex::new(None),
+        })
+        .invoke_handler(tauri::generate_handler![
+            server::llama::start_llama_server,
+            server::llama::stop_llama_server
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
