@@ -40,7 +40,13 @@
 
 # PoC
 - OCR & LLM
+  ✅ configure llama-server binaries
+  - handle llama-server lifecycle with rust backend
+  - start and stop llama-server from UI
+  - Init page design for image integration
+  - Extract image information and initialize form
 - excel export
 - Backup
+- Integrate Typesense
 - Qrcode mobile transferring 
 - P2P transfert
