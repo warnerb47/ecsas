@@ -10,7 +10,7 @@
 - update procedureGateway: add CRUD
 ✅ C
 ✅ R
-- U
+✅ U
 - D
 - add btn to manage category
 
