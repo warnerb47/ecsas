@@ -22,13 +22,7 @@ import {
 } from '@org/models';
 import { DatePipe } from '@angular/common';
 import { map, Subject, takeUntil } from 'rxjs';
-import {
-  applyEach,
-  form,
-  FormField,
-  required,
-  submit,
-} from '@angular/forms/signals';
+import { form, FormField, submit } from '@angular/forms/signals';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ApplicationGateway, ProcedureGateway } from '@org/ecsas/ecsas-data';
 
@@ -188,8 +182,7 @@ export class NewApplicationComponent implements OnInit, OnDestroy {
     for (const document of this.procedure()?.documents ?? []) {
       const found = this.applicationModel().sources?.find((source) => {
         return (
-          source.document.name === document.name &&
-          source.document.required
+          source.document.name === document.name && source.document.required
         );
       });
 
@@ -203,7 +196,7 @@ export class NewApplicationComponent implements OnInit, OnDestroy {
   async submitApplication() {
     await submit(this.applicationForm, async () => {
       if (this.applicationForm().valid() && this.validDocument()) {
-        const result =await this.createApplication(this.applicationModel());
+        const result = await this.createApplication(this.applicationModel());
         if (result) {
           this._router.navigateByUrl(`/procedure/detail/${this.procedureId()}`);
         }

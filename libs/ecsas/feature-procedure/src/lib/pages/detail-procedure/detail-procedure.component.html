@@ -1,6 +1,6 @@
 <div class="flex-1 flex flex-col overflow-hidden">
     <lib-topbar [breadcrumbItems]="breadcrumbItems" searchPlaceholder="Rechercher une demande ou un bénéficiaire...">
-        <lib-button (click)="editProcedure()" routerLink="/procedure/new-procedure" type="secondary">
+        <lib-button routerLink="/procedure/detail/{{procedureId()}}/update" type="secondary">
           <div class="flex items-center justify-center space-x-2">
             <i class="pi pi-file-edit"></i>
             <span>Modifier procédure</span>

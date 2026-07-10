@@ -9,7 +9,6 @@ import {
   TextAreaComponent,
   DateInputComponent,
 } from '@org/ecsas/shared-ui';
-import { DocumentCardComponent } from './document-card/document-card.component';
 import {
   Procedure,
   ProcedureDocument,
@@ -18,8 +17,8 @@ import {
 } from '@org/models';
 import { form, FormField, required, submit } from '@angular/forms/signals';
 import { ProcedureGateway } from '@org/ecsas/ecsas-data';
-import { ProcedureDocumentComponent } from './procedure-document/procedure-document.component';
 import { DialogService } from 'primeng/dynamicdialog';
+import { DocumentCardComponent, ProcedureDocumentComponent } from '../../components';
 
 @Component({
   selector: 'lib-new-procedure-component',

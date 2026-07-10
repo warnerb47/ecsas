@@ -1,4 +1,4 @@
-import { Procedure, ProcedurePayload, ProcedureType } from '@org/models';
+import { Procedure, ProcedureDocument, ProcedurePayload, ProcedureType } from '@org/models';
 import { GET_PROCEDURE_QUERY_BY_ID, GET_PROCEDURE_TYPE_QUERY, GET_PROCEDURES_QUERY } from './queries';
 import { v4 as uuidv4 } from 'uuid';
 import { closeConnection, openConnection, parseKey } from '../db.utils';
@@ -102,6 +102,120 @@ export class ProcedureRepository {
       return procedureResult;
     } catch (error) {
       console.error(error);
+      throw error;
+    }
+  }
+
+    async updateProcedure(procedure: ProcedurePayload) {
+    const db = await openConnection();
+    if (!db) {
+      throw new Error('No database connection');
+    }
+
+    const p = procedure;
+
+    try {
+      // 1. Update the parent procedure
+      await db.execute(
+        `UPDATE core_procedure
+         SET name = $1, description = $2, start_date = $3, end_date = $4, status = $5, type = $6
+         WHERE id = $7`,
+        [
+          p.name,
+          p.description,
+          p.startDate,
+          p.endDate,
+          p.status,
+          p.type,
+          p.id,
+        ],
+      );
+
+      return { success: true, id: procedure.id };
+    } catch (error) {
+      console.error('Error updating procedure:', error);
+      throw error;
+    }
+  }
+
+  async createProcedureDocument(payload: ProcedureDocument) {
+    const db = await openConnection();
+    if (!db) {
+      throw new Error('No database connection');
+    }
+    if (!payload.procedureId) {
+      throw new Error('Procedure ID is required');
+    }
+
+    const documentId = uuidv4();
+    const isRequired = payload.required ? 1 : 0;
+
+    try {
+      await db.execute(
+        `INSERT INTO core_procedure_document (id, procedure_id, name, required)
+         VALUES ($1, $2, $3, $4)`,
+        [documentId, payload.procedureId, payload.name, isRequired]
+      );
+
+      return { success: true, id: documentId };
+    } catch (error) {
+      console.error('Error adding document:', error);
+      throw error;
+    }
+  }
+
+  async updateProcedureDocument(payload: ProcedureDocument) {
+    const db = await openConnection();
+    if (!db) {
+      throw new Error('No database connection');
+    }
+    if (!payload.procedureId) {
+      throw new Error('Procedure ID is required');
+    }
+
+    const isRequired = payload.required ? 1 : 0;
+
+    try {
+      const result = await db.execute(
+        `UPDATE core_procedure_document
+         SET name = $1, required = $2
+         WHERE id = $3 AND procedure_id = $4`,
+        [payload.name, isRequired, payload.id, payload.procedureId]
+      );
+
+      // Optional: Check if a row was actually updated
+      if (result.rowsAffected === 0) {
+        throw new Error('Document not found or belongs to a different procedure');
+      }
+
+      return { success: true, id: payload.id };
+    } catch (error) {
+      console.error('Error updating document:', error);
+      throw error;
+    }
+  }
+
+  async deleteProcedureDocument(params: {procedureId: string; documentId: string}) {
+    const { procedureId, documentId } = params;
+    const db = await openConnection();
+    if (!db) {
+      throw new Error('No database connection');
+    }
+
+    try {
+      const result = await db.execute(
+        `DELETE FROM core_procedure_document
+         WHERE id = $1 AND procedure_id = $2`,
+        [documentId, procedureId]
+      );
+
+      if (result.rowsAffected === 0) {
+        throw new Error('Document not found or already deleted');
+      }
+
+      return { success: true, id: documentId };
+    } catch (error) {
+      console.error('Error deleting document:', error);
       throw error;
     }
   }

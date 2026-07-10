@@ -11,6 +11,7 @@ export const GET_PROCEDURES_QUERY = `
           COALESCE(
               json_group_array(
                   json_object(
+                      'id', d.id,
                       'name', d.name,
                       'required', d.required
                   )
@@ -40,6 +41,7 @@ export const GET_PROCEDURE_QUERY_BY_ID = `
           COALESCE(
               json_group_array(
                   json_object(
+                      'id', d.id,
                       'name', d.name,
                       'required', d.required
                   )

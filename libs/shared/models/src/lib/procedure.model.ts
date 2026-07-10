@@ -4,15 +4,19 @@ export interface Procedure {
   description: string;
   startDate: string;
   endDate: string;
-  status: 'IN_PROGRESS' | 'COMPLETED';
+  status: ProcedureStatus;
   type?: Partial<ProcedureType>;
   applicationCount?: number;
-  documents?: ProcedureDocument[];
+  documents?: Partial<ProcedureDocument>[];
 }
 
+export type ProcedureStatus = 'IN_PROGRESS' | 'COMPLETED';
+
 export interface ProcedureDocument {
+  id: string;
   name: string;
   required: boolean;
+  procedureId?: string;
 }
 
 export interface ProcedureType {
@@ -24,12 +28,13 @@ export interface ProcedureType {
 }
 
 export interface ProcedurePayload {
+  id?: string;
   name: string;
   description: string;
   startDate: string;
   endDate: string;
-  status: 'IN_PROGRESS' | 'COMPLETED';
+  status: ProcedureStatus;
   type: string;
   applicationCount?: number;
-  documents?: ProcedureDocument[];
+  documents?: Partial<ProcedureDocument>[];
 }

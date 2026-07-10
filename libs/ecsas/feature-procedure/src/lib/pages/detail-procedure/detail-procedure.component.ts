@@ -12,6 +12,7 @@ import {
 import { ApplicationTableComponent } from './application-table/application-table.component';
 import { ProcedureGateway } from '@org/ecsas/ecsas-data';
 import { ProcedureStateService } from '../../state/procedure-state.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'lib-detail-procedure-component',
@@ -20,6 +21,7 @@ import { ProcedureStateService } from '../../state/procedure-state.service';
     ApplicationStatisticsComponent,
     ApplicationTableComponent,
     ButtonComponent,
+    RouterLink,
   ],
   templateUrl: './detail-procedure.component.html',
 })
@@ -82,9 +84,5 @@ export class DetailProcedureComponent implements OnInit {
     } finally {
       this.loadingProcudre.set(false);
     }
-  }
-
-  editProcedure() {
-    console.log({ edit: this.procedureId() });
   }
 }
