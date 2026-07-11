@@ -10,30 +10,16 @@ CREATE TABLE IF NOT EXISTS core_user (
     created_at TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS core_procedure_type (
-  id TEXT NOT NULL PRIMARY KEY,
-  label TEXT NOT NULL,
-  value TEXT NOT NULL,
-  color TEXT,
-  icon TEXT
-);
 
 CREATE TABLE IF NOT EXISTS core_procedure (
     id          TEXT                        NOT NULL PRIMARY KEY,
     name        TEXT                        NOT NULL,
     description TEXT,
-    start_date  TEXT,
-    end_date    TEXT,
-    status      TEXT                        NOT NULL,
-    type        TEXT                        NOT NULL,
+    icon        TEXT                        DEFAULT 'pi pi-tag',
+    color       TEXT,
+    deleted     INTEGER                     NOT NULL DEFAULT 0,
     created_at  TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at  TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_procedure_type
-        FOREIGN KEY (type)
-        REFERENCES core_procedure_type(id)
-        ON UPDATE CASCADE
-        ON DELETE RESTRICT
+    updated_at  TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS core_procedure_document (

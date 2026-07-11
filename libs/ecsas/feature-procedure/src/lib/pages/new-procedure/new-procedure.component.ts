@@ -1,19 +1,15 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import {
   BreadcrumbItem,
   TopbarComponent,
   TextInputComponent,
-  DropdownComponent,
   ButtonComponent,
   TextAreaComponent,
-  DateInputComponent,
 } from '@org/ecsas/shared-ui';
 import {
   Procedure,
   ProcedureDocument,
-  ProcedurePayload,
-  ProcedureType,
 } from '@org/models';
 import { form, FormField, required, submit } from '@angular/forms/signals';
 import { ProcedureGateway } from '@org/ecsas/ecsas-data';
@@ -25,10 +21,8 @@ import { DocumentCardComponent, ProcedureDocumentComponent } from '../../compone
   imports: [
     RouterLink,
     TopbarComponent,
-    DateInputComponent,
     FormField,
     TextInputComponent,
-    DropdownComponent,
     ButtonComponent,
     TextAreaComponent,
     DocumentCardComponent,
@@ -36,19 +30,17 @@ import { DocumentCardComponent, ProcedureDocumentComponent } from '../../compone
   providers: [DialogService],
   templateUrl: './new-procedure.component.html',
 })
-export class NewProcedureComponent implements OnInit {
+export class NewProcedureComponent {
   private readonly _procedureGateway = inject(ProcedureGateway);
   private readonly _dialogService = inject(DialogService);
   private readonly _router = inject(Router);
 
   procedure: Procedure | null = null;
-  procedureModel = signal<ProcedurePayload>({
+  procedureModel = signal<Procedure>({
     name: '',
-    type: '',
     description: '',
-    startDate: new Date().toISOString(),
-    endDate: '',
-    status: 'IN_PROGRESS',
+    icon: '',
+    id: '',
   });
   procedureForm = form(this.procedureModel, (schemaPath) => {
     required(schemaPath.name, { message: 'Ce champ est obligatoire' });
@@ -59,31 +51,9 @@ export class NewProcedureComponent implements OnInit {
     { label: 'Nouvelle procédure', route: '/procedure/new-procedure' },
   ];
 
-  procedureTypes = signal<ProcedureType[]>([]);
   documents = signal<ProcedureDocument[]>([]);
   loadingSubmit = signal(false);
 
-  ngOnInit(): void {
-    this.fetchProcedureTypes();
-  }
-
-  async fetchProcedureTypes() {
-    try {
-      const procedureTypes =
-        (await this._procedureGateway.getProcedureTypes()) as ProcedureType[];
-      const formattedProcedureTypes = procedureTypes.map((type) => {
-        return {
-          ...type,
-          label: type.label,
-          value: type.id,
-        };
-      });
-      this.procedureTypes.set(formattedProcedureTypes);
-      this.procedureModel().type = formattedProcedureTypes[0].value;
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   addDocument() {
     this._dialogService
@@ -120,13 +90,9 @@ export class NewProcedureComponent implements OnInit {
       this.loadingSubmit.set(true);
       const payload = {
         ...this.procedureModel(),
-        endDate: new Date(this.procedureModel().endDate).toISOString(),
         documents: this.documents(),
       };
-      console.log({ procedure: payload });
-      const result =
-        await this._procedureGateway.createProcedureWithDocuments(payload);
-      console.log({ result });
+      await this._procedureGateway.createProcedureWithDocuments(payload);
       this._router.navigateByUrl('/procedure');
     } catch (error) {
       console.error(error);

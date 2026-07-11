@@ -4,17 +4,12 @@ import {
   BreadcrumbItem,
   TopbarComponent,
   TextInputComponent,
-  DropdownComponent,
   ButtonComponent,
   TextAreaComponent,
-  DateInputComponent,
 } from '@org/ecsas/shared-ui';
 import {
   Procedure,
   ProcedureDocument,
-  ProcedurePayload,
-  ProcedureStatus,
-  ProcedureType,
 } from '@org/models';
 import { form, FormField, required, submit } from '@angular/forms/signals';
 import { ProcedureGateway } from '@org/ecsas/ecsas-data';
@@ -25,17 +20,14 @@ import {
   DocumentCardComponent,
   ProcedureDocumentComponent,
 } from '../../components';
-import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'lib-update-procedure-component',
   imports: [
     RouterLink,
     TopbarComponent,
-    DateInputComponent,
     FormField,
     TextInputComponent,
-    DropdownComponent,
     ButtonComponent,
     TextAreaComponent,
     DocumentCardComponent,
@@ -49,13 +41,11 @@ export class UpdateProcedureComponent implements OnInit, OnDestroy {
   private readonly _router = inject(Router);
   private readonly _activatedRoute = inject(ActivatedRoute);
 
-  procedureModel = signal<ProcedurePayload>({
+  procedureModel = signal<Procedure>({
+    id: '',
     name: '',
-    type: '',
     description: '',
-    startDate: new Date().toISOString(),
-    endDate: '',
-    status: 'IN_PROGRESS',
+    icon: '',
   });
   procedureForm = form(this.procedureModel, (schemaPath) => {
     required(schemaPath.name, { message: 'Ce champ est obligatoire' });
@@ -64,10 +54,6 @@ export class UpdateProcedureComponent implements OnInit, OnDestroy {
     this._activatedRoute.paramMap.pipe(map((p) => p.get('procedureId'))),
     { initialValue: null },
   );
-  procedureStatus = [
-    { label: 'En cours', value: 'IN_PROGRESS' },
-    { label: 'Clôturé', value: 'COMPLETED' },
-  ];
 
   breadcrumbItems: BreadcrumbItem[] = [
     { label: 'Procédures', route: '/procedure' },
@@ -75,7 +61,6 @@ export class UpdateProcedureComponent implements OnInit, OnDestroy {
     { label: 'Modifier demande', route: '.' },
   ];
 
-  procedureTypes = signal<ProcedureType[]>([]);
   documents = signal<Partial<ProcedureDocument>[]>([]);
   loadingSubmit = signal(false);
   loadingProcudre = signal(false);
@@ -92,7 +77,6 @@ export class UpdateProcedureComponent implements OnInit, OnDestroy {
   }
 
   async initState() {
-    await this.fetchProcedureTypes();
     await this.fetchProcedureById();
     this.initFormState(this.procedure());
   }
@@ -110,43 +94,16 @@ export class UpdateProcedureComponent implements OnInit, OnDestroy {
     }
   }
 
-  async fetchProcedureTypes() {
-    try {
-      const procedureTypes =
-        (await this._procedureGateway.getProcedureTypes()) as ProcedureType[];
-      const formattedProcedureTypes = procedureTypes.map((type) => {
-        return {
-          ...type,
-          label: type.label,
-          value: type.id,
-        };
-      });
-      this.procedureTypes.set(formattedProcedureTypes);
-      this.procedureModel().type = formattedProcedureTypes[0].value;
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   initFormState(procedure: Partial<Procedure> | null) {
-    const update: ProcedurePayload = {
+    const update: Procedure = {
+      id: procedure?.id ?? '',
       name: procedure?.name ?? '',
-      type: procedure?.type?.id ?? '',
       description: procedure?.description ?? '',
-      startDate: procedure?.startDate ?? '',
-      endDate: this.formatDate(procedure?.endDate),
-      status: procedure?.status ?? 'IN_PROGRESS',
       documents: procedure?.documents ?? [],
+      icon: procedure?.icon ?? '',
     };
     this.procedureModel.set(update);
     this.documents.set(procedure?.documents ?? []);
-  }
-
-  formatDate(date: string | undefined) {
-    if (!date) {
-      return '';
-    }
-    return formatDate(date, 'yyyy-MM-dd', 'en-US');
   }
 
   addDocument() {
@@ -209,10 +166,9 @@ export class UpdateProcedureComponent implements OnInit, OnDestroy {
   async updateProcedure() {
     try {
       this.loadingSubmit.set(true);
-      const payload: ProcedurePayload = {
+      const payload: Procedure = {
         ...this.procedureModel(),
         id: this.procedureId() ?? '',
-        endDate: new Date(this.procedureModel().endDate).toISOString(),
       };
       await this._procedureGateway.updateProcedure(payload);
       this._router.navigateByUrl(`/procedure/detail/${this.procedureId()}`);

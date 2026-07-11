@@ -1,5 +1,5 @@
-import { Procedure, ProcedureDocument, ProcedurePayload, ProcedureType } from '@org/models';
-import { GET_PROCEDURE_QUERY_BY_ID, GET_PROCEDURE_TYPE_QUERY, GET_PROCEDURES_QUERY } from './queries';
+import { Procedure, ProcedureDocument } from '@org/models';
+import { GET_PROCEDURE_QUERY_BY_ID, GET_PROCEDURES_QUERY } from './queries';
 import { v4 as uuidv4 } from 'uuid';
 import { closeConnection, openConnection, parseKey } from '../db.utils';
 
@@ -42,19 +42,7 @@ export class ProcedureRepository {
     return results;
   }
 
-  async getProcedureTypes() {
-    const db = await openConnection();
-    if (!db) {
-      throw new Error('No database connection');
-    }
-    const procedureTypes: Partial<ProcedureType>[] = await db.select(
-      GET_PROCEDURE_TYPE_QUERY,
-    );
-    await closeConnection(db);
-    return procedureTypes;
-  }
-
-  async createProcedureWithDocuments(procedure: ProcedurePayload) {
+  async createProcedureWithDocuments(procedure: Procedure) {
     const db = await openConnection();
     if (!db) {
       throw new Error('No database connection');
@@ -66,16 +54,12 @@ export class ProcedureRepository {
     try {
       // 1. Insertion de la procédure parente
       const procedureResult = await db.execute(
-        `INSERT INTO core_procedure (id, name, description, start_date, end_date, status, type)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+        `INSERT INTO core_procedure (id, name, description)
+       VALUES ($1, $2, $3)`,
         [
           procedureId,
           p.name,
-          p.description,
-          p.startDate,
-          p.endDate,
-          p.status,
-          p.type,
+          p.description
         ],
       );
 
@@ -106,7 +90,7 @@ export class ProcedureRepository {
     }
   }
 
-    async updateProcedure(procedure: ProcedurePayload) {
+    async updateProcedure(procedure: Procedure) {
     const db = await openConnection();
     if (!db) {
       throw new Error('No database connection');
@@ -118,15 +102,11 @@ export class ProcedureRepository {
       // 1. Update the parent procedure
       await db.execute(
         `UPDATE core_procedure
-         SET name = $1, description = $2, start_date = $3, end_date = $4, status = $5, type = $6
-         WHERE id = $7`,
+         SET name = $1, description = $2
+         WHERE id = $3`,
         [
           p.name,
           p.description,
-          p.startDate,
-          p.endDate,
-          p.status,
-          p.type,
           p.id,
         ],
       );

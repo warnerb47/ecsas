@@ -77,10 +77,6 @@
                                     <p class="text-sm font-semibold text-slate-700">{{procedure()?.name}}</p>
                                 </div>
                                 <div>
-                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Date clôture de la procédure</p>
-                                    <p class="text-sm font-semibold text-slate-700">{{ procedure()?.endDate | date: 'dd/MM/yyyy' }}</p>
-                                </div>
-                                <div>
                                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Date de soumission</p>
                                     <p class="text-sm font-semibold text-slate-700">{{application()?.createdAt| date: 'dd/MM/yyyy'}}</p>
                                 </div>

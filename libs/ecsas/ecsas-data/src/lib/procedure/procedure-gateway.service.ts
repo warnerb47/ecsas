@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ProcedureRepository } from '@org/api/products';
-import { ProcedureDocument, ProcedurePayload } from '@org/models';
+import { Procedure, ProcedureDocument } from '@org/models';
 
 @Injectable({
   providedIn: 'root',
@@ -16,15 +16,11 @@ export class ProcedureGateway {
     return this._procedureRepository.getProcedureById(procedureId);
   }
 
-  getProcedureTypes() {
-    return this._procedureRepository.getProcedureTypes();
-  }
-
-  updateProcedure(payload: ProcedurePayload) {
+  updateProcedure(payload: Procedure) {
     return this._procedureRepository.updateProcedure(payload);
   }
 
-  createProcedureWithDocuments(payload: ProcedurePayload) {
+  createProcedureWithDocuments(payload: Procedure) {
     return this._procedureRepository.createProcedureWithDocuments(payload);
   }
 

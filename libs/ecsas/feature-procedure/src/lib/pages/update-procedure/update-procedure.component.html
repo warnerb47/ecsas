@@ -15,9 +15,6 @@
                         </h3>
                         <div class="grid grid-cols-2 gap-8">
                             <lib-text-input [formField]="procedureForm.name"  label="Nom de la procédure" placeholder="Ex: Secours Tabaski Octobre 2026"></lib-text-input>
-                            <lib-date-input [formField]="procedureForm.endDate" label="Date de clôture"></lib-date-input>
-                            <lib-dropdown [formField]="procedureForm.type" label="Type de procédure" [options]="procedureTypes()"></lib-dropdown>
-                            <lib-dropdown [formField]="procedureForm.status" label="Status de la procédure" [options]="procedureStatus"></lib-dropdown>
                             <lib-text-area [formField]="procedureForm.description" class="col-span-2" label="Description / Notes internes" placeholder="Objectif de cette aide..."></lib-text-area>
                         </div>
                     </div>
