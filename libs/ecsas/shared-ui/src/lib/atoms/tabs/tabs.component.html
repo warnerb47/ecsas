@@ -1,13 +1,14 @@
-<div class="flex space-x-1 mb-8 bg-slate-200/50 p-1 rounded-xl w-max">
-    @for (tab of tabs(); track tab) {
-        <button class="px-4 py-2 rounded-lg font-medium text-sm transition"
-            (click)="onTabClick(tab)"
-            [class.bg-white]="activeTab() === tab"
-            [class.text-[#1A365D]]="activeTab() === tab"
-            [class.shadow-sm]="activeTab() === tab"
-            [class.text-slate-600]="activeTab() !== tab"
-            [class.hover:bg-white/50]="activeTab() !== tab">
-            {{ tab }}
-        </button>
-    }
+<div
+  class="flex space-x-1 bg-slate-200/50 p-1 rounded-xl w-100 overflow-auto">
+  @for (tab of tabs(); track tab) {
+    <button class="px-4 py-2 rounded-lg font-medium text-sm transition shrink-0"
+        (click)="onTabClick(tab)"
+        [class.bg-white]="activeTab() === tab"
+        [class.text-[#1A365D]]="activeTab() === tab"
+        [class.shadow-sm]="activeTab() === tab"
+        [class.text-slate-600]="activeTab() !== tab"
+        [class.hover:bg-white]="activeTab() !== tab">
+        {{ tab }}
+    </button>
+  }
 </div>

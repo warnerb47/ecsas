@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import {
   TopbarComponent,
@@ -9,6 +9,9 @@ import {
 } from '@org/ecsas/shared-ui';
 import { Procedure, ProcedureType } from '@org/models';
 import { ProcedureGateway } from '@org/ecsas/ecsas-data';
+import { Subject, takeUntil } from 'rxjs';
+import { DialogService } from 'primeng/dynamicdialog';
+import { ProcedureTypeListComponent } from './procedure-type-list/procedure-type-list.component';
 
 @Component({
   selector: 'lib-procedure-list-component',
@@ -19,11 +22,13 @@ import { ProcedureGateway } from '@org/ecsas/ecsas-data';
     ProcedureCardComponent,
     ButtonComponent,
   ],
+  providers: [DialogService],
   templateUrl: './procedure-list.component.html',
 })
-export class ProcedureListComponent implements OnInit {
+export class ProcedureListComponent implements OnInit, OnDestroy {
   private readonly _router = inject(Router);
   private readonly _procedureGateway = inject(ProcedureGateway);
+  private readonly _dialogService = inject(DialogService);
   tabs = signal<string[]>([]);
   activeTab = signal('Touts');
   breadcrumbItems: BreadcrumbItem[] = [
@@ -37,9 +42,15 @@ export class ProcedureListComponent implements OnInit {
 
   procedureTypes = signal<Partial<ProcedureType>[]>([]);
   loadingProcudreTypes = signal(false);
+  unsubscribe = new Subject<void>();
 
   ngOnInit(): void {
     this.initState();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 
   async initState() {
@@ -82,7 +93,9 @@ export class ProcedureListComponent implements OnInit {
 
   onTabChange(tab: string) {
     this.activeTab.set(tab);
-    const procedureType = this.procedureTypes().find((type) => type.label === tab);
+    const procedureType = this.procedureTypes().find(
+      (type) => type.label === tab,
+    );
     if (procedureType) {
       this.filterByProcedureType(procedureType);
     } else {
@@ -94,12 +107,27 @@ export class ProcedureListComponent implements OnInit {
     this.filteredProcedures.set(
       this.procedures().filter((procedure) => {
         return procedure.type?.id === procedureType.id;
-      })
+      }),
     );
-
   }
 
   onProcedureSelected(procedure: Partial<Procedure>) {
     this._router.navigate(['/procedure/detail', procedure.id]);
+  }
+
+  openProcedureTypes() {
+    this._dialogService
+      .open(ProcedureTypeListComponent, {
+        header: 'Types de procédure',
+        width: '40vw',
+        height: '70vh',
+        focusOnShow: false,
+        closable: true,
+        closeOnEscape: true,
+      })
+      ?.onClose.pipe(takeUntil(this.unsubscribe))
+      .subscribe(() => {
+        this.fetchProcedureTypes();
+      });
   }
 }

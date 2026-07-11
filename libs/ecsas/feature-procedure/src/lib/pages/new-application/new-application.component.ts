@@ -148,7 +148,7 @@ export class NewApplicationComponent implements OnInit, OnDestroy {
     });
   }
 
-  addDocument(file: File | null, document: ProcedureDocument) {
+  addDocument(file: File | null, document: Partial<ProcedureDocument>) {
     if (!file) return;
     const fileName = document?.name ?? file.name;
     const newFile = new File([file], fileName, {

@@ -22,7 +22,14 @@
                 </div>
               </div>
             } @else{
-              <lib-tabs [tabs]="tabs()" [activeTabInput]="activeTab()" (activeTabChange)="onTabChange($event)"></lib-tabs>
+              <div class="flex items-center justify-between mb-8">
+                <lib-tabs [tabs]="tabs()" [activeTabInput]="activeTab()" (activeTabChange)="onTabChange($event)"></lib-tabs>
+                <div class="flex">
+                  <button (click)="openProcedureTypes()" class="px-4 py-2 rounded-lg font-medium text-sm transition shrink-0">
+                    <i class="pi pi-cog"></i>
+                  </button>
+                </div>
+              </div>
             }
 
             @if(loadingProcudres()) {
