@@ -25,6 +25,7 @@ export interface ProcedureType {
   value: string;
   color: string;
   icon: string;
+  isEditing?: boolean;
 }
 
 export interface ProcedurePayload {

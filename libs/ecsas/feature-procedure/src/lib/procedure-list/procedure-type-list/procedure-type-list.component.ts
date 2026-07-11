@@ -15,6 +15,7 @@ export class ProcedureTypeListComponent implements OnInit {
 
   procedureTypes = signal<Partial<ProcedureType>[]>([]);
   loadingProcudreTypes = signal(false);
+  isEditing = signal(false);
 
   ngOnInit() {
     this.fetchProcedureTypes();
@@ -30,6 +31,25 @@ export class ProcedureTypeListComponent implements OnInit {
     } finally {
       this.loadingProcudreTypes.set(false);
     }
+  }
+
+  onEdit(procedureType: Partial<ProcedureType>, index: number) {
+    this.procedureTypes.update((procedureTypes) => {
+      procedureTypes[index].isEditing = true;
+      return procedureTypes;
+    })
+  }
+
+  submtEdit(value: string, procedureType: Partial<ProcedureType>, index: number) {
+    this.updateProcedureType({...procedureType, label: value});
+    this.procedureTypes.update((procedureTypes) => {
+      procedureTypes[index].isEditing = false;
+      return procedureTypes;
+    })
+  }
+
+  updateProcedureType(procedureType: Partial<ProcedureType>) {
+    console.log(procedureType);
   }
 
 }
