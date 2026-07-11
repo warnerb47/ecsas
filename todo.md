@@ -13,6 +13,8 @@
 ✅ U
 - D
 - add btn to manage category
+  - refactoring: remove category keep only procedure and add filter by date
+  - refactoring: remove procedure.endDate, procedure.startDate, procedure.type, procedure.status
 
 
 # Module application
