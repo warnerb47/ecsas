@@ -11,17 +11,22 @@ export interface Application {
   createdAt: string;
   status: ApplicationStatus;
   state: ApplicationState;
-  amount: number;
+  requestedAmount: number;
+  receivedAmount: number;
+  comment?: string;
 }
 
 export interface ApplicationPayload {
+  id?: string;
   applicant: string;
   sources: ApplicationDocument[];
   procedure: string;
   mailRef: string;
-  status: ApplicationStatus;
-  state: ApplicationState;
-  amount: number | null;
+  status: ApplicationStatus | null;
+  state: ApplicationState | null;
+  requestedAmount: number | null;
+  receivedAmount: number | null;
+  comment: string;
 }
 
 export interface ApplicationDocument {
@@ -30,7 +35,7 @@ export interface ApplicationDocument {
 }
 
 export type ApplicationState =
-  | 'DEFAULT'
+  | 'COMPLIANT'
   | 'OUT_OF_ZONE'
   | 'INCOMPLETE'
   | 'MAYOR_REQUEST';

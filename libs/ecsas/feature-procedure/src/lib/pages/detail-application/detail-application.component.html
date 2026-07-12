@@ -109,10 +109,16 @@
                         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
                             <h3 class="text-sm font-black text-slate-400 tracking-widest mb-6">Progression du Workflow</h3>
                             <form class="grid gap-4">
-                                <lib-dropdown label="Statut de la demande" [options]="statuts"></lib-dropdown>
-                                <lib-dropdown label="État de conformité" [options]="conformities"></lib-dropdown>
-                                <lib-text-area label="Commentaires" placeholder="Ajouter des commentaires"></lib-text-area>
-                                <lib-button type="primary">Enregistrer</lib-button>
+                                <lib-dropdown [formField]="applicationForm.status" label="Statut de la demande" [options]="statuts"></lib-dropdown>
+                                <lib-dropdown [formField]="applicationForm.state" label="État de conformité" [options]="conformities"></lib-dropdown>
+                                <lib-text-area [formField]="applicationForm.comment" label="Commentaires" placeholder="Ajouter des commentaires"></lib-text-area>
+                                <lib-button (click)="submit()" [disabled]="loadingSubmit()" type="primary">
+                                  @if (loadingSubmit()) {
+                                    <i class="pi pi-spin pi-spinner"></i>
+                                  } @else {
+                                    <span>Enregistrer</span>
+                                  }
+                                </lib-button>
                             </form>
                         </div>
 
