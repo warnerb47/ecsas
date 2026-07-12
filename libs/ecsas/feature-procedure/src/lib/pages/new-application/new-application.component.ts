@@ -22,13 +22,7 @@ import {
 } from '@org/models';
 import { DatePipe } from '@angular/common';
 import { map, Subject, takeUntil } from 'rxjs';
-import {
-  applyEach,
-  form,
-  FormField,
-  required,
-  submit,
-} from '@angular/forms/signals';
+import { form, FormField, submit } from '@angular/forms/signals';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ApplicationGateway, ProcedureGateway } from '@org/ecsas/ecsas-data';
 
@@ -73,10 +67,12 @@ export class NewApplicationComponent implements OnInit, OnDestroy {
     applicant: '',
     procedure: '',
     sources: [] as ApplicationDocument[],
-    status: 'PENDING',
-    state: 'DEFAULT',
+    status: null,
+    state: null,
     mailRef: '',
-    amount: null,
+    comment: '',
+    receivedAmount: null,
+    requestedAmount: null,
   });
 
   applicationForm = form(this.applicationModel);
@@ -154,7 +150,7 @@ export class NewApplicationComponent implements OnInit, OnDestroy {
     });
   }
 
-  addDocument(file: File | null, document: ProcedureDocument) {
+  addDocument(file: File | null, document: Partial<ProcedureDocument>) {
     if (!file) return;
     const fileName = document?.name ?? file.name;
     const newFile = new File([file], fileName, {
@@ -176,10 +172,12 @@ export class NewApplicationComponent implements OnInit, OnDestroy {
       procedure: procedureId,
       applicant: this.applicant()?.id ?? '',
       mailRef: payload.mailRef ?? '',
-      amount: payload.amount ?? null,
+      requestedAmount: payload.requestedAmount ?? null,
+      receivedAmount:  null,
       status: 'PENDING',
-      state: 'DEFAULT',
+      state: null,
       sources: payload.sources ?? [],
+      comment: payload.comment ?? '',
     };
     return this._applicationGateway.createApplication(application);
   }
@@ -188,8 +186,7 @@ export class NewApplicationComponent implements OnInit, OnDestroy {
     for (const document of this.procedure()?.documents ?? []) {
       const found = this.applicationModel().sources?.find((source) => {
         return (
-          source.document.name === document.name &&
-          source.document.required
+          source.document.name === document.name && source.document.required
         );
       });
 
@@ -203,7 +200,7 @@ export class NewApplicationComponent implements OnInit, OnDestroy {
   async submitApplication() {
     await submit(this.applicationForm, async () => {
       if (this.applicationForm().valid() && this.validDocument()) {
-        const result =await this.createApplication(this.applicationModel());
+        const result = await this.createApplication(this.applicationModel());
         if (result) {
           this._router.navigateByUrl(`/procedure/detail/${this.procedureId()}`);
         }

@@ -21,4 +21,11 @@ export class ApplicationGateway {
   getApplicationById(applicationId: string) {
     return this._applicationRepository.getApplicationById(applicationId);
   }
+
+  updateApplication(params: {
+    applicationId: string;
+    application: Partial<ApplicationPayload>;
+  }) {
+    return this._applicationRepository.updateApplication(params);
+  }
 }

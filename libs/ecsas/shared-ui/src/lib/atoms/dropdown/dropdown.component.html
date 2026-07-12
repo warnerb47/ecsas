@@ -3,9 +3,19 @@
         {{label()}}
     </label>
     <select class="w-full px-4 py-3 pr-10 bg-slate-50 border border-slate-200 text-slate-600 rounded-lg focus:outline-none"
-        [value]="value()" (input)="setValue($event)">
+        [class.border-red-500]="invalid() && touched()"
+        [value]="value()" (input)="setValue($event)"
+        (blur)="touched.set(true)">
         @for (option of options(); track option.value) {
             <option [value]="option.value">{{option.label}}</option>
         }
     </select>
+    <!-- Internal Error Display -->
+    @if (invalid() && touched()) {
+      <div class="text-red-500 text-xs mt-1">
+        @for (error of errors(); track error.kind) {
+          <span>{{ error.message }}</span>
+        }
+      </div>
+    }
 </div>

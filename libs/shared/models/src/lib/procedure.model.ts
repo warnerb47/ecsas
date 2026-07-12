@@ -2,34 +2,16 @@ export interface Procedure {
   id: string;
   name: string;
   description: string;
-  startDate: string;
-  endDate: string;
-  status: 'IN_PROGRESS' | 'COMPLETED';
-  type?: Partial<ProcedureType>;
+  icon: string;
   applicationCount?: number;
-  documents?: ProcedureDocument[];
+  documents?: Partial<ProcedureDocument>[];
+  deleted?: boolean;
 }
+
 
 export interface ProcedureDocument {
+  id: string;
   name: string;
   required: boolean;
-}
-
-export interface ProcedureType {
-  id: string;
-  label: string;
-  value: string;
-  color: string;
-  icon: string;
-}
-
-export interface ProcedurePayload {
-  name: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  status: 'IN_PROGRESS' | 'COMPLETED';
-  type: string;
-  applicationCount?: number;
-  documents?: ProcedureDocument[];
+  procedureId?: string;
 }

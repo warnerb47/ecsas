@@ -10,30 +10,16 @@ CREATE TABLE IF NOT EXISTS core_user (
     created_at TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS core_procedure_type (
-  id TEXT NOT NULL PRIMARY KEY,
-  label TEXT NOT NULL,
-  value TEXT NOT NULL,
-  color TEXT,
-  icon TEXT
-);
 
 CREATE TABLE IF NOT EXISTS core_procedure (
     id          TEXT                        NOT NULL PRIMARY KEY,
     name        TEXT                        NOT NULL,
     description TEXT,
-    start_date  TEXT,
-    end_date    TEXT,
-    status      TEXT                        NOT NULL,
-    type        TEXT                        NOT NULL,
+    icon        TEXT                        DEFAULT 'pi pi-tag',
+    color       TEXT,
+    deleted     INTEGER                     NOT NULL DEFAULT 0,
     created_at  TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at  TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_procedure_type
-        FOREIGN KEY (type)
-        REFERENCES core_procedure_type(id)
-        ON UPDATE CASCADE
-        ON DELETE RESTRICT
+    updated_at  TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS core_procedure_document (
@@ -50,7 +36,6 @@ CREATE TABLE IF NOT EXISTS core_procedure_document (
 
 CREATE INDEX IF NOT EXISTS idx_procedure_document_procedure_id ON core_procedure_document(procedure_id);
 
--- ✅ FIXED: Removed trailing comma after 'uploaded_at'
 CREATE TABLE IF NOT EXISTS core_source (
     id             TEXT                        NOT NULL PRIMARY KEY,
     name           TEXT                        NOT NULL,
@@ -66,7 +51,8 @@ CREATE TABLE IF NOT EXISTS core_applicant (
     phone_number   TEXT,
     address        TEXT,
     status         TEXT,
-    created_at     TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at     TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at    TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS core_applicant_source (
@@ -85,16 +71,19 @@ CREATE TABLE IF NOT EXISTS core_applicant_source (
         ON UPDATE NO ACTION
 );
 
--- ✅ FIXED: Added missing comma between the two CONSTRAINT definitions
+
 CREATE TABLE IF NOT EXISTS core_application (
-    id             TEXT                        NOT NULL PRIMARY KEY,
-    applicant_id   TEXT                        NOT NULL,
-    procedure_id   TEXT                        NOT NULL,
-    mail_ref       TEXT,
-    created_at     TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    status         TEXT,
-    state          TEXT,
-    amount         REAL                        NOT NULL,
+    id               TEXT                        NOT NULL PRIMARY KEY,
+    applicant_id     TEXT                        NOT NULL,
+    procedure_id     TEXT                        NOT NULL,
+    mail_ref         TEXT,
+    created_at       TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at       TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status           TEXT,
+    state            TEXT,
+    comment          TEXT,
+    requested_amount REAL,
+    received_amount  REAL,
     CONSTRAINT fk__core_application__applicant_id
         FOREIGN KEY (applicant_id)
         REFERENCES core_applicant(id)

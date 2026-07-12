@@ -11,6 +11,7 @@ export interface Applicant {
 }
 
 export interface ApplicantPayload {
+  id?: string;
   fullName: string;
   nin: string;
   phoneNumber: string;

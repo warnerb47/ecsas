@@ -10,9 +10,12 @@
 - update procedureGateway: add CRUD
 ✅ C
 ✅ R
-- U
+✅ U
 - D
-- add btn to manage category
+✅ add btn to manage category
+  ✅ refactoring: update migrations
+  ✅ refactoring: remove category keep only procedure and add filter by date
+  ✅ refactoring: remove procedure.endDate, procedure.startDate, procedure.type, procedure.status
 
 
 # Module application
@@ -26,13 +29,21 @@
  ✅ remove selected applicant
 ✅ create application
 ✅ plug detail application
-- add update application status and state
-- add update applicant
+✅ add update applicant
+✅ add update application status and state
+✅ add update application comment
 - add application status filter
 - add application-table pagination
 - add application-table search
 - add application-table advance filter
+- fix: set dropdown option label to '' when value is null (it is selecting the first option label)
 
+# Refactoring
+- update applicant.sources to applicant.source (applicant have only one source the CNI)
+- add error handling for all shared-ui input
+
+# Database
+- use transaction for commands
 
 # Module Dashboard
 

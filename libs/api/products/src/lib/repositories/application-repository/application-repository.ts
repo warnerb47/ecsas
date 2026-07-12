@@ -1,6 +1,17 @@
-import { Application, ApplicationDocument, ApplicationPayload } from '@org/models';
-import { closeConnection, openConnection, parseKey } from '../db.utils';
-import { GET_APPLICATION_BY_ID, GET_APPLICATIONS_BY_PROCEDURE_ID } from './query';
+import {
+  Application,
+  ApplicationDocument,
+  ApplicationPayload,
+} from '@org/models';
+import {
+  closeConnection,
+  openConnection,
+  parseKey,
+} from '../db.utils';
+import {
+  GET_APPLICATION_BY_ID,
+  GET_APPLICATIONS_BY_PROCEDURE_ID,
+} from './query';
 import { v4 as uuidv4 } from 'uuid';
 import { DocumentManager } from '@org/api/products';
 
@@ -103,9 +114,10 @@ export class ApplicationRepository {
         mail_ref,
         status,
         state,
-        amount
+        requested_amount,
+        comment
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
       [
         applicationId,
         application.applicant,
@@ -113,14 +125,62 @@ export class ApplicationRepository {
         application.mailRef,
         application.status,
         application.state,
-        application.amount,
+        application.requestedAmount,
+        application.comment,
       ],
     );
     if (!result.rowsAffected) {
-      throw new Error('core_applicant_source creation failed');
+      throw new Error('core_applicant creation failed');
     }
     await closeConnection(db);
     return applicationId;
+  }
+
+  async updateApplication(params: {
+    applicationId: string;
+    application: Partial<ApplicationPayload>;
+  }) {
+    const { applicationId, application } = params;
+    const db = await openConnection();
+    if (!db) {
+      throw new Error('No database connection');
+    }
+
+    try {
+      const result = await db.execute(
+        `
+      UPDATE core_application
+      SET
+        applicant_id = $1,
+        procedure_id = $2,
+        mail_ref = $3,
+        status = $4,
+        state = $5,
+        requested_amount = $6,
+        received_amount = $7,
+        comment = $8
+      WHERE id = $9`,
+        [
+          application.applicant,
+          application.procedure,
+          application.mailRef,
+          application.status,
+          application.state,
+          application.requestedAmount,
+          application.receivedAmount,
+          application.comment,
+          applicationId,
+        ],
+      );
+
+      if (!result.rowsAffected || result.rowsAffected === 0) {
+        throw new Error('core_application update failed - no rows affected');
+      }
+
+      return applicationId;
+    } finally {
+      await closeConnection(db);
+    }
   }
 
   async createCoreApplicationSource(params: {

@@ -55,7 +55,7 @@ export class ApplicationTableComponent implements OnInit {
       return;
     }
     if (!this.procedure()?.id) {
-      await this.fetchProcedureById(this.procedureId()!);
+      await this.fetchProcedureById(this.procedureId() ?? '');
     }
     await this.fetchApplications();
   }

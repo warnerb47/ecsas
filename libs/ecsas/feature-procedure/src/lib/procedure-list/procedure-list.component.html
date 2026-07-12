@@ -14,16 +14,6 @@
                 <p class="text-slate-500 mt-2">Sélectionnez une procédure pour créer une nouvelle demande.</p>
             </div>
 
-            @if (loadingProcudreTypes()) {
-              <div class="flex space-x-2 items-center">
-                <i class="pi pi-spin pi-spinner"></i>
-                <div>
-                  Chargement des onglets
-                </div>
-              </div>
-            } @else{
-              <lib-tabs [tabs]="tabs()" [activeTabInput]="activeTab()" (activeTabChange)="onTabChange($event)"></lib-tabs>
-            }
 
             @if(loadingProcudres()) {
               <div class="flex flex-col items-center justify-center">
@@ -33,9 +23,9 @@
                 <i class="pi pi-spin pi-spinner text-2xl"></i>
               </div>
             }@else {
-              @if (filteredProcedures().length) {
+              @if (procedures().length) {
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @for (procedure of filteredProcedures(); track procedure.id) {
+                    @for (procedure of procedures(); track procedure.id) {
                       <lib-procedure-card [procedure]="procedure" (procedureSelected)="onProcedureSelected($event)">
                       </lib-procedure-card>
                     }

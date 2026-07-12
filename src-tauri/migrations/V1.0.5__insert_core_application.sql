@@ -6,7 +6,8 @@ INSERT INTO
     mail_ref,
     status,
     state,
-    amount
+    requested_amount,
+    received_amount
   )
 VALUES
   (
@@ -16,5 +17,6 @@ VALUES
     'REF-767G56',
     'APPROVED',
     NULL,
-    25000
+    25000,
+    15000
   );

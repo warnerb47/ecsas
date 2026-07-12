@@ -8,7 +8,9 @@ SELECT
   a.created_at as createdAt,
   a.status,
   a.state,
-  a.amount
+  a.requested_amount as requestedAmount,
+  a.received_amount as receivedAmount,
+  a.comment
 FROM
   core_application a
   JOIN core_applicant apt ON a.applicant_id = apt.id
@@ -39,7 +41,9 @@ SELECT
   a.created_at as createdAt,
   a.status,
   a.state,
-  a.amount
+  a.requested_amount as requestedAmount,
+  a.received_amount as receivedAmount,
+  a.comment
 FROM
   core_application a
   JOIN core_applicant apt ON a.applicant_id = apt.id
