@@ -36,7 +36,6 @@ CREATE TABLE IF NOT EXISTS core_procedure_document (
 
 CREATE INDEX IF NOT EXISTS idx_procedure_document_procedure_id ON core_procedure_document(procedure_id);
 
--- ✅ FIXED: Removed trailing comma after 'uploaded_at'
 CREATE TABLE IF NOT EXISTS core_source (
     id             TEXT                        NOT NULL PRIMARY KEY,
     name           TEXT                        NOT NULL,
@@ -72,16 +71,18 @@ CREATE TABLE IF NOT EXISTS core_applicant_source (
         ON UPDATE NO ACTION
 );
 
--- ✅ FIXED: Added missing comma between the two CONSTRAINT definitions
+
 CREATE TABLE IF NOT EXISTS core_application (
-    id             TEXT                        NOT NULL PRIMARY KEY,
-    applicant_id   TEXT                        NOT NULL,
-    procedure_id   TEXT                        NOT NULL,
-    mail_ref       TEXT,
-    created_at     TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    status         TEXT,
-    state          TEXT,
-    amount         REAL                        NOT NULL,
+    id               TEXT                        NOT NULL PRIMARY KEY,
+    applicant_id     TEXT                        NOT NULL,
+    procedure_id     TEXT                        NOT NULL,
+    mail_ref         TEXT,
+    created_at       TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status           TEXT,
+    state            TEXT,
+    comment          TEXT,
+    requested_amount REAL,
+    received_amount  REAL,
     CONSTRAINT fk__core_application__applicant_id
         FOREIGN KEY (applicant_id)
         REFERENCES core_applicant(id)
