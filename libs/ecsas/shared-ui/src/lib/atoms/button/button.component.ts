@@ -9,4 +9,5 @@ import { NgClass } from '@angular/common';
 })
 export class ButtonComponent {
   type = input<'primary' | 'secondary'>();
+  disabled = input<boolean>(false);
 }
