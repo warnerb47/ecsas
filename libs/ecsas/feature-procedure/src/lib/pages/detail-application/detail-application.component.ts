@@ -17,7 +17,8 @@ import {
 } from '@org/ecsas/shared-ui';
 import { Applicant, Application, Procedure, Source } from '@org/models';
 import { DialogService } from 'primeng/dynamicdialog';
-import { map } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
+import { UpdateApplicantComponent } from './update-applicant/update-applicant.component';
 
 @Component({
   selector: 'lib-detail-application-component',
@@ -38,6 +39,7 @@ export class DetailApplicationComponent implements OnInit {
   private readonly _applicationGateway = inject(ApplicationGateway);
   private readonly _applicantGateway = inject(ApplicantGateway);
   private readonly _dialogService = inject(DialogService);
+  private readonly _unsubscribe = new Subject<void>();
 
   procedureId = toSignal(
     this._activatedRoute.paramMap.pipe(map((p) => p.get('procedureId'))),
@@ -100,7 +102,6 @@ export class DetailApplicationComponent implements OnInit {
         this.applicationId() ?? '',
       );
       this.application.set(application);
-      console.log({ application });
     } catch (error) {
       console.error(error);
     }
@@ -129,6 +130,19 @@ export class DetailApplicationComponent implements OnInit {
     });
   }
   editApplicant() {
-    console.log('edit applicant')
+    this._dialogService
+      .open(UpdateApplicantComponent, {
+        header: 'Modifier le bénéficiaire',
+        width: '40vw',
+        focusOnShow: false,
+        closable: true,
+        closeOnEscape: true,
+        data: this.applicant(),
+      })
+      ?.onClose.pipe(takeUntil(this._unsubscribe))
+      .subscribe((result) => {
+        if (!result) return;
+        this.applicant.set(result);
+      });
   }
 }

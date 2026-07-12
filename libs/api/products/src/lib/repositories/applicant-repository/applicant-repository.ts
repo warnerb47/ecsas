@@ -66,6 +66,60 @@ export class ApplicantRepository {
     return sourceId;
   }
 
+  async updateCoreSource(params: { id: string; file?: File }) {
+    const { id, file } = params;
+    let fullPath: string | undefined;
+    let mimeType: string | undefined;
+    let fileName: string | undefined;
+
+    if (file) {
+      fileName = file.name;
+      mimeType = file.type;
+      fullPath = `${this._documentManager.appDataConfig.applicantFolder.path}/${file.name}`;
+
+      const uploaded = await this._documentManager.uploadFile({
+        file,
+        fullPath,
+      });
+      if (!uploaded) {
+        throw new Error('File upload failed during update');
+      }
+    }
+
+    const db = await openConnection();
+    if (!db) {
+      throw new Error('No database connection');
+    }
+
+    try {
+      let result;
+
+      if (file) {
+        result = await db.execute(
+          `UPDATE core_source
+         SET name = $1, path = $2, mime_type = $3
+         WHERE id = $4`,
+          [fileName, fullPath, mimeType, id],
+        );
+      } else {
+        throw new Error(
+          'No file provided for update. Implement logic for metadata-only updates if needed.',
+        );
+      }
+
+      if (result.rowsAffected === 0) {
+        throw new Error(
+          'core_source update failed: No rows affected (ID may not exist)',
+        );
+      }
+
+      return id;
+    } catch (error) {
+      console.error('Error updating core_source:', error);
+      throw error;
+    }
+  }
+
   async createCoreApplicant(applicant: ApplicantPayload) {
     const applicantId = uuidv4();
     const db = await openConnection();
@@ -121,6 +175,61 @@ export class ApplicantRepository {
       const applicantId = await this.createCoreApplicant(payload);
       await this.createCoreApplicantSource({ applicantId, sourceId });
       return applicantId;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async updateCoreApplicant(params: {
+    id: string;
+    applicant: ApplicantPayload;
+  }) {
+    const { id, applicant } = params;
+    const db = await openConnection();
+    if (!db) {
+      throw new Error('No database connection');
+    }
+
+    const result = await db.execute(
+      `UPDATE core_applicant
+     SET full_name = $1, nin = $2, phone_number = $3, address = $4, status = $5
+     WHERE id = $6`,
+      [
+        applicant.fullName,
+        applicant.nin,
+        applicant.phoneNumber,
+        applicant.address,
+        applicant.status,
+        id,
+      ],
+    );
+
+    if (result.rowsAffected === 0) {
+      throw new Error(
+        'core_applicant update failed: No rows affected (ID may not exist)',
+      );
+    }
+
+    return id;
+  }
+
+  async updateApplicant(params: {
+    applicant: ApplicantPayload;
+    sourceId: string;
+  }) {
+    const { applicant, sourceId } = params;
+    try {
+      if (applicant?.source && sourceId) {
+        await this.updateCoreSource({ id: sourceId, file: applicant.source });
+      }
+      if (applicant.id) {
+        await this.updateCoreApplicant({ id: applicant.id, applicant });
+      }
+      return {
+        id: applicant.id,
+        sourceId,
+      };
     } catch (error) {
       console.error(error);
       throw error;

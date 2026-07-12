@@ -30,12 +30,17 @@
 ✅ create application
 ✅ plug detail application
 - add update application status and state
-- add update applicant
+✅ add update applicant
 - add application status filter
 - add application-table pagination
 - add application-table search
 - add application-table advance filter
 
+# Refactoring
+- update applicant.sources to applicant.source (applicant have only one source the CNI)
+
+# Database
+- use transaction for commands
 
 # Module Dashboard
 

@@ -12,13 +12,15 @@ export class ApplicantGateway {
     return this._applicantRepository.searchApplicant(query);
   }
 
-
-
   getApplicantById(applicantId: string) {
     return this._applicantRepository.getApplicantById(applicantId);
   }
 
   createApplicant(applicant: ApplicantPayload) {
     return this._applicantRepository.createApplicant(applicant);
+  }
+
+  updateApplicant(params: { applicant: ApplicantPayload; sourceId: string }) {
+    return this._applicantRepository.updateApplicant(params);
   }
 }

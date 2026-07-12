@@ -52,7 +52,8 @@ CREATE TABLE IF NOT EXISTS core_applicant (
     phone_number   TEXT,
     address        TEXT,
     status         TEXT,
-    created_at     TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at     TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at    TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS core_applicant_source (
