@@ -70,7 +70,9 @@ export class NewApplicationComponent implements OnInit, OnDestroy {
     status: 'PENDING',
     state: 'DEFAULT',
     mailRef: '',
-    amount: null,
+    comment: '',
+    receivedAmount: null,
+    requestedAmount: null,
   });
 
   applicationForm = form(this.applicationModel);
@@ -170,10 +172,12 @@ export class NewApplicationComponent implements OnInit, OnDestroy {
       procedure: procedureId,
       applicant: this.applicant()?.id ?? '',
       mailRef: payload.mailRef ?? '',
-      amount: payload.amount ?? null,
+      requestedAmount: payload.requestedAmount ?? null,
+      receivedAmount:  null,
       status: 'PENDING',
       state: 'DEFAULT',
       sources: payload.sources ?? [],
+      comment: payload.comment ?? '',
     };
     return this._applicationGateway.createApplication(application);
   }

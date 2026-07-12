@@ -94,7 +94,7 @@
                                   <lib-text-input [formField]="applicationForm.mailRef" label="Référence du courrier" placeholder="REF784G"></lib-text-input>
                               </div>
                               <div class="col-span-1">
-                                  <lib-number-input [formField]="applicationForm.amount" label="Montant" placeholder="25000"></lib-number-input>
+                                  <lib-number-input [formField]="applicationForm.requestedAmount" label="Montant" placeholder="25000"></lib-number-input>
                               </div>
                               @for (document of procedure()?.documents ?? []; track $index) {
                                 <div class="col-span-2">
