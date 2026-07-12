@@ -78,6 +78,7 @@ CREATE TABLE IF NOT EXISTS core_application (
     procedure_id     TEXT                        NOT NULL,
     mail_ref         TEXT,
     created_at       TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at       TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
     status           TEXT,
     state            TEXT,
     comment          TEXT,
