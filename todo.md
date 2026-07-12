@@ -29,8 +29,8 @@
  ✅ remove selected applicant
 ✅ create application
 ✅ plug detail application
-- add update application status and state
 ✅ add update applicant
+- add update application status and state
 - add application status filter
 - add application-table pagination
 - add application-table search
