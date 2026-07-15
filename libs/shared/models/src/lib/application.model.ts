@@ -1,4 +1,4 @@
-import { Applicant } from './applicant.model';
+import { Applicant, ApplicantStatus } from './applicant.model';
 import { Procedure, ProcedureDocument } from './procedure.model';
 import { Source } from './source.model';
 
@@ -43,18 +43,18 @@ export type ApplicationState =
 export type ApplicationStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 
 export interface ApplicationFilters {
-  procedureId: string;
-  status?: string;
-  state?: string;
-  fullName?: string;
-  nin?: string;
-  phoneNumber?: string;
-  requestedAmount?: number;
-  receivedAmount?: number;
-  createdAtFrom?: string; // ISO date string
-  createdAtTo?: string; // ISO date string
-  page?: number; // 1-based page number
-  pageSize?: number; // Items per page
-  address?: string;
-  applicantStatus?: string;
+  procedureId: string | null;
+  status: ApplicationStatus | null | null;
+  state: ApplicationState | null;
+  fullName: string | null;
+  nin: string | null;
+  phoneNumber: string | null;
+  requestedAmount: number | null;
+  receivedAmount: number | null;
+  createdAtFrom: string | null; // ISO date string
+  createdAtTo: string | null; // ISO date string
+  page: number; // 1-based page number
+  pageSize: number ; // Items per page
+  address: string | null;
+  applicantStatus: ApplicantStatus | null;
 }

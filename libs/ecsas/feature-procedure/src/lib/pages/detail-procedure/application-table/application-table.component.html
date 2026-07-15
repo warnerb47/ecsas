@@ -21,7 +21,8 @@
     <!-- filter -->
     <div class="bg-white p-4 border border-slate-100 flex items-end gap-2">
         <lib-search-input placeholder="Rechercher par nom, CNI ou numéro de dossier..."></lib-search-input>
-        <lib-dropdown [options]="statusOptions"></lib-dropdown>
+        <lib-dropdown [formField]="filterForm.status" [options]="statusOptions"></lib-dropdown>
+        <lib-dropdown [formField]="filterForm.state" [options]="conformities"></lib-dropdown>
         <lib-button type="secondary">
             <i class="pi pi-filter"></i>
         </lib-button>
@@ -66,14 +67,16 @@
               {{app.mailRef}}
             </td>
             <td class="px-6 py-4">
-              {{app.createdAt | date:'dd/MM/yyyy'}}
+              {{app.createdAt | date:'d MMM y'}}
             </td>
             <td class="px-6 py-4 font-semibold">
               {{ formatAmount(app?.receivedAmount ?? 0) }}
             </td>
 
             <td class="px-6 py-4">
-              <span class="px-3 py-1 rounded-full text-[11px] font-bold border" [ngClass]="getStatusClasses(app.status)">
+              <span class="px-3 py-1 rounded-full text-[11px] font-bold border"
+                title="{{ app?.comment }}"
+                [ngClass]="getStatusClasses(app.status)">
                   {{ getStatusLabel(app.status) }}
               </span>
             </td>

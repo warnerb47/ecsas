@@ -6,7 +6,7 @@ export interface Applicant {
   nin: string;
   phoneNumber: string;
   address: string;
-  status: 'SOCIAL_CASE' | 'NON_ESSENTIAL' | 'RECENTLY_SUPPORTED' | 'INAPPROPRIATE_AGE' | 'DEFAULT';
+  status: ApplicantStatus;
   sources: Partial<Source>[];
 }
 
@@ -16,6 +16,8 @@ export interface ApplicantPayload {
   nin: string;
   phoneNumber: string;
   address: string;
-  status: 'SOCIAL_CASE' | 'NON_ESSENTIAL' | 'RECENTLY_SUPPORTED' | 'INAPPROPRIATE_AGE' | 'DEFAULT';
+  status: ApplicantStatus;
   source: File | null;
 }
+
+export type ApplicantStatus = 'SOCIAL_CASE' | 'NON_ESSENTIAL' | 'RECENTLY_SUPPORTED' | 'INAPPROPRIATE_AGE' | 'DEFAULT';

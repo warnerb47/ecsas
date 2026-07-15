@@ -299,10 +299,10 @@ export class ApplicationRepository {
     if (applicantStatus) {
       addCondition('apt.status = ?', applicantStatus);
     }
-    if (requestedAmount !== undefined) {
+    if (requestedAmount) {
       addCondition('a.requested_amount = ?', requestedAmount);
     }
-    if (receivedAmount !== undefined) {
+    if (receivedAmount) {
       addCondition('a.received_amount = ?', receivedAmount);
     }
     if (createdAtFrom) {
@@ -314,8 +314,8 @@ export class ApplicationRepository {
 
     // Pagination
     const offset = (page - 1) * pageSize;
-    sql += ` LIMIT ? OFFSET ?`;
     sql += ' ORDER BY a.created_at DESC';
+    sql += ` LIMIT ? OFFSET ?`;
     params.push(pageSize, offset);
 
     try {

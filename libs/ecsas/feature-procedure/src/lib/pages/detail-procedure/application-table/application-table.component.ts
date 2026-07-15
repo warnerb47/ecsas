@@ -1,7 +1,7 @@
 import { DatePipe, NgClass } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { Application } from '@org/models';
+import { Application, ApplicationFilters } from '@org/models';
 import {
   ButtonComponent,
   DropdownComponent,
@@ -11,6 +11,7 @@ import { ProcedureStateService } from '../../../state/procedure-state.service';
 import { ApplicationGateway, ProcedureGateway } from '@org/ecsas/ecsas-data';
 import { map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { disabled, form, FormField } from '@angular/forms/signals';
 
 @Component({
   selector: 'lib-application-table',
@@ -22,6 +23,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
     DropdownComponent,
     SearchInputComponent,
     DatePipe,
+    FormField,
   ],
   templateUrl: './application-table.component.html',
 })
@@ -37,15 +39,47 @@ export class ApplicationTableComponent implements OnInit {
   );
 
   statusOptions = [
-    { label: 'Tous les statuts', value: 'all' },
-    { label: 'En attente', value: 'pending' },
-    { label: 'Approuvé', value: 'approved' },
-    { label: 'Rejeté', value: 'rejected' },
+    { label: 'Tous les statuts', value: '' },
+    { label: 'En attente', value: 'PENDING' },
+    { label: 'Approuvé', value: 'APPROVED' },
+    { label: 'Rejeté', value: 'REJECTED' },
+  ];
+
+  conformities = [
+    { label: 'Tous les statuts de Conformité', value: '' },
+    { label: 'Conforme', value: 'COMPLIANT' },
+    { label: 'Hors zone', value: 'OUT_OF_ZONE' },
+    { label: 'Dossier incomplet', value: 'INCOMPLETE' },
+    { label: 'Demande du Maire', value: 'MAYOR_REQUEST' },
   ];
 
   applications = signal<Partial<Application>[]>([]);
   procedure = this._procedureStateService.procedure;
   loadingApplications = signal(false);
+  filterModel = signal<ApplicationFilters>({
+    procedureId: this.procedureId() ?? '',
+    address: null,
+    applicantStatus: null,
+    createdAtFrom: null,
+    createdAtTo: null,
+    fullName: null,
+    nin: null,
+    page: 1,
+    pageSize: 10,
+    phoneNumber: null,
+    receivedAmount: null,
+    requestedAmount: null,
+    status: null,
+    state: null,
+  });
+  filterForm = form(this.filterModel);
+
+constructor() {
+
+  effect(() => {
+    this.filterApplications();
+  });
+}
 
   ngOnInit() {
     this.initState();
@@ -58,14 +92,13 @@ export class ApplicationTableComponent implements OnInit {
     if (!this.procedure()?.id) {
       await this.fetchProcedureById(this.procedureId() ?? '');
     }
-    await this.fetchApplications();
+    // await this.filterApplications();
   }
 
   async fetchProcedureById(procedureId: string) {
     try {
-      const procedure = await this._procedureGateway.getProcedureById(
-        procedureId,
-      );
+      const procedure =
+        await this._procedureGateway.getProcedureById(procedureId);
       this.procedure.set(procedure);
       this._procedureStateService.procedure.set(procedure);
     } catch (error) {
@@ -73,14 +106,14 @@ export class ApplicationTableComponent implements OnInit {
     }
   }
 
-  async fetchApplications() {
+  async filterApplications() {
     try {
       if (!this.procedure()?.id) return;
       this.loadingApplications.set(true);
-      const applications =
-        await this._applicationGateway.getApplicationsByProcedureId(
-          this.procedure()?.id ?? '',
-        );
+      const applications = await this._applicationGateway.filterApplications({
+        ...this.filterModel(),
+        procedureId: this.procedure()?.id ?? null,
+      });
       this.applications.set(applications);
     } catch (error) {
       console.error(error);
@@ -107,7 +140,7 @@ export class ApplicationTableComponent implements OnInit {
     };
     return map[status] ?? 'bg-slate-50 text-slate-700 border-slate-100';
   }
-    getStatusLabel(status: string | undefined): string {
+  getStatusLabel(status: string | undefined): string {
     if (!status) return 'En attente';
     const map: Record<string, string> = {
       PENDING: 'En attente',
@@ -116,7 +149,6 @@ export class ApplicationTableComponent implements OnInit {
     };
     return map[status] ?? 'En attente';
   }
-
 
   formatAmount(amount: number): string {
     return amount.toLocaleString('fr-FR') + ' FCFA';
