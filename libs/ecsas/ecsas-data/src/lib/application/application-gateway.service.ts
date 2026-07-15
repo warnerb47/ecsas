@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApplicationRepository } from '@org/api/products';
-import { ApplicationPayload } from '@org/models';
+import { ApplicationFilters, ApplicationPayload } from '@org/models';
 
 @Injectable({
   providedIn: 'root',
@@ -27,5 +27,9 @@ export class ApplicationGateway {
     application: Partial<ApplicationPayload>;
   }) {
     return this._applicationRepository.updateApplication(params);
+  }
+
+  filterApplications(filters: ApplicationFilters) {
+    return this._applicationRepository.filterApplications(filters);
   }
 }

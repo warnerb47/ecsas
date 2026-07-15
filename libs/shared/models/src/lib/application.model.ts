@@ -41,3 +41,20 @@ export type ApplicationState =
   | 'MAYOR_REQUEST';
 
 export type ApplicationStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+
+export interface ApplicationFilters {
+  procedureId: string;
+  status?: string;
+  state?: string;
+  fullName?: string;
+  nin?: string;
+  phoneNumber?: string;
+  requestedAmount?: number;
+  receivedAmount?: number;
+  createdAtFrom?: string; // ISO date string
+  createdAtTo?: string; // ISO date string
+  page?: number; // 1-based page number
+  pageSize?: number; // Items per page
+  address?: string;
+  applicantStatus?: string;
+}

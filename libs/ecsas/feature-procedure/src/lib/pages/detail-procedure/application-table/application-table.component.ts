@@ -1,7 +1,7 @@
 import { NgClass } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { Application, Procedure } from '@org/models';
+import { Application } from '@org/models';
 import {
   ButtonComponent,
   DropdownComponent,
