@@ -1,4 +1,4 @@
-import { NgClass } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Application } from '@org/models';
@@ -21,6 +21,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
     ButtonComponent,
     DropdownComponent,
     SearchInputComponent,
+    DatePipe,
   ],
   templateUrl: './application-table.component.html',
 })
@@ -80,6 +81,7 @@ export class ApplicationTableComponent implements OnInit {
         await this._applicationGateway.getApplicationsByProcedureId(
           this.procedure()?.id ?? '',
         );
+        console.log(applications);
       this.applications.set(applications);
     } catch (error) {
       console.error(error);

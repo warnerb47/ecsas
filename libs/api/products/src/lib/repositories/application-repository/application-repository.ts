@@ -315,6 +315,7 @@ export class ApplicationRepository {
     // Pagination
     const offset = (page - 1) * pageSize;
     sql += ` LIMIT ? OFFSET ?`;
+    sql += ' ORDER BY a.created_at DESC';
     params.push(pageSize, offset);
 
     try {
