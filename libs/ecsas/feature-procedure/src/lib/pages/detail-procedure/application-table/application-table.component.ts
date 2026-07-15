@@ -81,7 +81,6 @@ export class ApplicationTableComponent implements OnInit {
         await this._applicationGateway.getApplicationsByProcedureId(
           this.procedure()?.id ?? '',
         );
-        console.log(applications);
       this.applications.set(applications);
     } catch (error) {
       console.error(error);

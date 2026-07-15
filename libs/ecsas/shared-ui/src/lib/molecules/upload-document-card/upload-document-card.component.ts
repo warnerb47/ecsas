@@ -64,7 +64,6 @@ export class UploadDocumentCardComponent implements FormValueControl<File | null
         lastModified: file.lastModified,
       });
       this.value.set(renamedFile);
-      console.log({renamedFile, rawFileName: this.rawFileName(), mimeType: file.type, newName});
     } else {
       this.value.set(file);
     }

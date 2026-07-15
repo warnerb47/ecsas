@@ -63,7 +63,6 @@ export class CreateApplicantComponent {
   });
 
   async createApplicant() {
-    console.log({ applicant: this.applicantModel() });
     const applicantId = await this._applicantGateway.createApplicant(
       this.applicantModel(),
     );
