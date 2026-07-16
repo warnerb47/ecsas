@@ -37,6 +37,9 @@
 - add application-table search
 - add application-table advance filter
 - fix: set dropdown option label to '' when value is null (it is selecting the first option label)
+- update detail-application design (add demande section edit btn like for applicant)
+- update detail-application design (use badge for status and state)
+- update detail-application design (add label for applicant.status)
 
 # Refactoring
 - update applicant.sources to applicant.source (applicant have only one source the CNI)
@@ -44,6 +47,7 @@
 
 # Database
 - use transaction for commands
+- add full text search with FTS5 for application.comment, applicant.address
 
 # Module Dashboard
 

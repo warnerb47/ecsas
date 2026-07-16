@@ -11,7 +11,7 @@ import { FormValueControl, ValidationError, WithOptionalFieldTree } from '@angul
 export class DropdownComponent implements FormValueControl<string | null> {
   label = input('');
   placeholder = input<string>('');
-  options = input<{ label: string; value: string }[]>([]);
+  options = input<{ label: string; value: string | null }[]>([]);
   value = model<string | null>(null);
 
   // Interaction state (touched)

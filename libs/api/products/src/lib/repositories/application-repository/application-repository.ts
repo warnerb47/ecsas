@@ -1,13 +1,10 @@
 import {
   Application,
   ApplicationDocument,
+  ApplicationFilters,
   ApplicationPayload,
 } from '@org/models';
-import {
-  closeConnection,
-  openConnection,
-  parseKey,
-} from '../db.utils';
+import { closeConnection, openConnection, parseKey } from '../db.utils';
 import {
   GET_APPLICATION_BY_ID,
   GET_APPLICATIONS_BY_PROCEDURE_ID,
@@ -219,6 +216,126 @@ export class ApplicationRepository {
     } catch (error) {
       console.error(error);
       throw error;
+    }
+  }
+
+  async filterApplications(filters: ApplicationFilters) {
+    const db = await openConnection();
+    if (!db) {
+      throw new Error('No database connection');
+    }
+
+    const {
+      procedureId,
+      status,
+      state,
+      fullName,
+      nin,
+      phoneNumber,
+      requestedAmount,
+      receivedAmount,
+      createdAtFrom,
+      createdAtTo,
+      address,
+      applicantStatus,
+      mailRef,
+      page = 1,
+      pageSize = 10,
+    } = filters;
+
+    // Base query parts
+    let sql = `
+    SELECT
+      a.id,
+      json_object(
+        'id', apt.id,
+        'fullName', apt.full_name,
+        'nin', apt.nin,
+        'phoneNumber', apt.phone_number,
+        'address', apt.address,
+        'status', apt.status
+      ) as applicant,
+      a.mail_ref as mailRef,
+      a.created_at as createdAt,
+      a.status,
+      a.state,
+      a.requested_amount as requestedAmount,
+      a.received_amount as receivedAmount,
+      a.comment
+    FROM
+      core_application a
+      JOIN core_applicant apt ON a.applicant_id = apt.id
+      JOIN core_procedure p ON a.procedure_id = p.id
+    WHERE
+      p.id = ?
+  `;
+
+    const params: unknown[] = [procedureId];
+
+    // Helper to add conditions safely
+    const addCondition = (condition: string, value: any) => {
+      sql += ` AND ${condition}`;
+      params.push(value);
+    };
+
+    // Apply filters
+    if (status) {
+      addCondition('a.status = ?', status);
+    }
+    if (state) {
+      addCondition('a.state = ?', state);
+    }
+    if (mailRef) {
+      addCondition('a.mail_ref LIKE ?', `%${mailRef}%`);
+    }
+    if (fullName) {
+      addCondition('apt.full_name LIKE ?', `%${fullName}%`);
+    }
+    if (nin) {
+      addCondition('apt.nin LIKE ?', `%${nin}%`);
+    }
+    if (phoneNumber) {
+      addCondition('apt.phone_number LIKE ?', `%${phoneNumber}%`);
+    }
+    if (address) {
+      addCondition('apt.address LIKE ?', `%${address}%`);
+    }
+    if (applicantStatus) {
+      addCondition('apt.status = ?', applicantStatus);
+    }
+    if (requestedAmount) {
+      addCondition('a.requested_amount = ?', requestedAmount);
+    }
+    if (receivedAmount) {
+      addCondition('a.received_amount = ?', receivedAmount);
+    }
+    if (createdAtFrom) {
+      addCondition('a.created_at >= ?', createdAtFrom);
+    }
+    if (createdAtTo) {
+      addCondition('a.created_at <= ?', createdAtTo);
+    }
+
+    // Pagination
+    const offset = (page - 1) * pageSize;
+    sql += ' ORDER BY a.created_at DESC';
+    sql += ` LIMIT ? OFFSET ?`;
+    params.push(pageSize, offset);
+
+    try {
+      const applications: Partial<Application>[] = await db.select(sql, params);
+
+      // Parse the JSON 'applicant' field into a flat object
+      const results = applications.map((application) => {
+        return {
+          ...application,
+          ...parseKey({ entity: application, key: 'applicant' }),
+        };
+      });
+
+      return results;
+    } finally {
+      await closeConnection(db);
     }
   }
 }

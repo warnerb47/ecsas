@@ -113,10 +113,20 @@ CREATE TABLE IF NOT EXISTS core_application_source (
 );
 
 /* Create indexes for better query performance */
+
+-- core_application
 CREATE INDEX IF NOT EXISTS idx_application_applicant_id ON core_application(applicant_id);
 CREATE INDEX IF NOT EXISTS idx_application_procedure_id ON core_application(procedure_id);
+CREATE INDEX IF NOT EXISTS idx_application_status ON core_application(status);
+CREATE INDEX IF NOT EXISTS idx_application_state ON core_application(state);
+CREATE INDEX IF NOT EXISTS idx_application_created_at ON core_application(created_at DESC);
+
+-- core_applicant
+CREATE INDEX IF NOT EXISTS idx_applicant_full_name ON core_applicant(full_name);
+CREATE INDEX IF NOT EXISTS idx_applicant_status ON core_applicant(status);
+CREATE INDEX IF NOT EXISTS idx_applicant_phone_number ON core_applicant(phone_number);
 CREATE INDEX IF NOT EXISTS idx_applicant_nin ON core_applicant(nin);
-CREATE INDEX IF NOT EXISTS idx_user_login ON core_user(login);
+
 
 /* Triggers for auto-updating updated_at timestamps */
 

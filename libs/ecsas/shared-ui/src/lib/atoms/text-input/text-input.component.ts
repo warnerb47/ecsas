@@ -8,11 +8,11 @@ import {FormValueControl, ValidationError, WithOptionalFieldTree} from '@angular
   imports: [CommonModule],
   templateUrl: './text-input.component.html'
 })
-export class TextInputComponent implements FormValueControl<string>{
+export class TextInputComponent implements FormValueControl<string | null>{
   label = input('');
   type = input<'text' | 'email' | 'password' | 'number' | 'date'>('text');
   placeholder = input<string>('');
-  value = model('');
+  value = model<string | null>(null);
 
   // Interaction state (touched)
   readonly touched = model<boolean>(false);
