@@ -12,6 +12,7 @@ import { ApplicationGateway, ProcedureGateway } from '@org/ecsas/ecsas-data';
 import { map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { form, FormField } from '@angular/forms/signals';
+import { ExcelExportService } from '@org/api/products';
 
 @Component({
   selector: 'lib-application-table',
@@ -32,6 +33,7 @@ export class ApplicationTableComponent implements OnInit {
   private readonly _applicationGateway = inject(ApplicationGateway);
   private readonly _procedureGateway = inject(ProcedureGateway);
   private readonly _activatedRoute = inject(ActivatedRoute);
+  private readonly _excelExportService = new ExcelExportService();
 
   procedureId = toSignal(
     this._activatedRoute.paramMap.pipe(map((p) => p.get('procedureId'))),
@@ -152,5 +154,20 @@ constructor() {
 
   formatAmount(amount: number): string {
     return amount.toLocaleString('fr-FR') + ' FCFA';
+  }
+
+  export() {
+    const data = this.applications().map((application) => ({
+      numero_courrier: application.mailRef ?? '',
+      NIN: application.applicant?.nin ?? '',
+      date_soummission: application.createdAt ?? '',
+      nom: application.applicant?.fullName ?? '',
+      telephone: application.applicant?.phoneNumber ?? '',
+      adresse: application.applicant?.address ?? '',
+      status: this.getStatusLabel(application.status ?? ''),
+      etat_conformite: application.state ?? '',
+      Montant_reçu: application.receivedAmount ?? 0,
+    }))
+    this._excelExportService.exportToExcel(data, 'liste_des_demandes');
   }
 }

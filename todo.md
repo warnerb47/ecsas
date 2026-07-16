@@ -32,10 +32,10 @@
 ✅ add update applicant
 ✅ add update application status and state
 ✅ add update application comment
-- add application status filter
+✅ add application status filter
+✅ add application-table search
+✅ add application-table advance filter
 - add application-table pagination
-- add application-table search
-- add application-table advance filter
 - fix: set dropdown option label to '' when value is null (it is selecting the first option label)
 - update detail-application design (add demande section edit btn like for applicant)
 - update detail-application design (use badge for status and state)

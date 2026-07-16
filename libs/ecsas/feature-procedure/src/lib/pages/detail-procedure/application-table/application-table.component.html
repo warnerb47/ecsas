@@ -5,7 +5,7 @@
         <p class="text-slate-500 text-sm">{{ procedure()?.description }}</p>
     </div>
     <div class="flex space-x-3">
-        <lib-button routerLink="." type="secondary">
+        <lib-button (click)="export()" type="secondary">
             <i class="pi pi-download"></i>
             Exporter (Excel)
         </lib-button>

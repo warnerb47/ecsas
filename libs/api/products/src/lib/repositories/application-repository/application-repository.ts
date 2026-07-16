@@ -273,7 +273,7 @@ export class ApplicationRepository {
     const params: unknown[] = [procedureId];
 
     // Helper to add conditions safely
-    const addCondition = (condition: string, value: any) => {
+    const addCondition = (condition: string, value: unknown) => {
       sql += ` AND ${condition}`;
       params.push(value);
     };

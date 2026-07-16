@@ -1,6 +1,6 @@
-use tauri::{AppHandle, Manager, State};
-use tauri_plugin_shell::{ShellExt, process::CommandChild};
 use std::sync::Mutex;
+use tauri::{AppHandle, Manager, State};
+use tauri_plugin_shell::{process::CommandChild, ShellExt};
 
 // 1. Define a state struct to hold the running process
 pub struct LlamaState {
@@ -23,11 +23,16 @@ pub async fn start_llama_server(
 
     let sidecar = "llama-server";
     let args = [
-        "-m", "./resources/Qwen3VL-2B-Instruct-Q8_0.gguf",
-        "--mmproj", "./resources/mmproj-Qwen3VL-2B-Instruct-F16.gguf",
-        "--port", "8080",
-        "-t", "8",
-        "--ctx-size", "4096",
+        "-m",
+        "./resources/Qwen3VL-2B-Instruct-Q8_0.gguf",
+        "--mmproj",
+        "./resources/mmproj-Qwen3VL-2B-Instruct-F16.gguf",
+        "--port",
+        "8080",
+        "-t",
+        "8",
+        "--ctx-size",
+        "4096",
         "--mlock",
     ];
 
