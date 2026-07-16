@@ -57,4 +57,5 @@ export interface ApplicationFilters {
   pageSize: number ; // Items per page
   address: string | null;
   applicantStatus: ApplicantStatus | null;
+  mailRef: string | null;
 }

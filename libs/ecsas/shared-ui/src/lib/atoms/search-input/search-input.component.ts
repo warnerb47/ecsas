@@ -8,7 +8,7 @@ import {FormValueControl} from '@angular/forms/signals';
   imports: [CommonModule],
   templateUrl: './search-input.component.html'
 })
-export class SearchInputComponent implements FormValueControl<string>{
+export class SearchInputComponent implements FormValueControl<string | null>{
   placeholder = input<string>('');
-  value = model('');
+  value = model<string | null>(null);
 }

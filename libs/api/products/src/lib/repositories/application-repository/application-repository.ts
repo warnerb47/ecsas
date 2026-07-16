@@ -238,6 +238,7 @@ export class ApplicationRepository {
       createdAtTo,
       address,
       applicantStatus,
+      mailRef,
       page = 1,
       pageSize = 10,
     } = filters;
@@ -283,6 +284,9 @@ export class ApplicationRepository {
     }
     if (state) {
       addCondition('a.state = ?', state);
+    }
+    if (mailRef) {
+      addCondition('a.mail_ref LIKE ?', `%${mailRef}%`);
     }
     if (fullName) {
       addCondition('apt.full_name LIKE ?', `%${fullName}%`);

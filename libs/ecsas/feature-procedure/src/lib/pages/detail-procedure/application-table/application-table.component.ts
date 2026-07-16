@@ -5,13 +5,13 @@ import { Application, ApplicationFilters } from '@org/models';
 import {
   ButtonComponent,
   DropdownComponent,
-  SearchInputComponent,
+  TextInputComponent,
 } from '@org/ecsas/shared-ui';
 import { ProcedureStateService } from '../../../state/procedure-state.service';
 import { ApplicationGateway, ProcedureGateway } from '@org/ecsas/ecsas-data';
 import { map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { disabled, form, FormField } from '@angular/forms/signals';
+import { form, FormField } from '@angular/forms/signals';
 
 @Component({
   selector: 'lib-application-table',
@@ -21,7 +21,7 @@ import { disabled, form, FormField } from '@angular/forms/signals';
     NgClass,
     ButtonComponent,
     DropdownComponent,
-    SearchInputComponent,
+    TextInputComponent,
     DatePipe,
     FormField,
   ],
@@ -71,6 +71,7 @@ export class ApplicationTableComponent implements OnInit {
     requestedAmount: null,
     status: null,
     state: null,
+    mailRef: null
   });
   filterForm = form(this.filterModel);
 
@@ -92,7 +93,6 @@ constructor() {
     if (!this.procedure()?.id) {
       await this.fetchProcedureById(this.procedureId() ?? '');
     }
-    // await this.filterApplications();
   }
 
   async fetchProcedureById(procedureId: string) {

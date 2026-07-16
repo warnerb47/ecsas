@@ -19,13 +19,13 @@
 <!-- table -->
 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
     <!-- filter -->
-    <div class="bg-white p-4 border border-slate-100 flex items-end gap-2">
-        <lib-search-input placeholder="Rechercher par nom, CNI ou numéro de dossier..."></lib-search-input>
+    <div class="bg-white p-4 border border-slate-100 flex flex-wrap items-end gap-2">
+        <lib-text-input [formField]="filterForm.fullName" placeholder="Nom"></lib-text-input>
+        <lib-text-input [formField]="filterForm.phoneNumber" placeholder="Téléphone"></lib-text-input>
+        <lib-text-input [formField]="filterForm.nin" placeholder="NIN"></lib-text-input>
+        <lib-text-input [formField]="filterForm.mailRef" placeholder="Numéro courrier"></lib-text-input>
         <lib-dropdown [formField]="filterForm.status" [options]="statusOptions"></lib-dropdown>
         <lib-dropdown [formField]="filterForm.state" [options]="conformities"></lib-dropdown>
-        <lib-button type="secondary">
-            <i class="pi pi-filter"></i>
-        </lib-button>
     </div>
     <table class="w-full text-left text-sm">
         <thead class="bg-slate-50 text-slate-500 font-medium">
