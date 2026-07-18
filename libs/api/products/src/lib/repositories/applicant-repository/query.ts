@@ -4,6 +4,7 @@ SELECT
   full_name as fullName,
   nin,
   phone_number as phoneNumber,
+  birthdate,
   address,
   status,
   created_at
@@ -24,6 +25,7 @@ SELECT
   core_applicant.phone_number as phoneNumber,
   core_applicant.address,
   core_applicant.status,
+  core_applicant.birthdate,
   COALESCE(
       json_group_array(
           json_object(

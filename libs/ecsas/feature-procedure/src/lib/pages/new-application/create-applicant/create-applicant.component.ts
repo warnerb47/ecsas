@@ -3,6 +3,7 @@ import { form, FormField, required, submit } from '@angular/forms/signals';
 import { ApplicantGateway } from '@org/ecsas/ecsas-data';
 import {
   ButtonComponent,
+  DateInputComponent,
   DropdownComponent,
   PhoneInputComponent,
   TextInputComponent,
@@ -19,6 +20,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
     PhoneInputComponent,
     DropdownComponent,
     UploadDocumentCardComponent,
+    DateInputComponent,
     FormField,
   ],
   templateUrl: './create-applicant.component.html',
@@ -52,6 +54,7 @@ export class CreateApplicantComponent {
     address: '',
     source: null,
     status: 'DEFAULT',
+    birthdate: null,
   });
 
   applicantForm = form(this.applicantModel, (f) => {

@@ -253,7 +253,8 @@ export class ApplicationRepository {
         'nin', apt.nin,
         'phoneNumber', apt.phone_number,
         'address', apt.address,
-        'status', apt.status
+        'status', apt.status,
+        'birthdate', apt.birthdate
       ) as applicant,
       a.mail_ref as mailRef,
       a.created_at as createdAt,
@@ -273,7 +274,7 @@ export class ApplicationRepository {
     const params: unknown[] = [procedureId];
 
     // Helper to add conditions safely
-    const addCondition = (condition: string, value: any) => {
+    const addCondition = (condition: string, value: unknown) => {
       sql += ` AND ${condition}`;
       params.push(value);
     };

@@ -25,7 +25,7 @@ VALUES
 
 
 INSERT INTO
-  core_applicant (id, full_name, nin, phone_number, address, status)
+  core_applicant (id, full_name, nin, phone_number, address, status, birthdate)
 VALUES
   (
     'ab227af7-1fdf-4e64-8f3a-f45958a711b8',
@@ -33,7 +33,8 @@ VALUES
     '123456789',
     '+221 77 777 77 77',
     'Yoff dagoudane, Dakar, Senegal',
-    'SOCIAL_CASE'
+    'SOCIAL_CASE',
+    '2006-03-25'
   ),
   (
     '79035fdc-82c7-485e-a08d-7827e2a7f0f5',
@@ -41,7 +42,8 @@ VALUES
     '123456710',
     '+221 17 177 17 17',
     'Yoff Layenne, Dakar, Senegal',
-    Null
+    Null,
+    '2002-03-25'
   ),
   (
     '00e70afe-f876-4ac9-be8f-0c4f5c56ca14',
@@ -49,7 +51,8 @@ VALUES
     '223456740',
     '+221 49 497 49 49',
     'Yoff Apecsy 3, Dakar, Senegal',
-    'NON_ESSENTIAL'
+    'NON_ESSENTIAL',
+    '2001-03-25'
   );
 
 

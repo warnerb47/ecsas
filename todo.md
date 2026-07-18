@@ -32,16 +32,17 @@
 ✅ add update applicant
 ✅ add update application status and state
 ✅ add update application comment
-- add application status filter
+✅ add application status filter
+✅ add application-table search
+✅ add application-table advance filter
 - add application-table pagination
-- add application-table search
-- add application-table advance filter
 - fix: set dropdown option label to '' when value is null (it is selecting the first option label)
 - update detail-application design (add demande section edit btn like for applicant)
 - update detail-application design (use badge for status and state)
 - update detail-application design (add label for applicant.status)
 
 # Refactoring
+✅- add applicant.birthDate 
 - update applicant.sources to applicant.source (applicant have only one source the CNI)
 - add error handling for all shared-ui input
 
@@ -54,14 +55,14 @@
 # Module Setting
 
 # PoC
+✅ excel export
+- Backup
 - OCR & LLM
   ✅ configure llama-server binaries
   - handle llama-server lifecycle with rust backend
   - start and stop llama-server from UI
   - Init page design for image integration
   - Extract image information and initialize form
-- excel export
-- Backup
 - Integrate Typesense
 - Qrcode mobile transferring 
 - P2P transfert

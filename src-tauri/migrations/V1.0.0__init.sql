@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS core_applicant (
     full_name      TEXT                        NOT NULL,
     nin            TEXT                        NOT NULL,
     phone_number   TEXT,
+    birthdate      TEXT,
     address        TEXT,
     status         TEXT,
     created_at     TEXT                        NOT NULL DEFAULT CURRENT_TIMESTAMP,

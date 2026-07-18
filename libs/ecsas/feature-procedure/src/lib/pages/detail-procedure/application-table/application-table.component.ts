@@ -1,4 +1,4 @@
-import { DatePipe, NgClass } from '@angular/common';
+import { DatePipe, formatDate, NgClass } from '@angular/common';
 import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Application, ApplicationFilters } from '@org/models';
@@ -12,6 +12,7 @@ import { ApplicationGateway, ProcedureGateway } from '@org/ecsas/ecsas-data';
 import { map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { form, FormField } from '@angular/forms/signals';
+import { ExcelExportService } from '@org/api/products';
 
 @Component({
   selector: 'lib-application-table',
@@ -32,6 +33,7 @@ export class ApplicationTableComponent implements OnInit {
   private readonly _applicationGateway = inject(ApplicationGateway);
   private readonly _procedureGateway = inject(ProcedureGateway);
   private readonly _activatedRoute = inject(ActivatedRoute);
+  private readonly _excelExportService = new ExcelExportService();
 
   procedureId = toSignal(
     this._activatedRoute.paramMap.pipe(map((p) => p.get('procedureId'))),
@@ -152,5 +154,28 @@ constructor() {
 
   formatAmount(amount: number): string {
     return amount.toLocaleString('fr-FR') + ' FCFA';
+  }
+
+  export() {
+    const data = this.applications().map((application, index) => {
+      const fullName = (application.applicant?.fullName ?? '').split(' ');
+      const lastName = fullName[fullName.length - 1];
+      const firstName = fullName.slice(0, fullName.length - 1).join(' ');
+      let birthdate = '';
+      if (application.applicant?.birthdate) {
+        birthdate = formatDate(application.applicant.birthdate, 'dd/MM/yyyy', 'fr-FR');
+      }
+      return {
+      "N°": index + 1,
+      "Nom": lastName,
+      "Prénom": firstName,
+      "Date de naissance": birthdate,
+      "NIN": application.applicant?.nin ?? '',
+      "Adresse": application.applicant?.address ?? '',
+      "Telephone": application.applicant?.phoneNumber ?? '',
+      "Numéro courrier": application.mailRef ?? '',
+    }
+    })
+    this._excelExportService.exportToExcel(data, 'liste_des_demandes');
   }
 }

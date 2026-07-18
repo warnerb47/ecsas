@@ -128,8 +128,8 @@ export class ApplicantRepository {
     }
 
     const result = await db.execute(
-      `INSERT INTO core_applicant (id, full_name, nin, phone_number, address, status)
-      VALUES ($1, $2, $3, $4, $5, $6)`,
+      `INSERT INTO core_applicant (id, full_name, nin, phone_number, address, status, birthdate)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)`,
       [
         applicantId,
         applicant.fullName,
@@ -137,6 +137,7 @@ export class ApplicantRepository {
         applicant.phoneNumber,
         applicant.address,
         applicant.status,
+        applicant.birthdate,
       ],
     );
     if (!result.rowsAffected) {
@@ -193,14 +194,15 @@ export class ApplicantRepository {
 
     const result = await db.execute(
       `UPDATE core_applicant
-     SET full_name = $1, nin = $2, phone_number = $3, address = $4, status = $5
-     WHERE id = $6`,
+     SET full_name = $1, nin = $2, phone_number = $3, address = $4, status = $5, birthdate = $6
+     WHERE id = $7`,
       [
         applicant.fullName,
         applicant.nin,
         applicant.phoneNumber,
         applicant.address,
         applicant.status,
+        applicant.birthdate,
         id,
       ],
     );

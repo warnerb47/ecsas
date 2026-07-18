@@ -5,6 +5,7 @@ export interface Applicant {
   fullName: string;
   nin: string;
   phoneNumber: string;
+  birthdate: string;
   address: string;
   status: ApplicantStatus;
   sources: Partial<Source>[];
@@ -18,6 +19,7 @@ export interface ApplicantPayload {
   address: string;
   status: ApplicantStatus;
   source: File | null;
+  birthdate: string | null;
 }
 
 export type ApplicantStatus = 'SOCIAL_CASE' | 'NON_ESSENTIAL' | 'RECENTLY_SUPPORTED' | 'INAPPROPRIATE_AGE' | 'DEFAULT';
