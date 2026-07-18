@@ -3,7 +3,7 @@ PRAGMA foreign_keys = ON;
 
 /* 1. Insert Additional Test Applicants */
 /* Designed to test: fullName (LIKE), nin (exact), phoneNumber (LIKE), status */
-INSERT INTO core_applicant (id, full_name, nin, phone_number, address, status, created_at, updated_at) VALUES
+INSERT INTO core_applicant (id, full_name, nin, phone_number, address, status, birthdate, created_at, updated_at) VALUES
 (
     'a1111111-1111-1111-1111-111111111111',
     'Moussa Diarra',
@@ -11,6 +11,7 @@ INSERT INTO core_applicant (id, full_name, nin, phone_number, address, status, c
     '+221 78 100 10 10',
     'Yoff Virage, Dakar',
     'PENDING',
+    '2006-01-10 08:00:00',
     '2026-01-10 08:00:00',
     '2026-01-10 08:00:00'
 ),
@@ -21,6 +22,7 @@ INSERT INTO core_applicant (id, full_name, nin, phone_number, address, status, c
     '+221 77 200 20 20',
     'Yoff Tonghor, Dakar',
     'REJECTED',
+    '2016-02-15 10:30:00',
     '2026-02-15 10:30:00',
     '2026-02-16 09:00:00'
 ),
@@ -31,6 +33,7 @@ INSERT INTO core_applicant (id, full_name, nin, phone_number, address, status, c
     '+221 76 300 30 30',
     'Yoff Cap Manuel, Dakar',
     'SOCIAL_CASE',
+    '2000-03-20 14:15:00',
     '2026-03-20 14:15:00',
     '2026-03-20 14:15:00'
 ),
@@ -41,6 +44,7 @@ INSERT INTO core_applicant (id, full_name, nin, phone_number, address, status, c
     '+221 70 400 40 40',
     'Yoff Golf Sud, Dakar',
     'PENDING',
+    '2001-04-05 11:00:00',
     '2026-04-05 11:00:00',
     '2026-04-05 11:00:00'
 ),
@@ -51,6 +55,7 @@ INSERT INTO core_applicant (id, full_name, nin, phone_number, address, status, c
     '+221 75 500 50 50',
     'Yoff Ndiareme, Dakar',
     'APPROVED',
+    '2003-05-12 16:45:00',
     '2026-05-12 16:45:00',
     '2026-05-13 10:00:00'
 );

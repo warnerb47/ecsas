@@ -1,4 +1,4 @@
-import { DatePipe, NgClass } from '@angular/common';
+import { DatePipe, formatDate, NgClass } from '@angular/common';
 import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Application, ApplicationFilters } from '@org/models';
@@ -157,17 +157,25 @@ constructor() {
   }
 
   export() {
-    const data = this.applications().map((application) => ({
-      numero_courrier: application.mailRef ?? '',
-      NIN: application.applicant?.nin ?? '',
-      date_soummission: application.createdAt ?? '',
-      nom: application.applicant?.fullName ?? '',
-      telephone: application.applicant?.phoneNumber ?? '',
-      adresse: application.applicant?.address ?? '',
-      status: this.getStatusLabel(application.status ?? ''),
-      etat_conformite: application.state ?? '',
-      Montant_reçu: application.receivedAmount ?? 0,
-    }))
+    const data = this.applications().map((application, index) => {
+      const fullName = (application.applicant?.fullName ?? '').split(' ');
+      const lastName = fullName[fullName.length - 1];
+      const firstName = fullName.slice(0, fullName.length - 1).join(' ');
+      let birthdate = '';
+      if (application.applicant?.birthdate) {
+        birthdate = formatDate(application.applicant.birthdate, 'dd/MM/yyyy', 'fr-FR');
+      }
+      return {
+      "N°": index + 1,
+      "Nom": lastName,
+      "Prénom": firstName,
+      "Date de naissance": birthdate,
+      "NIN": application.applicant?.nin ?? '',
+      "Adresse": application.applicant?.address ?? '',
+      "Telephone": application.applicant?.phoneNumber ?? '',
+      "Numéro courrier": application.mailRef ?? '',
+    }
+    })
     this._excelExportService.exportToExcel(data, 'liste_des_demandes');
   }
 }

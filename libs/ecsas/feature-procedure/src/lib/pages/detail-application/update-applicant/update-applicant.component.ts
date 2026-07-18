@@ -4,6 +4,7 @@ import { DocumentManager } from '@org/api/products';
 import { ApplicantGateway } from '@org/ecsas/ecsas-data';
 import {
   ButtonComponent,
+  DateInputComponent,
   DropdownComponent,
   PhoneInputComponent,
   TextInputComponent,
@@ -23,6 +24,7 @@ import {
     ButtonComponent,
     PhoneInputComponent,
     DropdownComponent,
+    DateInputComponent,
     UploadDocumentCardComponent,
     FormField,
   ],
@@ -59,6 +61,7 @@ export class UpdateApplicantComponent implements OnInit {
     address: '',
     source: null,
     status: 'DEFAULT',
+    birthdate: null,
   });
 
   applicantForm = form(this.applicantModel, (f) => {

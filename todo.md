@@ -42,6 +42,7 @@
 - update detail-application design (add label for applicant.status)
 
 # Refactoring
+✅- add applicant.birthDate 
 - update applicant.sources to applicant.source (applicant have only one source the CNI)
 - add error handling for all shared-ui input
 
@@ -54,14 +55,14 @@
 # Module Setting
 
 # PoC
+✅ excel export
+- Backup
 - OCR & LLM
   ✅ configure llama-server binaries
   - handle llama-server lifecycle with rust backend
   - start and stop llama-server from UI
   - Init page design for image integration
   - Extract image information and initialize form
-- excel export
-- Backup
 - Integrate Typesense
 - Qrcode mobile transferring 
 - P2P transfert
