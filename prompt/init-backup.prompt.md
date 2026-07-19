@@ -1,5 +1,5 @@
 # Prompt 1
-I am using angular with tauri and sqlite. Here is my init_migration:
+I am using angular with tauri v2 and sqlite. Here is my init_migration:
 `
 /* Enable foreign key enforcement - MUST be first */
 PRAGMA foreign_keys = ON;
@@ -156,4 +156,5 @@ BEGIN
 END;
 `
 
-This app work offline so I want to integrate a backup to export data in AppData app.db and assets in AppLocalData as zip file. How can I handle this backup functionnality ?
+This app work offline so I want to integrate a backup to export sqlite data and assets in AppLocalData as zip file. How can I handle this backup functionnality ?
+I want to implement backup import to overwirte or merge with existing data. How can I handle this ?
