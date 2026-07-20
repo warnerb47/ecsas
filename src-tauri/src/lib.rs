@@ -29,7 +29,9 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
             server::llama::start_llama_server,
-            server::llama::stop_llama_server
+            server::llama::stop_llama_server,
+            db::backup::create_backup,
+
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
