@@ -30,3 +30,4 @@ tauri-plugin-http = "2"
 tauri-plugin-dialog = "2"
 zip = "4.2.0"
 chrono = "0.4.45"
+sqlx = { version = "0.8", features = ["sqlite", "runtime-tokio"] }
