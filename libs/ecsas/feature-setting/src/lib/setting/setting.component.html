@@ -6,22 +6,21 @@
           <p class="text-slate-500 font-medium">Gérez votre compte et la sécurité de vos données locales.</p>
       </header>
 
-      <div class="space-y-10">
+      <div class="flex flex-col space-y-6">
 
-          <lib-profile-card></lib-profile-card>
-          <lib-export-zip-card></lib-export-zip-card>
-
-          <div class="p-6 bg-white rounded-3xl text-slate-800 flex items-start space-x-4 border border-slate-200 shadow-sm">
-              <div class="p-2 bg-slate-500 rounded-lg">
-                <i class="pi pi-info-circle text-slate-200"></i>
-              </div>
-              <div>
-                  <p class="font-medium tracking-widest text-slate-800 mb-1">Rappel de Confidentialité</p>
-                  <p class="text-sm text-slate-500 leading-relaxed">
-                      Toutes vos données (CNI, montants d'aide) sont stockées localement sur cette machine. Ne partagez jamais vos sauvegardes ZIP par email non sécurisé.
-                  </p>
-              </div>
-          </div>
+        <lib-export-zip-card></lib-export-zip-card>
+        <lib-profile-card></lib-profile-card>
+        <div class="p-6 bg-white rounded-3xl text-slate-800 flex items-start space-x-4 border border-slate-200 shadow-sm">
+            <div class="p-2 bg-slate-500 rounded-lg">
+              <i class="pi pi-info-circle text-slate-200"></i>
+            </div>
+            <div>
+                <p class="font-medium tracking-widest text-slate-800 mb-1">Rappel de Confidentialité</p>
+                <p class="text-sm text-slate-500 leading-relaxed">
+                    Toutes vos données (CNI, montants d'aide) sont stockées localement sur cette machine. Ne partagez jamais vos sauvegardes ZIP par email non sécurisé.
+                </p>
+            </div>
+        </div>
 
       </div>
   </div>

@@ -1,12 +1,17 @@
 import { invoke } from '@tauri-apps/api/core';
 import { open } from '@tauri-apps/plugin-dialog';
+import { openPath } from '@tauri-apps/plugin-opener';
 
 export class BackupService {
-  async createBackup(): Promise<string> {
+  async createBackup(): Promise<void> {
     try {
       const backupPath = await invoke<string>('create_backup');
-      console.log('Backup created at:', backupPath);
-      return backupPath;
+      const pathEntries = backupPath?.split('\\');
+      pathEntries.pop();
+      const path = pathEntries.join('\\');
+      if (path) {
+        openPath(path);
+      }
     } catch (error) {
       console.error('Backup failed:', error);
       throw error;

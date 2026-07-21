@@ -25,7 +25,7 @@ pub async fn restore_backup(
 
     let mut archive = ZipArchive::new(zip_file).map_err(|e| format!("Invalid zip file: {}", e))?;
 
-    let  temp_db_path = app_data_dir.join("ecsas_restore_temp.db");
+    let temp_db_path = app_data_dir.join("ecsas_restore_temp.db");
 
     // Extract database file
     let mut db_file = File::create(&temp_db_path).map_err(|e| e.to_string())?;
