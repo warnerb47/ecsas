@@ -1,0 +1,40 @@
+<div class="flex flex-col space-y-4">
+  <div class="flex flex-col items-center justify-center w-full space-y-4">
+    <lib-tabs [tabs]="tabs" [activeTabInput]="activeTab()" (activeTabChange)="onActiveTabChange($event)"></lib-tabs>
+    <div class="flex flex-col space-y-2">
+      @if(activeTab() === 'Conserver les données') {
+        <div>
+          Importe les éléments manquants depuis la sauvegarde sans modifier vos données actuelles.
+        </div>
+        <div>
+          Recommandé pour une fusion sécurisée.
+        </div>
+      } @else {
+        <div>
+          Remplace l'intégralité de vos données actuelles par celles de la sauvegarde.
+        </div>
+        <div>
+          Attention : toutes les modifications récentes seront perdues.
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="flex flex-col space-y-1 text-red-500 text-xs mt-1">
+    @if(error().message) {
+      <span>{{ error().message }}</span>
+    }
+    @if(error().details) {
+      <span>{{ error().details }}</span>
+    }
+  </div>
+  <lib-button [disabled]="isLoading()" class="w-full" (click)="restoreBackup()" type="primary">
+    @if(isLoading()) {
+      <i class="pi pi-spin pi-spinner"></i>
+    } @else {
+      Importer
+    }
+  </lib-button>
+
+
+</div>

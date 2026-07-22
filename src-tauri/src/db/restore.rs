@@ -125,7 +125,6 @@ pub async fn merge_databases(target_path: &PathBuf, source_path: &PathBuf) -> Re
 
     // List of tables to merge (respecting foreign key order)
     let tables = vec![
-        "core_user",
         "core_procedure",
         "core_procedure_document",
         "core_source",

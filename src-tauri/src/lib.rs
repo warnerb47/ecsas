@@ -32,6 +32,7 @@ pub fn run() {
             server::llama::start_llama_server,
             server::llama::stop_llama_server,
             db::backup::create_backup,
+            db::restore::restore_backup,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
