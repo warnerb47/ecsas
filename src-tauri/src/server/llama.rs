@@ -1,5 +1,5 @@
 use std::sync::Mutex;
-use tauri::{AppHandle, Manager, State};
+use tauri::{AppHandle, State};
 use tauri_plugin_shell::{process::CommandChild, ShellExt};
 
 // 1. Define a state struct to hold the running process

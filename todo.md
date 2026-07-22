@@ -57,6 +57,11 @@
 # PoC
 ✅ excel export
 - Backup
+ ✅ add create_backup command
+ ✅ add restore_backup command
+ ✅ init backup-service
+ ✅ plug setting/backup card UI
+ ✅ add setting/restore card UI
 - OCR & LLM
   ✅ configure llama-server binaries
   - handle llama-server lifecycle with rust backend
