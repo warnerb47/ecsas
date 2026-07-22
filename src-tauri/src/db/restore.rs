@@ -1,4 +1,4 @@
-use sqlx::SqlitePool;
+use sqlx::{SqlitePool, Transaction};
 use std::fs::{self, File};
 use std::io::{Read, Write};
 use std::path::PathBuf;
@@ -103,9 +103,16 @@ pub async fn merge_databases(target_path: &PathBuf, source_path: &PathBuf) -> Re
         .await
         .map_err(|e| format!("Failed to connect to target database: {}", e))?;
 
+    // 3. Start a transaction directly from the pool.
+    // This acquires a connection and begins a transaction on it atomically.
+    let mut tx: Transaction<sqlx::Sqlite> = pool
+        .begin()
+        .await
+        .map_err(|e| format!("Failed to begin transaction: {}", e))?;
+
     // Enable foreign keys (must be done per connection in SQLite)
     sqlx::query("PRAGMA foreign_keys = ON")
-        .execute(&pool)
+        .execute(&mut *tx)
         .await
         .map_err(|e| format!("Failed to enable foreign keys: {}", e))?;
 
@@ -113,15 +120,34 @@ pub async fn merge_databases(target_path: &PathBuf, source_path: &PathBuf) -> Re
     let attach_sql = format!("ATTACH DATABASE '{}' AS backup_db", source_path.display());
 
     sqlx::query(&attach_sql)
-        .execute(&pool)
+        .execute(&mut *tx)
         .await
         .map_err(|e| format!("Failed to attach source database: {}", e))?;
 
-    // Begin transaction for atomic merge
-    let mut tx = pool
-        .begin()
-        .await
-        .map_err(|e| format!("Failed to begin transaction: {}", e))?;
+    // Verify attachment (Optional but good for debugging)
+    // let results: Vec<(i64, String, String)> =
+    //     sqlx::query_as("SELECT seq, name, file FROM pragma_database_list")
+    //         .fetch_all(&mut *tx) // Use fetch_all to get all attached databases
+    //         .await
+    //         .map_err(|e| format!("Query failed: {}", e))?;
+    // Print the results
+    // println!("--- Attached Databases ---");
+    // for (seq, name, file) in results {
+    //     // file might be empty for TEMP or MEMORY databases
+    //     let file_display = if file.is_empty() {
+    //         "<memory>".to_string()
+    //     } else {
+    //         file
+    //     };
+    //     println!("ID: {} | Name: '{}' | File: {}", seq, name, file_display);
+    // }
+
+    let _check_backup_db: (String,) =
+        sqlx::query_as("SELECT name FROM pragma_database_list WHERE name='backup_db'")
+            // .fetch_one(&pool)
+            .fetch_one(&mut *tx)
+            .await
+            .map_err(|_| "Attachment verification failed: backup_db not found")?;
 
     // List of tables to merge (respecting foreign key order)
     let tables = vec![
@@ -152,11 +178,7 @@ pub async fn merge_databases(target_path: &PathBuf, source_path: &PathBuf) -> Re
         .await
         .map_err(|e| format!("Failed to commit transaction: {}", e))?;
 
-    // Detach source database
-    sqlx::query("DETACH DATABASE backup_db")
-        .execute(&pool)
-        .await
-        .map_err(|e| format!("Failed to detach source database: {}", e))?;
+    pool.close().await;
 
     Ok(())
 }
