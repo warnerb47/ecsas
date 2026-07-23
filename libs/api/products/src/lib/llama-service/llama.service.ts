@@ -1,68 +1,31 @@
 import { readFile } from '@tauri-apps/plugin-fs';
-import { Child, Command } from '@tauri-apps/plugin-shell';
 import { invoke } from '@tauri-apps/api/core';
 
 export class LlamaService {
   private apiUrl = 'http://localhost:8080/v1/chat/completions';
-  private llamaProcess: Child | null = null;
 
   async startLlamaServer() {
     try {
-      const sidecar = 'binaries/llama-server/llama-server';
-      const args = [
-        '-m',
-        './resources/Qwen3VL-2B-Instruct-Q8_0.gguf',
-        '--mmproj',
-        './resources/mmproj-Qwen3VL-2B-Instruct-F16.gguf',
-        '--port',
-        '8080',
-        '-t',
-        '8',
-        '--ctx-size',
-        '4096',
-        '--mlock',
-      ];
-
-      const command = Command.sidecar(sidecar, args);
-      const llamaProcess = await command.spawn();
-      this.llamaProcess = llamaProcess;
-      console.log(
-        `llama-server running on port 8080 (pid: ${this.llamaProcess?.pid})`,
-      );
+      const result = await invoke<string>('start_llama_server');
+      console.log(result);
     } catch (error) {
       console.error(`Failed to start: ${error}`);
-    }
-  }
-  //   async startLlamaServer() {
-  //   try {
-  //     const result = await invoke<string>('start_llama_server');
-  //     console.log(result);
-  //   } catch (error) {
-  //     console.error(`Failed to start: ${error}`);
-  //     throw error;
-  //   }
-  // }
-
-  stopLlamaServer() {
-    if (this.llamaProcess) {
-      console.log('Stopping llama-server...');
-      try {
-        this.llamaProcess?.kill();
-        this.llamaProcess = null;
-      } catch (err) {
-        console.error('Failed to kill process:', err);
-      }
+      throw error;
     }
   }
 
-  // async stopLlamaServer() {
-  //   try {
-  //     const result = await invoke<string>('stop_llama_server');
-  //     console.log(result);
-  //   } catch (error) {
-  //     console.error(`Failed to stop: ${error}`);
-  //   }
-  // }
+  async stopLlamaServer() {
+    try {
+      const result = await invoke<string>('stop_llama_server');
+      console.log(result);
+    } catch (error) {
+      console.error(`Failed to stop: ${error}`);
+    }
+  }
+
+  async isRunning(): Promise<boolean> {
+    return await invoke<boolean>('get_llama_status');
+  }
 
   async test() {
     console.log('Testing llama-server...');
