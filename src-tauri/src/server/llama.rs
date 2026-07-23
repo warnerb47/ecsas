@@ -59,3 +59,12 @@ pub async fn stop_llama_server(state: State<'_, LlamaState>) -> Result<String, S
         Ok("Llama Server was not running".to_string())
     }
 }
+
+#[tauri::command]
+pub fn get_llama_status(state: State<'_, LlamaState>) -> Result<bool, String> {
+    // Lock the state to read the process status
+    let proc = state.process.lock().map_err(|e| e.to_string())?;
+
+    // Return true if process exists (Some), false if None
+    Ok(proc.is_some())
+}
