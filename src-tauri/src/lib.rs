@@ -1,6 +1,7 @@
 mod db;
 mod server;
 use std::sync::Mutex;
+use tauri::{Manager, State, WindowEvent};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -31,9 +32,26 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             server::llama::start_llama_server,
             server::llama::stop_llama_server,
+            server::llama::get_llama_status,
             db::backup::create_backup,
             db::restore::restore_backup,
         ])
+        .on_window_event(|window, event| match event {
+            WindowEvent::Destroyed => {
+                // Access the state from the window
+                let state: State<server::llama::LlamaState> = window.state();
+                let mut proc = state.process.lock().unwrap();
+
+                if let Some(child) = proc.take() {
+                    if let Err(e) = child.kill() {
+                        eprintln!("Failed to kill llama-server on exit: {}", e);
+                    } else {
+                        println!("Llama server stopped successfully on app close.");
+                    }
+                }
+            }
+            _ => {}
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
