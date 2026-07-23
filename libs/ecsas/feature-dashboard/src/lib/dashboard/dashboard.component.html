@@ -1,9 +1,24 @@
 <div class="flex-1 overflow-y-auto">
   <lib-topbar searchPlaceholder="Rechercher une demande ou un bénéficiaire...">
+    <div class="flex space-x-4">
       <lib-button routerLink="/procedure/new-procedure" type="primary">
         <i class="pi pi-plus"></i>
         Nouvelle procédure
       </lib-button>
+      @if(isRunning()){
+        <lib-button (click)="stopLlamaServer()" type="secondary">
+          <i class="text-red-500 pi pi-stop"></i>
+          Stopper le serveur
+        </lib-button>
+
+      }@else {
+        <lib-button (click)="startLlamaServer()" type="secondary">
+          <i class="text-green-500 pi pi-play"></i>
+          Lancer le serveur
+        </lib-button>
+      }
+
+    </div>
   </lib-topbar>
   <div class="p-8 max-w-7xl mx-auto">
     <lib-statistic></lib-statistic>
