@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { form, FormField, required, submit } from '@angular/forms/signals';
+import { LlamaService } from '@org/api/products';
 import { ApplicantGateway } from '@org/ecsas/ecsas-data';
 import {
   ButtonComponent,
@@ -29,6 +30,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 export class CreateApplicantComponent {
   private readonly _dialogRef = inject(DynamicDialogRef);
   private readonly _applicantGateway = inject(ApplicantGateway);
+  private readonly _llamaService = new LlamaService();
   document = signal<{
     name: string;
     hint: string;
@@ -85,7 +87,12 @@ export class CreateApplicantComponent {
     });
   }
 
-  onUpload(file: File | null) {
-    this.document.update((doc) => ({ ...doc, file }));
+  async scrapInfo(file: File | null) {
+    if (!file) return;
+    console.log('Scraping info...');
+    const base64 = await this._llamaService.fileToBase64(file);
+    console.log({base64});
+    const applicant = await this._llamaService.fetchApplicantInfo(base64);
+    console.log(applicant);
   }
 }

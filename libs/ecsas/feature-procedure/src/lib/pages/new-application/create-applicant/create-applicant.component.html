@@ -22,7 +22,13 @@
       <h1 class="text-xs font-bold text-slate-500 uppercase mb-2">
         Document
       </h1>
-      <lib-upload-document-card [formField]="applicantForm.source" rawFileName="photocopie_cni" label="{{document().name}}" placeholder="{{document().hint}}"></lib-upload-document-card>
+      <lib-upload-document-card
+        [formField]="applicantForm.source"
+        rawFileName="photocopie_cni"
+        label="{{document().name}}"
+        placeholder="{{document().hint}}"
+        (fileSelected)="scrapInfo($event)"
+        ></lib-upload-document-card>
     </div>
   </div>
   <lib-button class="w-full" (click)="submitForm()" type="primary">

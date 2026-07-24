@@ -1,4 +1,3 @@
-import { readFile } from '@tauri-apps/plugin-fs';
 import { invoke } from '@tauri-apps/api/core';
 
 export class LlamaService {
@@ -49,10 +48,7 @@ export class LlamaService {
     return data;
   }
 
-  async extractIdCard(imagePath: string): Promise<unknown> {
-    // Read file as Base64 (Angular/TS)
-    const base64Image = await this.fileToBase64(imagePath);
-
+  async fetchApplicantInfo(base64Image: string): Promise<unknown> {
     const response = await fetch(this.apiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -64,7 +60,7 @@ export class LlamaService {
             content: [
               {
                 type: 'image_url',
-                image_url: { url: `data:image/png;base64,${base64Image}` },
+                image_url: { url: base64Image },
               },
               {
                 type: 'text',
@@ -79,17 +75,57 @@ export class LlamaService {
     });
 
     const data = await response.json();
-    return JSON.parse(data.choices[0].message.content);
+    console.log(data);
+    return this.parseLlamaResponse(data);
   }
 
-  private fileToBase64(path: string): Promise<string> {
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async parseLlamaResponse(response: any): Promise<any> {
+    // 1. Get the raw content string
+    const rawContent = response.choices?.[0]?.message?.content;
+
+    if (!rawContent) {
+      throw new Error('No content received from llama-server');
+    }
+
+    try {
+      // 2. Check if it's already a valid JSON string (rare but possible)
+      // If not, strip Markdown code blocks (```json ... ```)
+      const jsonStr = this.extractJsonFromMarkdown(rawContent);
+
+      // 3. Parse the cleaned JSON string
+      return JSON.parse(jsonStr);
+    } catch (error) {
+      console.error('Failed to parse Llama response:', error);
+      console.error('Raw content:', rawContent);
+      throw new Error(`Invalid JSON response from server: ${error}`);
+    }
+  }
+
+  private extractJsonFromMarkdown(content: string): string {
+    // Regex to match content inside ```json ... ``` or ``` ... ```
+    const markdownRegex = /```(?:json)?\s*([\s\S]*?)```/;
+    const match = content.match(markdownRegex);
+
+    if (match && match[1]) {
+      return match[1].trim();
+    }
+
+    // If no markdown block found, return the content as-is (it might be raw JSON)
+    return content.trim();
+  }
+
+  async fileToBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
-      readFile(path)
-        .then((data) => {
-          const binary = String.fromCharCode(...new Uint8Array(data));
-          resolve(btoa(binary));
-        })
-        .catch(reject);
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result as string);
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+      reader.readAsDataURL(file);
     });
   }
 }

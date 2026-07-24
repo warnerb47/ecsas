@@ -64,8 +64,10 @@
  ✅ add setting/restore card UI
 - OCR & LLM
   ✅ configure llama-server binaries
-  - handle llama-server lifecycle with rust backend
-  - start and stop llama-server from UI
+  ✅ handle llama-server lifecycle with rust backend
+  ✅ start and stop llama-server from UI
+  - Improve response timing (current 11s)
+  - Configure respone JSON format with the initial prompt
   - Init page design for image integration
   - Extract image information and initialize form
 - Integrate Typesense
