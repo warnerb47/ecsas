@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demandes en cours de Scan IA - ECSAS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 flex h-screen overflow-hidden">
+
+    <!-- Sidebar de l'application -->
+    <aside class="w-64 bg-[#1A365D] text-white flex flex-col justify-between p-6 shrink-0">
+        <div>
+            <div class="flex items-center space-x-3 mb-10">
+                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-[#1A365D] font-black text-xl shadow-lg">M</div>
+                <div>
+                    <h1 class="text-sm font-bold leading-tight">Mairie de Yoff</h1>
+                    <p class="text-[10px] text-blue-200">Commission santé & action sociale</p>
+                </div>
+            </div>
+            <nav class="space-y-2">
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-blue-200 hover:bg-blue-800/50 rounded-xl text-xs font-semibold transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 bg-blue-600 text-white rounded-xl text-xs font-bold shadow-md transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <span>Scans & Pré-remplissage</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-blue-200 hover:bg-blue-800/50 rounded-xl text-xs font-semibold transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <span>Procédures</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-blue-200 hover:bg-blue-800/50 rounded-xl text-xs font-semibold transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
+                    <span>Paramètres</span>
+                </a>
+            </nav>
+        </div>
+        <div class="p-3 bg-blue-900/40 rounded-xl border border-blue-800 flex items-center space-x-3">
+            <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+            <span class="text-[11px] font-medium text-blue-200">LLM Local : En cours (2 tâches)</span>
+        </div>
+    </aside>
+
+    <!-- Zone Principale -->
+    <main class="flex-1 flex flex-col overflow-hidden">
+
+        <!-- Header -->
+        <header class="h-16 bg-white border-b border-slate-200 px-8 flex justify-between items-center shrink-0">
+            <div class="flex items-center space-x-3">
+                <span class="text-xs font-semibold text-slate-400">Demandes</span>
+                <span class="text-slate-300">/</span>
+                <span class="text-xs font-bold text-slate-800 uppercase tracking-wide">File de Scan & Pré-remplissage Intelligent</span>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button class="px-5 py-2 bg-[#1A365D] text-white text-xs font-bold rounded-xl shadow-md hover:bg-blue-900 transition flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    <span>Nouvelle Demande</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Contenu -->
+        <div class="flex-1 overflow-y-auto p-8 custom-scrollbar">
+            <div class="max-w-7xl mx-auto space-y-6">
+
+                <!-- Bandeau résumé -->
+                <div class="flex items-center justify-between bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-800">Numérisation & Extraction en Arrière-Plan</h2>
+                        <p class="text-xs text-slate-500 mt-1">Le modèle IA local (Llama3-Vision) extrait automatiquement les informations des pièces pour pré-remplir les formulaires.</p>
+                    </div>
+                    <div class="flex space-x-3">
+                        <div class="px-4 py-2 bg-blue-50 border border-blue-100 rounded-2xl text-center">
+                            <span class="text-xs font-black text-blue-700 block">2</span>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase">En traitement</span>
+                        </div>
+                        <div class="px-4 py-2 bg-emerald-50 border border-emerald-100 rounded-2xl text-center">
+                            <span class="text-xs font-black text-emerald-700 block">1</span>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase">Prêt à valider</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grille des Demandes sous forme de Cartes -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    <!-- CARTE 1: En cours d'analyse (66%) -->
+                    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between overflow-hidden">
+                        <div class="p-6 space-y-4">
+                            <!-- Header Carte -->
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span class="text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md">#SCAN-2026-003</span>
+                                    <h3 class="text-sm font-bold text-slate-800 mt-2">Demandeur : <span class="font-normal italic">En cours d'extraction...</span></h3>
+                                </div>
+                                <span class="flex items-center space-x-1.5 px-2.5 py-1 bg-amber-50 border border-amber-200 text-amber-700 rounded-full text-[10px] font-bold">
+                                    <svg class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                    <span>Scan IA 66%</span>
+                                </span>
+                            </div>
+
+                            <!-- Barre de Progression Globale -->
+                            <div>
+                                <div class="flex justify-between text-[10px] font-bold text-slate-500 mb-1">
+                                    <span>Progression globale</span>
+                                    <span>2 / 3 documents</span>
+                                </div>
+                                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-blue-600 h-full w-2/3 animate-pulse rounded-full"></div>
+                                </div>
+                            </div>
+
+                            <!-- Statut des documents joints -->
+                            <div class="space-y-2 pt-2 border-t border-slate-100">
+                                <div class="flex items-center justify-between text-xs">
+                                    <span class="text-slate-600 flex items-center space-x-2 truncate">
+                                        <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                        <span class="truncate">CNI_Moussa_Sall.pdf</span>
+                                    </span>
+                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">Scanné</span>
+                                </div>
+                                <div class="flex items-center justify-between text-xs">
+                                    <span class="text-slate-600 flex items-center space-x-2 truncate">
+                                        <svg class="w-4 h-4 text-blue-500 animate-spin shrink-0" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                        <span class="truncate">Demande_Maire.jpg</span>
+                                    </span>
+                                    <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">Analyse...</span>
+                                </div>
+                                <div class="flex items-center justify-between text-xs opacity-50">
+                                    <span class="text-slate-600 flex items-center space-x-2 truncate">
+                                        <svg class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <span class="truncate">Certificat_Residence.pdf</span>
+                                    </span>
+                                    <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded">En attente</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer Action -->
+                        <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-[10px] font-medium text-slate-400">Lancé il y a 45s</span>
+                            <button class="px-4 py-2 bg-[#1A365D] hover:bg-blue-900 text-white text-xs font-bold rounded-xl transition shadow-sm flex items-center space-x-1">
+                                <span>Visualiser & Pré-remplir</span>
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- CARTE 2: Terminé / Prêt à valider (100%) -->
+                    <div class="bg-white rounded-3xl border border-emerald-200 shadow-sm hover:shadow-md transition flex flex-col justify-between overflow-hidden relative">
+                        <div class="p-6 space-y-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span class="text-[10px] font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-md">#SCAN-2026-002</span>
+                                    <h3 class="text-sm font-black text-slate-800 mt-2">MOUSSA SALL</h3>
+                                </div>
+                                <span class="flex items-center space-x-1 px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-full text-[10px] font-bold">
+                                    <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    <span>Scanné 100%</span>
+                                </span>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-[10px] font-bold text-slate-500 mb-1">
+                                    <span>Extraction IA terminée</span>
+                                    <span class="text-emerald-600">3 / 3 documents</span>
+                                </div>
+                                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-emerald-500 h-full w-full rounded-full"></div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2 pt-2 border-t border-slate-100">
+                                <div class="flex items-center justify-between text-xs">
+                                    <span class="text-slate-600 flex items-center space-x-2 truncate">
+                                        <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                        <span class="truncate">CNI_Moussa_Sall.pdf</span>
+                                    </span>
+                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">Extrai (98%)</span>
+                                </div>
+                                <div class="flex items-center justify-between text-xs">
+                                    <span class="text-slate-600 flex items-center space-x-2 truncate">
+                                        <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                        <span class="truncate">Demande_Maire.jpg</span>
+                                    </span>
+                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">Extrai (90%)</span>
+                                </div>
+                                <div class="flex items-center justify-between text-xs">
+                                    <span class="text-slate-600 flex items-center space-x-2 truncate">
+                                        <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                        <span class="truncate">Certif_Residence.pdf</span>
+                                    </span>
+                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">Extrai (95%)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-emerald-50/50 border-t border-emerald-100 flex items-center justify-between">
+                            <span class="text-[10px] font-medium text-emerald-700">Champs à corriger à la volée</span>
+                            <button class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition shadow-md flex items-center space-x-1">
+                                <span>Vérifier & Valider</span>
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7-7 7"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- CARTE 3: En début de traitement (25%) -->
+                    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between overflow-hidden">
+                        <div class="p-6 space-y-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span class="text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md">#SCAN-2026-001</span>
+                                    <h3 class="text-sm font-bold text-slate-800 mt-2">Demandeur : <span class="font-normal italic">Analyse...</span></h3>
+                                </div>
+                                <span class="flex items-center space-x-1.5 px-2.5 py-1 bg-amber-50 border border-amber-200 text-amber-700 rounded-full text-[10px] font-bold">
+                                    <svg class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                    <span>Scan IA 25%</span>
+                                </span>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-[10px] font-bold text-slate-500 mb-1">
+                                    <span>Progression globale</span>
+                                    <span>1 / 2 documents</span>
+                                </div>
+                                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-blue-600 h-full w-1/4 animate-pulse rounded-full"></div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2 pt-2 border-t border-slate-100">
+                                <div class="flex items-center justify-between text-xs">
+                                    <span class="text-slate-600 flex items-center space-x-2 truncate">
+                                        <svg class="w-4 h-4 text-blue-500 animate-spin shrink-0" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                        <span class="truncate">Extrait_Naissance.pdf</span>
+                                    </span>
+                                    <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">Analyse...</span>
+                                </div>
+                                <div class="flex items-center justify-between text-xs opacity-50">
+                                    <span class="text-slate-600 flex items-center space-x-2 truncate">
+                                        <svg class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <span class="truncate">Certif_Domicile.pdf</span>
+                                    </span>
+                                    <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded">En attente</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-[10px] font-medium text-slate-400">Lancé il y a 10s</span>
+                            <button class="px-4 py-2 bg-[#1A365D] hover:bg-blue-900 text-white text-xs font-bold rounded-xl transition shadow-sm flex items-center space-x-1">
+                                <span>Visualiser & Pré-remplir</span>
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

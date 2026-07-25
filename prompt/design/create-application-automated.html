@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Création Assistée par IA - ECSAS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 flex h-screen overflow-hidden">
+
+    <!-- Sidebar de l'application -->
+    <aside class="w-64 bg-[#1A365D] text-white flex flex-col justify-between p-6 shrink-0">
+        <div>
+            <div class="flex items-center space-x-3 mb-10">
+                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-[#1A365D] font-black text-xl shadow-lg">M</div>
+                <div>
+                    <h1 class="text-sm font-bold leading-tight">Mairie de Yoff</h1>
+                    <p class="text-[10px] text-blue-200">Commission santé & action sociale</p>
+                </div>
+            </div>
+            <nav class="space-y-2">
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-blue-200 hover:bg-blue-800/50 rounded-xl text-xs font-semibold transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 bg-blue-600 text-white rounded-xl text-xs font-bold shadow-md transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <span>Procédures</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-blue-200 hover:bg-blue-800/50 rounded-xl text-xs font-semibold transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
+                    <span>Paramètres</span>
+                </a>
+            </nav>
+        </div>
+        <div class="p-3 bg-blue-900/40 rounded-xl border border-blue-800 flex items-center space-x-3">
+            <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+            <span class="text-[11px] font-medium text-blue-200">LLM Local : Prêt (Ollama)</span>
+        </div>
+    </aside>
+
+    <!-- Zone Principale -->
+    <main class="flex-1 flex flex-col overflow-hidden">
+
+        <!-- Header -->
+        <header class="h-16 bg-white border-b border-slate-200 px-8 flex justify-between items-center shrink-0">
+            <div class="flex items-center space-x-3">
+                <span class="text-xs font-semibold text-slate-400">Nouvelle Demande</span>
+                <span class="text-slate-300">/</span>
+                <span class="text-xs font-bold text-slate-800">Scan & PRÉ-REMPLISSAGE INTELLIGENT</span>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button class="px-4 py-2 text-xs font-bold text-slate-500 hover:bg-slate-100 rounded-xl transition">Annuler</button>
+                <button class="px-5 py-2 bg-[#1A365D] text-white text-xs font-bold rounded-xl shadow-md hover:bg-blue-900 transition">Valider et Créer la demande</button>
+            </div>
+        </header>
+
+        <!-- Contenu du Workflow -->
+        <div class="flex-1 overflow-y-auto p-8 custom-scrollbar">
+            <div class="max-w-7xl mx-auto space-y-8">
+
+                <!-- SECTION 1: Chargement des Documents & Lancement IA -->
+                <section class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h2 class="text-base font-bold text-slate-800">1. Chargement des documents du dossier</h2>
+                            <p class="text-xs text-slate-500">Glissez-déposez les pièces requises pour extraire automatiquement les données du bénéficiaire.</p>
+                        </div>
+                        <button class="flex items-center space-x-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-blue-600/20 transition">
+                            <svg class="w-4 h-4 animate-spin hidden" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            <span>Lancer le Scan IA (Local)</span>
+                        </button>
+                    </div>
+
+                    <!-- Grille de chargement des 3 documents majeurs -->
+                    <div class="grid grid-cols-3 gap-6">
+
+                        <!-- Doc 1: CNI / Extrait -->
+                        <div class="border-2 border-dashed border-emerald-300 bg-emerald-50/30 rounded-2xl p-4 relative group hover:border-emerald-500 transition">
+                            <div class="flex justify-between items-start mb-3">
+                                <span class="text-[10px] font-black uppercase text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">CNI / Extrait</span>
+                                <span class="text-xs text-emerald-600 font-bold flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Chargé
+                                </span>
+                            </div>
+                            <p class="text-xs font-bold text-slate-700 truncate mb-1">CNI_Moussa_Sall.pdf</p>
+                            <p class="text-[10px] text-slate-400">Taille: 1.2 MB • Scanné à 100%</p>
+                        </div>
+
+                        <!-- Doc 2: Demande Manuscrite -->
+                        <div class="border-2 border-dashed border-blue-300 bg-blue-50/30 rounded-2xl p-4 relative group hover:border-blue-500 transition">
+                            <div class="flex justify-between items-start mb-3">
+                                <span class="text-[10px] font-black uppercase text-blue-700 bg-blue-100 px-2 py-0.5 rounded-md">Demande Manuscrite</span>
+                                <span class="text-xs text-blue-600 font-bold flex items-center gap-1">
+                                    <svg class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                    Analyse IA...
+                                </span>
+                            </div>
+                            <p class="text-xs font-bold text-slate-700 truncate mb-1">Demande_Maire.jpg</p>
+                            <!-- Progress bar -->
+                            <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mt-2">
+                                <div class="bg-blue-600 h-full w-2/3 animate-pulse"></div>
+                            </div>
+                        </div>
+
+                        <!-- Doc 3: Certificat de Domicile -->
+                        <div class="border-2 border-dashed border-slate-200 bg-slate-50 rounded-2xl p-4 flex flex-col items-center justify-center text-center hover:border-slate-400 cursor-pointer transition">
+                            <svg class="w-8 h-8 text-slate-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                            <span class="text-xs font-bold text-slate-600">Certificat de résidence</span>
+                            <span class="text-[10px] text-slate-400 mt-1">Glissez ou cliquez pour charger</span>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- SECTION 2: Écran de Validation / Correction à la Volée -->
+                <section class="grid grid-cols-12 gap-8">
+
+                    <!-- Colonne Gauche: Aperçu Document Scanné -->
+                    <div class="col-span-5 bg-white rounded-3xl border border-slate-200 shadow-sm flex flex-col overflow-hidden h-[520px]">
+                        <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+                            <h3 class="text-xs font-bold text-slate-700">Document actif : <span class="text-blue-600 font-mono">CNI_Moussa_Sall.pdf</span></h3>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase">Aperçu OCR</span>
+                        </div>
+                        <div class="flex-1 bg-slate-100 p-4 flex items-center justify-center overflow-auto relative">
+                            <!-- Visualiseur Document -->
+                            <div class="w-full h-full bg-white rounded-lg shadow-inner border border-slate-200 p-6 flex flex-col justify-between relative">
+                                <div class="absolute top-4 right-4 bg-emerald-500/10 border border-emerald-500 text-emerald-700 px-2 py-1 rounded text-[10px] font-bold">
+                                    Détection CNI Sénégal : 98%
+                                </div>
+                                <div class="space-y-4 pt-6">
+                                    <div class="h-4 bg-slate-200 rounded w-1/3"></div>
+                                    <div class="h-8 bg-blue-100/60 border border-blue-300 rounded w-2/3 flex items-center px-2 text-xs font-mono text-blue-900">1 234 567 89 012</div>
+                                    <div class="h-6 bg-blue-100/60 border border-blue-300 rounded w-1/2 flex items-center px-2 text-xs font-bold text-blue-900">MOUSSA SALL</div>
+                                    <div class="h-12 bg-slate-100 rounded w-full"></div>
+                                </div>
+                                <div class="text-[10px] text-slate-400 text-center">Extraction exécutée en local sur Ollama (Llama3-Vision)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Colonne Droite: Formulaires Pré-remplis à valider -->
+                    <div class="col-span-7 bg-white rounded-3xl border border-slate-200 shadow-sm p-6 flex flex-col justify-between h-[520px] overflow-y-auto custom-scrollbar">
+                        <div>
+                            <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+                                <div>
+                                    <h3 class="text-sm font-bold text-slate-800">Données extraites à vérifier</h3>
+                                    <p class="text-[11px] text-slate-400">Modifiez directement les champs si une erreur est survenue pendant le scan.</p>
+                                </div>
+                                <span class="px-3 py-1 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-lg text-[10px] font-bold">
+                                    4 champs pré-remplis
+                                </span>
+                            </div>
+
+                            <form class="space-y-4">
+                                <!-- Bénéficiaire -->
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="text-[10px] font-black text-slate-400 uppercase flex items-center justify-between">
+                                            <span>Nom & Prénom</span>
+                                            <span class="text-emerald-500 text-[9px]">Confiance 99%</span>
+                                        </label>
+                                        <input type="text" value="MOUSSA SALL" class="w-full mt-1 bg-emerald-50/30 border border-emerald-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] font-black text-slate-400 uppercase flex items-center justify-between">
+                                            <span>Numéro CNI</span>
+                                            <span class="text-emerald-500 text-[9px]">Confiance 98%</span>
+                                        </label>
+                                        <input type="text" value="1 234 567 89 012" class="w-full mt-1 bg-emerald-50/30 border border-emerald-300 rounded-xl px-3 py-2 text-xs font-bold font-mono text-slate-800 outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                </div>
+
+                                <!-- Demande -->
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="text-[10px] font-black text-slate-400 uppercase flex items-center justify-between">
+                                            <span>Référence du courrier</span>
+                                            <span class="text-amber-500 text-[9px]">Confiance 75% (A vérifier)</span>
+                                        </label>
+                                        <input type="text" value="REF784G" class="w-full mt-1 bg-amber-50/50 border border-amber-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] font-black text-slate-400 uppercase flex items-center justify-between">
+                                            <span>Montant Estimé (FCFA)</span>
+                                            <span class="text-emerald-500 text-[9px]">Confiance 90%</span>
+                                        </label>
+                                        <input type="text" value="25 000" class="w-full mt-1 bg-emerald-50/30 border border-emerald-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="text-[10px] font-black text-slate-400 uppercase flex items-center justify-between">
+                                        <span>Adresse Résidentielle</span>
+                                        <span class="text-emerald-500 text-[9px]">Confiance 95%</span>
+                                    </label>
+                                    <input type="text" value="Quartier Layenne, Yoff, Dakar" class="w-full mt-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Footer d'action rapide -->
+                        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-[10px] text-slate-400">Modifié à l'instant par l'opérateur</span>
+                            <button class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition">
+                                Recalculer via IA
+                            </button>
+                        </div>
+                    </div>
+
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

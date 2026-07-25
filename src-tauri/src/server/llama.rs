@@ -2,6 +2,7 @@ use std::sync::Mutex;
 use tauri::{AppHandle, State};
 use tauri_plugin_shell::{process::CommandChild, ShellExt};
 
+// https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct-GGUF
 // 1. Define a state struct to hold the running process
 pub struct LlamaState {
     pub process: Mutex<Option<CommandChild>>,
@@ -24,16 +25,19 @@ pub async fn start_llama_server(
     let sidecar = "llama-server";
     let args = [
         "-m",
-        "./resources/Qwen3VL-2B-Instruct-Q8_0.gguf",
+        "./resources/Qwen3VL-2B-Instruct-Q4_K_M.gguf",
         "--mmproj",
         "./resources/mmproj-Qwen3VL-2B-Instruct-F16.gguf",
         "--port",
         "8080",
         "-t",
-        "8",
+        "4",
         "--ctx-size",
-        "4096",
-        "--mlock",
+        "2048",
+        "-ngl",
+        "99",
+        "--flash-attn",
+        "true",
     ];
 
     // Spawn the sidecar using the AppHandle

@@ -49,6 +49,16 @@ export class LlamaService {
   }
 
   async fetchApplicantInfo(base64Image: string): Promise<unknown> {
+    const prompt = `
+    You are a data extractor. Given a ID card image, return ONLY valid JSON:
+        interface Applicant {
+        fullName: string;
+        nin: string;
+        phoneNumber: string;
+        birthdate: string;
+        address: string;
+    };
+    `;
     const response = await fetch(this.apiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -64,7 +74,8 @@ export class LlamaService {
               },
               {
                 type: 'text',
-                text: 'Extract all text fields from this ID card. Return ONLY valid JSON',
+                // text: 'Extract all text fields from this ID card. Return ONLY valid JSON',
+                text: prompt,
               },
             ],
           },
@@ -116,7 +127,7 @@ export class LlamaService {
     return content.trim();
   }
 
-  async fileToBase64(file: File): Promise<string> {
+  async fileToBase64(file: File | Blob): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => {
@@ -128,4 +139,24 @@ export class LlamaService {
       reader.readAsDataURL(file);
     });
   }
+
+resizeImage(file: File, maxDim = 1000): Promise<Blob | null> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+    img.onload = () => {
+      const scale = Math.min(maxDim / img.width, maxDim / img.height);
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        reject(new Error('Failed to create canvas context'));
+        return;
+      }
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob((blob) => resolve(blob), file.type, 0.85);
+    };
+  });
+}
 }

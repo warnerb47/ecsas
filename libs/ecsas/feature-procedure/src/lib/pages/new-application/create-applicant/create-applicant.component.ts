@@ -90,7 +90,10 @@ export class CreateApplicantComponent {
   async scrapInfo(file: File | null) {
     if (!file) return;
     console.log('Scraping info...');
-    const base64 = await this._llamaService.fileToBase64(file);
+    const resiezedImage = await this._llamaService.resizeImage(file);
+    if (!resiezedImage) return;
+    console.log('image resized...');
+    const base64 = await this._llamaService.fileToBase64(resiezedImage);
     console.log({base64});
     const applicant = await this._llamaService.fetchApplicantInfo(base64);
     console.log(applicant);

@@ -68,3 +68,92 @@ The LlamaState struc is used to check if an instance is running how can I accept
 
 # Prompt 2
 How can I stop llama-server on app closed
+
+# Prompt 3
+I am using angular with tauriv2 and llama-server as sidecar. Here is the model used:
+- Qwen3VL-2B-Instruct-Q4_K_M.gguf
+- mmproj-Qwen3VL-2B-Instruct-F16.gguf
+
+I pass cardId to this model and it returns me information in json format but request takes about 40s which too long how can I improve it. This LLM will be packed into my desktop app and should run smoothly even in limited ressource PC.
+Here is my llama-server sidecar:
+`
+use std::sync::Mutex;
+use tauri::{AppHandle, State};
+use tauri_plugin_shell::{process::CommandChild, ShellExt};
+
+// https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct-GGUF
+// 1. Define a state struct to hold the running process
+pub struct LlamaState {
+    pub process: Mutex<Option<CommandChild>>,
+}
+
+// 2. Command to Start the Server
+#[tauri::command]
+pub async fn start_llama_server(
+    app: AppHandle,
+    state: State<'_, LlamaState>,
+) -> Result<String, String> {
+    // Check if already running
+    {
+        let proc = state.process.lock().map_err(|e| e.to_string())?;
+        if proc.is_some() {
+            return Ok("Llama Server already running on port 8080".to_string());
+        }
+    }
+
+    let sidecar = "llama-server";
+    let args = [
+        "-m",
+        "./resources/Qwen3VL-2B-Instruct-Q4_K_M.gguf",
+        "--mmproj",
+        "./resources/mmproj-Qwen3VL-2B-Instruct-F16.gguf",
+        "--port",
+        "8080",
+        "-t",
+        "8",
+        "--ctx-size",
+        "4096",
+        "--mlock",
+    ];
+
+    // Spawn the sidecar using the AppHandle
+    let command = app.shell().sidecar(sidecar).map_err(|e| e.to_string())?;
+    let (_rx, child) = command.args(&args).spawn().map_err(|e| e.to_string())?;
+
+    // Store the process in state
+    let mut proc = state.process.lock().map_err(|e| e.to_string())?;
+    *proc = Some(child);
+
+    Ok("Llama Server running on port 8080".to_string())
+}
+
+// 3. Command to Stop the Server
+#[tauri::command]
+pub async fn stop_llama_server(state: State<'_, LlamaState>) -> Result<String, String> {
+    let mut proc = state.process.lock().map_err(|e| e.to_string())?;
+
+    if let Some(child) = proc.take() {
+        child.kill().map_err(|e| e.to_string())?;
+        Ok("Llama Server stopped".to_string())
+    } else {
+        Ok("Llama Server was not running".to_string())
+    }
+}
+
+#[tauri::command]
+pub fn get_llama_status(state: State<'_, LlamaState>) -> Result<bool, String> {
+    // Lock the state to read the process status
+    let proc = state.process.lock().map_err(|e| e.to_string())?;
+
+    // Return true if process exists (Some), false if None
+    Ok(proc.is_some())
+}
+
+`
+
+# Prompt 4
+I want to enable GPU Acceleration (Vulkan/CUDA) what should I use.
+
+
+# Prompt 5
+I think about using an OCR like tesseract to extrat text and pass it to my Qwen3VL-2B-Instruct-Q4_K_M.gguf model to format JSON from text. What do you think will it improve performance or should I keep my Qwen3VL-2B-Instruct-Q4_K_M.gguf with image processing throw mmproj-Qwen3VL-2B-Instruct-F16.gguf
