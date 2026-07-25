@@ -5,6 +5,9 @@
         <p class="text-slate-500 text-sm">{{ procedure()?.description }}</p>
     </div>
     <div class="flex space-x-3">
+        <lib-button routerLink="/procedure/detail/{{procedure()?.id}}/application-scan-list" type="secondary">
+            <i class="pi pi-sparkles"></i>
+        </lib-button>
         <lib-button (click)="export()" type="secondary">
             <i class="pi pi-download"></i>
             Exporter (Excel)

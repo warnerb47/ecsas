@@ -1,0 +1,149 @@
+<div class="flex-1 flex flex-col overflow-hidden">
+    <lib-topbar [breadcrumbItems]="breadcrumbItems" searchPlaceholder="Rechercher une demande ou un bénéficiaire...">
+    </lib-topbar>
+
+        <!-- Contenu -->
+        <div class="flex-1 overflow-y-auto p-8 custom-scrollbar">
+            <div class="max-w-7xl mx-auto space-y-6">
+
+                <!-- Bandeau résumé -->
+                <div class="flex items-center justify-between bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-800">Numérisation & Extraction en Arrière-Plan</h2>
+                        <p class="text-xs text-slate-500 mt-1">Le modèle IA local (Llama3-Vision) extrait automatiquement les informations des pièces pour pré-remplir les formulaires.</p>
+                    </div>
+                    <div class="flex space-x-3">
+                        <div class="px-4 py-2 bg-blue-50 border border-blue-100 rounded-2xl text-center">
+                            <span class="text-xs font-black text-blue-700 block">2</span>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase">En traitement</span>
+                        </div>
+                        <div class="px-4 py-2 bg-emerald-50 border border-emerald-100 rounded-2xl text-center">
+                            <span class="text-xs font-black text-emerald-700 block">1</span>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase">Prêt à valider</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grille des Demandes sous forme de Cartes -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    <!-- CARTE 1: En cours d'analyse (66%) -->
+                    <lib-application-scan-card></lib-application-scan-card>
+                    <lib-application-scan-card></lib-application-scan-card>
+                    <lib-application-scan-card></lib-application-scan-card>
+                    <lib-application-scan-card></lib-application-scan-card>
+
+                    <!-- CARTE 2: Terminé / Prêt à valider (100%) -->
+                    <div class="bg-white rounded-3xl border border-emerald-200 shadow-sm hover:shadow-md transition flex flex-col justify-between overflow-hidden relative">
+                        <div class="p-6 space-y-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span class="text-[10px] font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-md">#SCAN-2026-002</span>
+                                    <h3 class="text-sm font-black text-slate-800 mt-2">MOUSSA SALL</h3>
+                                </div>
+                                <span class="flex items-center space-x-1 px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-full text-[10px] font-bold">
+                                    <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    <span>Scanné 100%</span>
+                                </span>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-[10px] font-bold text-slate-500 mb-1">
+                                    <span>Extraction IA terminée</span>
+                                    <span class="text-emerald-600">3 / 3 documents</span>
+                                </div>
+                                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-emerald-500 h-full w-full rounded-full"></div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2 pt-2 border-t border-slate-100">
+                                <div class="flex items-center justify-between text-xs">
+                                    <span class="text-slate-600 flex items-center space-x-2 truncate">
+                                        <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                        <span class="truncate">CNI_Moussa_Sall.pdf</span>
+                                    </span>
+                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">Extrai (98%)</span>
+                                </div>
+                                <div class="flex items-center justify-between text-xs">
+                                    <span class="text-slate-600 flex items-center space-x-2 truncate">
+                                        <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                        <span class="truncate">Demande_Maire.jpg</span>
+                                    </span>
+                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">Extrai (90%)</span>
+                                </div>
+                                <div class="flex items-center justify-between text-xs">
+                                    <span class="text-slate-600 flex items-center space-x-2 truncate">
+                                        <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                        <span class="truncate">Certif_Residence.pdf</span>
+                                    </span>
+                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">Extrai (95%)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-emerald-50/50 border-t border-emerald-100 flex items-center justify-between">
+                            <span class="text-[10px] font-medium text-emerald-700">Champs à corriger à la volée</span>
+                            <button class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition shadow-md flex items-center space-x-1">
+                                <span>Vérifier & Valider</span>
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7-7 7"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- CARTE 3: En début de traitement (25%) -->
+                    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between overflow-hidden">
+                        <div class="p-6 space-y-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span class="text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md">#SCAN-2026-001</span>
+                                    <h3 class="text-sm font-bold text-slate-800 mt-2">Demandeur : <span class="font-normal italic">Analyse...</span></h3>
+                                </div>
+                                <span class="flex items-center space-x-1.5 px-2.5 py-1 bg-amber-50 border border-amber-200 text-amber-700 rounded-full text-[10px] font-bold">
+                                    <svg class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                    <span>Scan IA 25%</span>
+                                </span>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-[10px] font-bold text-slate-500 mb-1">
+                                    <span>Progression globale</span>
+                                    <span>1 / 2 documents</span>
+                                </div>
+                                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-blue-600 h-full w-1/4 animate-pulse rounded-full"></div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2 pt-2 border-t border-slate-100">
+                                <div class="flex items-center justify-between text-xs">
+                                    <span class="text-slate-600 flex items-center space-x-2 truncate">
+                                        <svg class="w-4 h-4 text-blue-500 animate-spin shrink-0" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                        <span class="truncate">Extrait_Naissance.pdf</span>
+                                    </span>
+                                    <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">Analyse...</span>
+                                </div>
+                                <div class="flex items-center justify-between text-xs opacity-50">
+                                    <span class="text-slate-600 flex items-center space-x-2 truncate">
+                                        <svg class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <span class="truncate">Certif_Domicile.pdf</span>
+                                    </span>
+                                    <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded">En attente</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-[10px] font-medium text-slate-400">Lancé il y a 10s</span>
+                            <button class="px-4 py-2 bg-[#1A365D] hover:bg-blue-900 text-white text-xs font-bold rounded-xl transition shadow-sm flex items-center space-x-1">
+                                <span>Visualiser & Pré-remplir</span>
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+</div>
