@@ -35,6 +35,7 @@
 ✅ add application status filter
 ✅ add application-table search
 ✅ add application-table advance filter
+✅ excel export
 - add application-table pagination
 - fix: set dropdown option label to '' when value is null (it is selecting the first option label)
 - update detail-application design (add demande section edit btn like for applicant)
@@ -50,27 +51,29 @@
 - use transaction for commands
 - add full text search with FTS5 for application.comment, applicant.address
 
-# Module Dashboard
-
-# Module Setting
-
-# PoC
-✅ excel export
-✅ Backup
+# Backup Module
  ✅ add create_backup command
  ✅ add restore_backup command
  ✅ init backup-service
  ✅ plug setting/backup card UI
  ✅ add setting/restore card UI
+
+
+# Application Scan Module
+✅ configure llama-server binaries
+✅ handle llama-server lifecycle with rust backend
+✅ start and stop llama-server from UI
+✅ Init page design for image integration
+✅ Configure respone JSON format in cardId prompt
+- add document extraction prompt on procedure document creation
+- add migrations for scan
+- plug application scan list page
+- plug application scan detail page
+- Improve response timing (current 40s)
+- Extract image information and initialize form
+
+# PoC
 - Document generation for bordereau
-- OCR & LLM
-  ✅ configure llama-server binaries
-  ✅ handle llama-server lifecycle with rust backend
-  ✅ start and stop llama-server from UI
-  - Improve response timing (current 11s)
-  - Configure respone JSON format with the initial prompt
-  - Init page design for image integration
-  - Extract image information and initialize form
 - Integrate Typesense
 - Qrcode mobile transferring 
 - P2P transfert

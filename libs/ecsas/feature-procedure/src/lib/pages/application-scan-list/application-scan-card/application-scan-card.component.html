@@ -6,7 +6,9 @@
               <span class="flex items-center px-2 py-1 bg-amber-50 border border-amber-200 text-amber-700 rounded-full text-[10px] font-bold w-fit">
                   Scan en cours
               </span>
-                <h3 class="text-sm font-bold text-slate-800 mt-2">Demandeur : <span class="font-normal italic">En cours d'extraction...</span></h3>
+                <h3 class="text-sm font-bold text-slate-800 mt-2">
+                  Demandeur : <span class="font-normal italic">En cours d'extraction...</span>
+                </h3>
             </div>
         </div>
 
@@ -25,7 +27,7 @@
         <div class="space-y-2 pt-2 border-t border-slate-100">
             <div class="flex items-center justify-between text-xs">
                 <span class="text-slate-600 flex items-center space-x-2 truncate">
-                    <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    <i class="text-emerald-500 font-bold pi pi-check" style="font-size: 0.80rem"></i>
                     <span class="truncate">CNI_Moussa_Sall.pdf</span>
                 </span>
                 <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">Scanné</span>
@@ -39,10 +41,10 @@
             </div>
             <div class="flex items-center justify-between text-xs opacity-50">
                 <span class="text-slate-600 flex items-center space-x-2 truncate">
-                    <svg class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <i class="text-slate-400 pi pi-clock" style="font-size: 0.80rem"></i>
                     <span class="truncate">Certificat_Residence.pdf</span>
                 </span>
-                <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded">En attente</span>
+                <span class="text-[10px] font-bold  bg-slate-100 px-2 py-0.5 rounded">En attente</span>
             </div>
         </div>
     </div>
@@ -52,7 +54,7 @@
         <span class="text-[10px] font-medium text-slate-400">
           Soumis le 20 janv 2026
         </span>
-        <lib-button type="primary">
+        <lib-button routerLink="/procedure/detail/{{procedureId()}}/application-scan-list/applicationScanId" type="primary">
           Voir détail
         </lib-button>
     </div>
