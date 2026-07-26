@@ -157,3 +157,51 @@ I want to enable GPU Acceleration (Vulkan/CUDA) what should I use.
 
 # Prompt 5
 I think about using an OCR like tesseract to extrat text and pass it to my Qwen3VL-2B-Instruct-Q4_K_M.gguf model to format JSON from text. What do you think will it improve performance or should I keep my Qwen3VL-2B-Instruct-Q4_K_M.gguf with image processing throw mmproj-Qwen3VL-2B-Instruct-F16.gguf
+
+
+# Prompt 6
+I am using angular with tauriv2 and llama-server as sidecar. Here is my method in my angular LlamaService to contact llama-server:
+`
+  async fetchApplicantInfo(base64Image: string): Promise<unknown> {
+    const prompt = `
+    You are a data extractor. Given a ID card image, return ONLY valid JSON:
+        interface Applicant {
+        fullName: string;
+        nin: string;
+        phoneNumber: string;
+        birthdate: string;
+        address: string;
+    };
+    `;
+    const response = await fetch(this.apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'Qwen3VL-2B-Instruct-Q8_0',
+        messages: [
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'image_url',
+                image_url: { url: base64Image },
+              },
+              {
+                type: 'text',
+                text: prompt,
+              },
+            ],
+          },
+        ],
+        temperature: 0.1,
+        top_k: 1,
+      }),
+    });
+
+    const data = await response.json();
+    console.log(data);
+    return this.parseLlamaResponse(data);
+  }
+
+`
+I want to add progression bar to display on UI file scan progression. Create another method based on fetchApplicantInfo which return on observable so that the ui component can subscribe and display progression

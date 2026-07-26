@@ -7,6 +7,7 @@ import { DetailApplicationComponent } from './pages/detail-application/detail-ap
 import { UpdateProcedureComponent } from './pages/update-procedure/update-procedure.component';
 import { ApplicationScanListComponent } from './pages/application-scan-list/application-scan-list.component';
 import { DetailApplicationScanComponent } from './pages/detail-application-scan/detail-application-scan.component';
+import { CreateApplicationScanComponent } from './pages/create-application-scan/create-application-scan.component';
 
 export const featureProcedureRoutes: Route[] = [
   { path: '', component: ProcedureListComponent, pathMatch: 'full' },
@@ -15,6 +16,7 @@ export const featureProcedureRoutes: Route[] = [
   { path: 'new-procedure', component: NewProcedureComponent },
   { path: 'detail/:procedureId/new-application', component: NewApplicationComponent },
   { path: 'detail/:procedureId/application-scan-list', component: ApplicationScanListComponent },
-  { path: 'detail/:procedureId/application-scan-list/:applicationScanId', component: DetailApplicationScanComponent },
+  { path: 'detail/:procedureId/application-scan-list/detail/:applicationScanId', component: DetailApplicationScanComponent },
+  { path: 'detail/:procedureId/application-scan-list/create', component: CreateApplicationScanComponent },
   { path: 'detail/:procedureId/detail-application/:applicationId', component: DetailApplicationComponent },
 ];

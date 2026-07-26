@@ -1,17 +1,18 @@
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { BreadcrumbItem, ButtonComponent, TopbarComponent } from '@org/ecsas/shared-ui';
+import { ActivatedRoute } from '@angular/router';
+import { BreadcrumbItem, TopbarComponent } from '@org/ecsas/shared-ui';
 import { map } from 'rxjs';
-import { ApplicationScanCardComponent } from './application-scan-card/application-scan-card.component';
+import { ApplicationScanDocumentComponent } from './application-scan-document/application-scan-document.component';
 
 @Component({
-  selector: 'lib-application-scan-list',
+  selector: 'lib-create-application-scan',
   standalone: true,
-  imports: [TopbarComponent, ApplicationScanCardComponent, ButtonComponent, RouterLink],
-  templateUrl: './application-scan-list.component.html',
+  imports: [TopbarComponent, ApplicationScanDocumentComponent],
+  templateUrl: './create-application-scan.component.html',
 })
-export class ApplicationScanListComponent {
+export class CreateApplicationScanComponent {
+
   private readonly _activatedRoute = inject(ActivatedRoute);
 
   procedureId = toSignal(

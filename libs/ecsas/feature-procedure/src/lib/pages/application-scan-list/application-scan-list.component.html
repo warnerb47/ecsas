@@ -7,12 +7,12 @@
             <div class="max-w-7xl mx-auto space-y-6">
 
                 <!-- Bandeau résumé -->
-                <div class="flex items-center justify-between bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <div class="flex flex-col bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
                     <div>
                         <h2 class="text-base font-bold text-slate-800">Numérisation & Extraction en Arrière-Plan</h2>
                         <p class="text-xs text-slate-500 mt-1">Le modèle IA local (Llama3-Vision) extrait automatiquement les informations des pièces pour pré-remplir les formulaires.</p>
                     </div>
-                    <div class="flex space-x-3">
+                    <div class="flex w-full items-end space-x-3 justify-end">
                         <div class="px-4 py-2 bg-blue-50 border border-blue-100 rounded-2xl text-center">
                             <span class="text-xs font-black text-blue-700 block">2</span>
                             <span class="text-[10px] font-bold text-slate-400 uppercase">En traitement</span>
@@ -21,6 +21,9 @@
                             <span class="text-xs font-black text-emerald-700 block">1</span>
                             <span class="text-[10px] font-bold text-slate-400 uppercase">Prêt à valider</span>
                         </div>
+                        <lib-button routerLink="/procedure/detail/{{procedureId()}}/application-scan-list/create" type="primary">
+                          Nouvelle demande
+                        </lib-button>
                     </div>
                 </div>
 
@@ -28,9 +31,6 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                     <!-- CARTE 1: En cours d'analyse (66%) -->
-                    <lib-application-scan-card></lib-application-scan-card>
-                    <lib-application-scan-card></lib-application-scan-card>
-                    <lib-application-scan-card></lib-application-scan-card>
                     <lib-application-scan-card></lib-application-scan-card>
 
                     <!-- CARTE 2: Terminé / Prêt à valider (100%) -->
