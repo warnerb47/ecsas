@@ -50,9 +50,9 @@
                                 <div class="bg-blue-600 h-full w-2/3 animate-pulse"></div>
                             </div>
                         </div>
-
-                        <!-- Doc 3: Certificat de Domicile -->
-                        <lib-application-scan-document></lib-application-scan-document>
+                        @for (document of procedure()?.documents ?? []; track $index) {
+                          <lib-application-scan-document [document]="document"></lib-application-scan-document>
+                        }
 
                     </div>
                 </section>

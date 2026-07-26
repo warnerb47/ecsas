@@ -2,12 +2,14 @@ import {
   Component,
   ElementRef,
   input,
+  OnDestroy,
   output,
   signal,
   ViewChild,
 } from '@angular/core';
 import { LlamaService } from '@org/api/products';
-import { tap } from 'rxjs';
+import { ProcedureDocument } from '@org/models';
+import { Subject, takeUntil, tap } from 'rxjs';
 
 @Component({
   selector: 'lib-application-scan-document',
@@ -15,9 +17,10 @@ import { tap } from 'rxjs';
   imports: [],
   templateUrl: './application-scan-document.component.html',
 })
-export class ApplicationScanDocumentComponent {
+export class ApplicationScanDocumentComponent implements OnDestroy {
   private readonly _llamaService = new LlamaService();
-  accept = input<string>('');
+  private readonly _unsubscribe = new Subject<void>();
+  document = input<Partial<ProcedureDocument> | null>(null);
   rawFileName = input<string>('');
   fileSelected = output<File | null>();
   selectedFileName = signal('');
@@ -32,6 +35,11 @@ export class ApplicationScanDocumentComponent {
   @ViewChild('fileInput', { static: false }) fileInput:
     | ElementRef<HTMLInputElement>
     | undefined;
+
+  ngOnDestroy() {
+    this._unsubscribe.next();
+    this._unsubscribe.complete();
+  }
 
   onUpload() {
     this.fileInput?.nativeElement?.click();
@@ -64,7 +72,7 @@ export class ApplicationScanDocumentComponent {
     this._llamaService
       .fetchApplicantInfoWithProgress(base64)
       .pipe(
-        tap((res) =>{
+        tap((res) => {
           this.progressEvent.set(
             res as unknown as {
               status: 'started' | 'streaming' | 'completed' | 'error';
@@ -73,8 +81,8 @@ export class ApplicationScanDocumentComponent {
               data?: unknown;
             },
           );
-        }
-        ),
+        }),
+        takeUntil(this._unsubscribe),
       )
       .subscribe();
   }

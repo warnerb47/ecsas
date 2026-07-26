@@ -3,13 +3,12 @@
   role="button" tabindex="0"
   (click)="onUpload()" (keydown.enter)="onUpload()">
   <svg class="w-8 h-8 text-slate-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-  <span class="text-xs font-bold text-slate-600">Certificat de résidence</span>
+  <span class="text-xs font-bold text-slate-600">{{document()?.name}}</span>
   <span class="text-[10px] text-slate-400 mt-1">Glissez ou cliquez pour charger</span>
 </div>
 
   <input
     #fileInput type="file" class="hidden" (change)="onFileSelected($event)"
-    [accept]="accept()"
   />
 } @else {
   @if (this.progressEvent()?.progress === 100) {
