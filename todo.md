@@ -42,10 +42,12 @@
 - update detail-application design (use badge for status and state)
 - update detail-application design (add label for applicant.status)
 
+
 # Refactoring
 ✅- add applicant.birthDate 
 - update applicant.sources to applicant.source (applicant have only one source the CNI)
 - add error handling for all shared-ui input
+
 
 # Database
 - use transaction for commands
@@ -72,8 +74,16 @@
 - Improve response timing (current 40s)
 - Extract image information and initialize form
 
+# Documen module
+- Prompt to check fasabilty 
+- Prompt to get design for this module
+- add documents menu item
+- create document template with text editor
+- let user define blank text and form for document
+- generate document on form submit
+
+
 # PoC
-- Document generation for bordereau
 - Integrate Typesense
 - Qrcode mobile transferring 
 - P2P transfert
