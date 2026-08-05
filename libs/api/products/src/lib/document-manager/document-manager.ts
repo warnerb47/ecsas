@@ -103,24 +103,4 @@ export class DocumentManager {
       throw error;
     }
   }
-
-  // exemple of file upload from component form
-  async uploadExempleFromComponent(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (!(input.files && input.files.length > 0)) {
-      console.log('No file selected');
-      return;
-    }
-    const selectedFile = input.files[0];
-    const fullPath = `${this.appDataConfig.applicantFolder.path}/${selectedFile.name}`;
-    const uploaded = await this.uploadFile({
-      file: selectedFile,
-      fullPath,
-    });
-    if (uploaded) {
-      console.log('File uploaded');
-      return;
-    }
-    console.log('File upload failed');
-  }
 }
