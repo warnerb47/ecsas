@@ -16,7 +16,7 @@
   ✅ refactoring: update migrations
   ✅ refactoring: remove category keep only procedure and add filter by date
   ✅ refactoring: remove procedure.endDate, procedure.startDate, procedure.type, procedure.status
-
+- add procedure metrics
 
 # Module application
 ✅ add migration for application
