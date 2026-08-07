@@ -1,10 +1,13 @@
-@if(!selectedFileName()) {
+@if(!selectedFileName() || this.progressEvent()?.status === 'error') {
 <div class="border-2 border-dashed border-slate-200 bg-slate-50 hover:border-slate-400 rounded-2xl p-4 flex flex-col items-center justify-center text-center cursor-pointer transition"
   role="button" tabindex="0"
   (click)="onUpload()" (keydown.enter)="onUpload()">
   <svg class="w-8 h-8 text-slate-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
   <span class="text-xs font-bold text-slate-600">{{document()?.name}}</span>
   <span class="text-[10px] text-slate-400 mt-1">Glissez ou cliquez pour charger</span>
+  @if(this.progressEvent()?.status === 'error') {
+    <span class="text-[10px] text-red-400 mt-1">Erreur lors du scan du document: {{this.progressEvent()?.message}}</span>
+  }
 </div>
 
   <input
