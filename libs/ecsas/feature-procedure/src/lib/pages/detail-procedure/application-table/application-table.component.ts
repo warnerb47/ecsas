@@ -63,6 +63,10 @@ export class ApplicationTableComponent implements OnInit {
     { label: '5000', value: 5000 },
   ];
 
+  pageOptions = signal<{ label: string; value: string | number | null }[]>([
+    { label: '1', value: 1 },
+  ]);
+
   applications = signal<Partial<Application>[]>([]);
   procedure = this._procedureStateService.procedure;
   loadingApplications = signal(false);
@@ -188,5 +192,37 @@ export class ApplicationTableComponent implements OnInit {
       };
     });
     this._excelExportService.exportToExcel(data, 'liste_des_demandes');
+  }
+
+  nextPage() {
+    this.filterModel.update((model) => {
+      const page = Number(this.filterModel().page);
+      return {
+        ...model,
+        page: page + 1,
+      };
+    });
+    this.updatePageOptions();
+  }
+
+  previousPage() {
+    if (this.filterModel().page === 1) return;
+    this.filterModel.update((model) => {
+      const page = Number(this.filterModel().page);
+      return {
+        ...model,
+        page: page - 1,
+      };
+    });
+    this.updatePageOptions();
+  }
+
+  updatePageOptions() {
+    const totalPages = this.filterModel().page;
+    this.pageOptions.set(
+      Array.from({ length: totalPages }, (_, index) => index + 1).map(
+        (page) => ({ label: page.toString(), value: page }),
+      ),
+    );
   }
 }
