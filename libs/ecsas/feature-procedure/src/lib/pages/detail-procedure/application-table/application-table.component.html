@@ -103,9 +103,6 @@
         <lib-button type="secondary" (click)="previousPage()">
             <i class="pi pi-chevron-left"></i>
         </lib-button>
-        <!-- <lib-button type="secondary">
-            <span class="font-bold text-[#1A365D]">{{filterModel().page}}</span>
-        </lib-button> -->
         <lib-dropdown class="-mt-2" [formField]="filterForm.page" [options]="pageOptions()"></lib-dropdown>
         <lib-button type="secondary" (click)="nextPage()">
             <i class="pi pi-chevron-right"></i>
