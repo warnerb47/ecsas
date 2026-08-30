@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { SidebarComponent } from './sidebar.component';
+import packageInfo from '../../../../../../package.json';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
@@ -23,6 +24,6 @@ describe('SidebarComponent', () => {
 
   it('should display the app version', () => {
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.textContent).toContain('Version 0.1.0');
+    expect(compiled.textContent).toContain(`Version ${packageInfo.version}`);
   });
 });

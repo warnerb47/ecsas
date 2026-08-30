@@ -61,6 +61,9 @@
 
 # Module Setting
 
+# Sidebar / Shell
+✅ display app version on sidebar bottom (imported from package.json, assert against imported value in spec)
+
 # PoC
 ✅ excel export
 - Backup
