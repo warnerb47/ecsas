@@ -41,6 +41,8 @@
 ✅ update detail-application design (use badge for status and state)
 ✅ update detail-application design (add label for applicant.status)
 ✅ fix dropdown value not applied on render (add [selected] binding on options)
+- Créer des demandes à partir d'un fichier excel
+- Keep a specific folder structure for applicant and application on local machine
 
 # Refactoring
 ✅ add applicant.birthDate 
@@ -58,8 +60,23 @@
 ✅ add application statistics query in application repository + gateway
 ✅ add recent procedures query in procedure repository + gateway
 ✅ make filterApplications procedureId optional with procedure name
+- Add delay do data fetch
+- Add animation transition to statistics and procedure cards
 
 # Module Setting
+✅ Remove profile card
+- Let user select where to save backup
+
+# Module event
+- visualize / create event on calendar
+- add event table with filters and pagination
+- add detail event page
+  - detail page info: lien utils, Budget / dépenses, Description, Partenaires
+  - generate `lettre d'invitation`
+  - generate `lettre de demande de sponsoring`
+  - generate `budgetisation évènement`
+  - generate or add `feuille de présence`
+  - generate `raport d'évènement`
 
 # Sidebar / Shell
 ✅ display app version on sidebar bottom (imported from package.json, assert against imported value in spec)
