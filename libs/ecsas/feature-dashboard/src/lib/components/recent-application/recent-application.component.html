@@ -14,7 +14,7 @@
   } @else if (error()) {
     <div class="p-12 flex flex-col items-center justify-center">
       <p class="text-sm text-slate-500 mb-4">Impossible de charger les demandes.</p>
-      <lib-button type="primary" (click)="fetchApplications()">
+      <lib-button type="primary" (click)="retry()">
         <i class="pi pi-refresh"></i>
         Réessayer
       </lib-button>

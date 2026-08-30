@@ -5,6 +5,7 @@ import { form, FormField } from '@angular/forms/signals';
 import { Application, ApplicationFilters } from '@org/models';
 import { ApplicationGateway } from '@org/ecsas/ecsas-data';
 import { ButtonComponent, DropdownComponent } from '@org/ecsas/shared-ui';
+import { firstValueFrom, of, delay } from 'rxjs';
 
 @Component({
   selector: 'lib-recent-application',
@@ -91,6 +92,12 @@ export class RecentApplicationComponent {
     }));
   }
 
+  private isMissingTableError(error: unknown): boolean {
+    const message =
+      error instanceof Error ? error.message : String(error ?? '');
+    return message.includes('no such table');
+  }
+
   async fetchApplications() {
     this.loading.set(true);
     this.error.set(false);
@@ -100,11 +107,22 @@ export class RecentApplicationComponent {
       );
       this.applications.set(applications);
     } catch (error) {
+      if (this.isMissingTableError(error)) {
+        this.applications.set([]);
+        return;
+      }
       console.error(error);
       this.error.set(true);
     } finally {
       this.loading.set(false);
     }
+  }
+
+  async retry() {
+    this.loading.set(true);
+    await firstValueFrom(of('wait').pipe(delay(1000)));
+    await this.fetchApplications();
+    this.loading.set(false);
   }
 
   private _buildInitialFilters(): ApplicationFilters {

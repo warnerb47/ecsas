@@ -53,4 +53,17 @@ describe('RecentApplicationComponent', () => {
     component.previousPage();
     expect(component.filterModel().page).toBe(1);
   });
+
+  it('should treat missing database table as empty applications', async () => {
+    mockApplicationGateway.filterApplications = vi
+      .fn()
+      .mockRejectedValue(
+        new Error('error returned from database: (code: 1) no such table: core_application'),
+      );
+
+    await component.fetchApplications();
+
+    expect(component.error()).toBe(false);
+    expect(component.applications()).toEqual([]);
+  });
 });

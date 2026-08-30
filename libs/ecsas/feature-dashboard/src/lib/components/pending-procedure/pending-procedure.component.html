@@ -17,20 +17,18 @@
       }
     </div>
   } @else if (error()) {
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex items-center justify-between">
-        <div class="flex items-center">
-          <i class="pi pi-exclamation-triangle text-red-500 mr-3"></i>
-          <p class="text-sm text-slate-500">Impossible de charger les procédures.</p>
-        </div>
-        <lib-button type="primary" (click)="fetchRecentProcedures()">
-          <i class="pi pi-refresh"></i>
-          Réessayer
-        </lib-button>
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-10 flex items-center justify-between">
+      <div class="flex items-center">
+        <i class="pi pi-exclamation-triangle text-red-500 mr-3"></i>
+        <p class="text-sm text-slate-500">Impossible de charger les procédures.</p>
       </div>
+      <lib-button type="primary" (click)="retry()">
+        <i class="pi pi-refresh"></i>
+        Réessayer
+      </lib-button>
     </div>
   } @else if (procedures().length === 0) {
-    <p class="text-sm text-slate-400 py-8 text-center">Aucune procédure récente.</p>
+    <p class="text-sm text-slate-400 py-8 text-center mb-10">Aucune procédure récente.</p>
   } @else {
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
       @for (procedure of procedures(); track procedure.id; let i = $index) {
