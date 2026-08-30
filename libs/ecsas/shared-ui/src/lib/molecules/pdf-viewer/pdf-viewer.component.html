@@ -1,13 +1,33 @@
-@if (source()?.mimeType === 'application/pdf') {
-  <div class="flex items-center justify-center w-full h-full">
-    <iframe
-      class="h-full w-full p-0 m-0"
-      [src]="safeUrl()"
-      frameborder="0"
-    ></iframe>
+@if (loading() && !retrying()) {
+  <div class="flex flex-col items-center justify-center">
+    <div class="text-secondary w-100 text-center">
+      Chargement du document...
+    </div>
+    <i class="pi pi-spin pi-spinner text-2xl"></i>
   </div>
-} @else if (source()?.mimeType?.includes('image')) {
-  <div class="flex items-center justify-center h-screen">
-    <img class="h-full object-contain" [src]="safeUrl()" alt="file" />
+} @else if (loadFailed()) {
+  <div class="flex flex-col space-y-4 w-full items-center justify-center h-full">
+    <div class="flex items-center gap-2 text-secondary text-center">
+      <i class="pi pi-exclamation-triangle text-2xl"></i>
+      <span>Impossible de charger le document cliquez sur ce bouton pour réessayer</span>
+    </div>
+    <lib-button type="primary" (click)="onRetry()">
+      <i class="pi pi-refresh" [ngClass]="{ 'pi-spin': retrying() }"></i>
+      Réessayer
+    </lib-button>
   </div>
+} @else {
+  @if (source()?.mimeType === 'application/pdf') {
+    <div class="flex items-center justify-center w-full h-full">
+      <iframe
+        class="h-full w-full p-0 m-0"
+        [src]="safeUrl()"
+        frameborder="0"
+      ></iframe>
+    </div>
+  } @else if (source()?.mimeType?.includes('image')) {
+    <div class="flex items-center justify-center h-screen">
+      <img class="h-full object-contain" [src]="safeUrl()" alt="file" />
+    </div>
+  }
 }

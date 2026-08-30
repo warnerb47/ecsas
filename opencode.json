@@ -1,9 +1,40 @@
 {
+  "$schema": "https://opencode.ai/config.json",
   "mcp": {
     "nx-mcp": {
       "type": "local",
       "command": ["npx", "nx", "mcp"],
       "enabled": true
+    },
+    "angular-cli": {
+      "type": "local",
+      "command": ["npx", "-y", "@angular/cli", "mcp"],
+      "enabled": true
+    },
+    "tauri": {
+      "type": "local",
+      "command": ["npx", "-y", "@hypothesi/tauri-mcp-server"],
+      "enabled": true
+    },
+    "primeng": {
+      "type": "local",
+      "command": ["npx", "-y", "@primeng/mcp"],
+      "enabled": true
+    }
+  },
+  "lsp": {
+    "angular": {
+      "command": [
+        "npx",
+        "-y",
+        "@angular/language-server",
+        "--stdio",
+        "--tsProbeLocations",
+        "./node_modules",
+        "--ngProbeLocations",
+        "./node_modules"
+      ],
+      "extensions": [".html"]
     }
   }
 }

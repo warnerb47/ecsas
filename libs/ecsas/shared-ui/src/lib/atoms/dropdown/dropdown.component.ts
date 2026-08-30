@@ -1,25 +1,33 @@
 import { Component, input, model } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormValueControl, ValidationError, WithOptionalFieldTree } from '@angular/forms/signals';
+import {
+  FormValueControl,
+  ValidationError,
+  WithOptionalFieldTree,
+} from '@angular/forms/signals';
 
 @Component({
   selector: 'lib-dropdown',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './dropdown.component.html'
+  templateUrl: './dropdown.component.html',
 })
-export class DropdownComponent implements FormValueControl<string | null> {
+export class DropdownComponent implements FormValueControl<
+  string | number | null
+> {
   label = input('');
   placeholder = input<string>('');
-  options = input<{ label: string; value: string | null }[]>([]);
-  value = model<string | null>(null);
+  options = input<{ label: string; value: string | number | null }[]>([]);
+  value = model<string | number | null>(null);
 
   // Interaction state (touched)
   readonly touched = model<boolean>(false);
 
   // State inputs automatically populated by [formField]
   readonly invalid = input<boolean>(false);
-  readonly errors = input<readonly WithOptionalFieldTree<ValidationError>[]>([]);
+  readonly errors = input<readonly WithOptionalFieldTree<ValidationError>[]>(
+    [],
+  );
   readonly disabled = input<boolean>(false);
 
   setValue(event: Event) {

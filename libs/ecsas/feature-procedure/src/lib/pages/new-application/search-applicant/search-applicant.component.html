@@ -6,6 +6,7 @@
       optionLabel="fullName"
       [(ngModel)]="selectedApplicant"
       filter="true"
+      filterBy="fullName,nin,phoneNumber"
       (onFilter)="onFilter($event)"
       emptyMessage="Aucun resultat trouvé"
       emptyFilterMessage="Aucun resultat trouve"

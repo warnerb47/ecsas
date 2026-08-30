@@ -4,11 +4,13 @@ import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { Source } from '@org/models';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { DocumentManager } from '@org/api/products';
+import { ButtonComponent } from '../../atoms';
+import { delay, firstValueFrom, of } from 'rxjs';
 
 @Component({
   selector: 'lib-pdf-viewer',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ButtonComponent],
   templateUrl: './pdf-viewer.component.html',
 })
 export class PdfViewerComponent implements OnInit {
@@ -18,8 +20,17 @@ export class PdfViewerComponent implements OnInit {
 
   source = signal<Partial<Source> | null>(null);
   safeUrl = signal<SafeUrl | null>(null);
+  loading = signal(false);
+  loadFailed = signal(false);
+  retrying = signal(false);
 
   ngOnInit(): void {
+    this.fetchSource();
+  }
+
+  async onRetry() {
+    this.retrying.set(true);
+    await firstValueFrom(of('wait').pipe(delay(1000)));
     this.fetchSource();
   }
 
@@ -27,10 +38,24 @@ export class PdfViewerComponent implements OnInit {
     const dialogData = this._dialogConfig?.data ?? null;
     this.source.set(dialogData);
 
-    const assetUrl = await this.getAssetUrl();
-    this.safeUrl.set(
-      this._sanitizer.bypassSecurityTrustResourceUrl(assetUrl ?? ''),
-    );
+    this.loading.set(true);
+    this.loadFailed.set(false);
+    try {
+      const assetUrl = await this.getAssetUrl();
+      if (!assetUrl) {
+        this.loadFailed.set(true);
+        return;
+      }
+      this.safeUrl.set(
+        this._sanitizer.bypassSecurityTrustResourceUrl(assetUrl),
+      );
+    } catch (error) {
+      console.error(error);
+      this.loadFailed.set(true);
+    } finally {
+      this.loading.set(false);
+      this.retrying.set(false);
+    }
   }
 
   async getAssetUrl() {

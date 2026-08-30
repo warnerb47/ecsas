@@ -39,66 +39,74 @@
         </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
-        @for (app of applications(); track app.id) {
-        <tr class="hover:bg-slate-50 transition">
-            <td class="px-6 py-4">
-              <div class="flex">
-                  <div class="w-8 h-8 rounded bg-slate-100 text-[#1A365D] flex items-center justify-center mr-3 font-bold text-xs">
-                  {{ getInitials(app.applicant?.fullName ?? '') }}
+          @if(applications().length === 0 ) {
+            <tr>
+              <td colspan="6" class="px-6 py-10 text-center text-slate-500">
+                Liste vide
+              </td>
+            </tr>
+          }
+          @for (app of applications(); track app.id) {
+            <tr class="hover:bg-slate-50 transition">
+                <td class="px-6 py-4">
+                  <div class="flex">
+                      <div class="w-8 h-8 rounded bg-slate-100 text-[#1A365D] flex items-center justify-center mr-3 font-bold text-xs">
+                      {{ getInitials(app.applicant?.fullName ?? '') }}
+                      </div>
+                      <div>
+                      <p class="font-bold">{{ app.applicant?.fullName }}</p>
+                      <p class="text-slate-400">
+                        <i class="pi pi-id-card mr-1" style="font-size: 0.7rem"></i>
+                        <span class="text-xs">
+                          {{ app.applicant?.nin }}
+                        </span>
+                      </p>
+                      <p class="text-slate-400">
+                          <i class="pi pi-phone mr-1" style="font-size: 0.7rem"></i>
+                          <span class="text-xs">
+                            {{ app.applicant?.phoneNumber }}
+                          </span>
+                      </p>
+                      </div>
                   </div>
-                  <div>
-                  <p class="font-bold">{{ app.applicant?.fullName }}</p>
-                  <p class="text-slate-400">
-                    <i class="pi pi-id-card mr-1" style="font-size: 0.7rem"></i>
-                    <span class="text-xs">
-                      {{ app.applicant?.nin }}
-                    </span>
-                  </p>
-                  <p class="text-slate-400">
-                      <i class="pi pi-phone mr-1" style="font-size: 0.7rem"></i>
-                      <span class="text-xs">
-                        {{ app.applicant?.phoneNumber }}
-                      </span>
-                  </p>
-                  </div>
-              </div>
-            </td>
-            <td class="px-6 py-4">
-              {{app.mailRef}}
-            </td>
-            <td class="px-6 py-4">
-              {{app.createdAt | date:'d MMM y'}}
-            </td>
-            <td class="px-6 py-4 font-semibold">
-              {{ formatAmount(app?.receivedAmount ?? 0) }}
-            </td>
+                </td>
+                <td class="px-6 py-4">
+                  {{app.mailRef}}
+                </td>
+                <td class="px-6 py-4">
+                  {{app.createdAt | date:'d MMM y'}}
+                </td>
+                <td class="px-6 py-4 font-semibold">
+                  {{ formatAmount(app?.receivedAmount ?? 0) }}
+                </td>
 
-            <td class="px-6 py-4">
-              <span class="px-3 py-1 rounded-full text-[11px] font-bold border"
-                title="{{ app?.comment }}"
-                [ngClass]="getStatusClasses(app.status)">
-                  {{ getStatusLabel(app.status) }}
-              </span>
-            </td>
-            <td class="px-6 py-4">
-                <i class="pi pi-eye cursor-pointer"
-                    routerLink="/procedure/detail/{{procedureId()}}/detail-application/{{app.id}}"></i>
-            </td>
-        </tr>
-        }
+                <td class="px-6 py-4">
+                  <span class="px-3 py-1 rounded-full text-[11px] font-bold border"
+                    title="{{ app?.comment }}"
+                    [ngClass]="getStatusClasses(app.status)">
+                      {{ getStatusLabel(app.status) }}
+                  </span>
+                </td>
+                <td class="px-6 py-4">
+                    <i class="pi pi-eye cursor-pointer"
+                        routerLink="/procedure/detail/{{procedureId()}}/detail-application/{{app.id}}"></i>
+                </td>
+            </tr>
+          }
         </tbody>
     </table>
 
     <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between">
-        <span class="text-sm text-slate-500">Affichage de 1 à 10 sur 247 demandes</span>
+        <!-- <span class="text-sm text-slate-500">Affichage de 1 à 10 sur 247 demandes</span> -->
+        <lib-dropdown [formField]="filterForm.pageSize" [options]="pageSizeOptions"></lib-dropdown>
         <div class="flex space-x-2">
-        <lib-button type="secondary">Précédent</lib-button>
-        <lib-button type="secondary">
-            <span class="font-bold text-[#1A365D]">1</span>
+        <lib-button type="secondary" (click)="previousPage()">
+            <i class="pi pi-chevron-left"></i>
         </lib-button>
-        <lib-button type="secondary">2</lib-button>
-        <lib-button type="secondary">3</lib-button>
-        <lib-button type="secondary">Suivant</lib-button>
+        <lib-dropdown class="-mt-2" [formField]="filterForm.page" [options]="pageOptions()"></lib-dropdown>
+        <lib-button type="secondary" (click)="nextPage()">
+            <i class="pi pi-chevron-right"></i>
+        </lib-button>
         </div>
     </div>
 </div>

@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -10,9 +10,7 @@ import {
 import {
   BreadcrumbItem,
   TopbarComponent,
-  DropdownComponent,
   ButtonComponent,
-  TextAreaComponent,
   PdfViewerComponent,
 } from '@org/ecsas/shared-ui';
 import {
@@ -25,18 +23,17 @@ import {
 import { DialogService } from 'primeng/dynamicdialog';
 import { map, Subject, takeUntil } from 'rxjs';
 import { UpdateApplicantComponent } from './update-applicant/update-applicant.component';
-import { form, FormField, required, submit } from '@angular/forms/signals';
+import { form, required } from '@angular/forms/signals';
+import { UpdateApplicationComponent } from './update-application/update-application.component';
 
 @Component({
   selector: 'lib-detail-application-component',
   imports: [
     RouterLink,
     TopbarComponent,
-    DropdownComponent,
     ButtonComponent,
-    TextAreaComponent,
     DatePipe,
-    FormField,
+    NgClass,
   ],
   providers: [DialogService],
   templateUrl: './detail-application.component.html',
@@ -192,30 +189,84 @@ export class DetailApplicationComponent implements OnInit {
       });
   }
 
-  async updateApplication() {
-    const applicantId = await this._applicationGateway.updateApplication({
-      application: this.applicationModel(),
-      applicationId: this.application()?.id ?? '',
-    });
-    return applicantId;
+  editApplication() {
+    this._dialogService
+      .open(UpdateApplicationComponent, {
+        header: 'Modifier le status de la demande',
+        width: '40vw',
+        focusOnShow: false,
+        closable: true,
+        closeOnEscape: true,
+        data: {...this.application(), procedure: this.procedure()},
+      })
+      ?.onClose.pipe(takeUntil(this._unsubscribe))
+      .subscribe((result) => {
+        if (!result) return;
+        this.fetchApplicationById();
+      });
   }
 
-  async submit() {
-    try {
-      await submit(this.applicationForm, async () => {
-        if (this.applicationForm().valid()) {
-          if (!this.applicationModel().id) {
-            return;
-          }
-          this.loadingSubmit.set(true);
-          await this.updateApplication();
-          this.fetchApplicationById();
-        }
-      });
-    } catch (error) {
-      console.error(error);
-    } finally {
-      this.loadingSubmit.set(false);
-    }
+  getApplicantStatusClasses(status: string | undefined): string {
+    const map: Record<string, string> = {
+      SOCIAL_CASE: 'bg-amber-50 text-amber-700 border-amber-100',
+      NON_ESSENTIAL: 'bg-slate-50 text-slate-700 border-slate-100',
+      RECENTLY_SUPPORTED: 'bg-violet-50 text-violet-700 border-violet-100',
+      INAPPROPRIATE_AGE: 'bg-red-50 text-red-700 border-red-100',
+      DEFAULT: 'bg-slate-50 text-slate-700 border-slate-100',
+    };
+    return (status && map[status]) ?? 'bg-slate-50 text-slate-700 border-slate-100';
   }
+  getApplicantStatusLabel(status: string | undefined): string {
+    if (!status) return 'Non défini';
+    const map: Record<string, string> = {
+      SOCIAL_CASE: 'Cas social',
+      NON_ESSENTIAL: 'Non nécessiteux',
+      RECENTLY_SUPPORTED: 'Déjà prise en charge',
+      INAPPROPRIATE_AGE: 'Âge non conforme',
+      DEFAULT: 'Aucun',
+    };
+    return map[status] ?? 'Non défini';
+  }
+
+  getStatusClasses(status: string | undefined): string {
+    if (!status) return 'bg-slate-50 text-slate-700 border-slate-100';
+    const map: Record<string, string> = {
+      PENDING: 'bg-amber-50 text-amber-700 border-amber-100',
+      APPROVED: 'bg-emerald-50 text-emerald-700 border-emerald-100',
+      REJECTED: 'bg-red-50 text-red-700 border-red-100',
+    };
+    return map[status] ?? 'bg-slate-50 text-slate-700 border-slate-100';
+  }
+  getStatusLabel(status: string | undefined): string {
+    if (!status) return 'Non défini';
+    const map: Record<string, string> = {
+      PENDING: 'En cours',
+      APPROVED: 'Acceptée',
+      REJECTED: 'Refusée',
+    };
+    return map[status] ?? 'Non défini';
+  }
+
+  getStateClasses(state: string | undefined): string {
+    if (!state) return 'bg-slate-50 text-slate-700 border-slate-100';
+    const map: Record<string, string> = {
+      COMPLIANT: 'bg-emerald-50 text-emerald-700 border-emerald-100',
+      OUT_OF_ZONE: 'bg-violet-50 text-violet-700 border-violet-100',
+      INCOMPLETE: 'bg-amber-50 text-amber-700 border-amber-100',
+      MAYOR_REQUEST: 'bg-blue-50 text-blue-700 border-blue-100',
+    };
+    return map[state] ?? 'bg-slate-50 text-slate-700 border-slate-100';
+  }
+  getStateLabel(state: string | undefined): string {
+    if (!state) return 'Non défini';
+    const map: Record<string, string> = {
+      COMPLIANT: 'Conforme',
+      OUT_OF_ZONE: 'Hors zone',
+      INCOMPLETE: 'Dossier incomplet',
+      MAYOR_REQUEST: 'Demande du Maire',
+    };
+    return map[state] ?? 'Non défini';
+  }
+
+
 }

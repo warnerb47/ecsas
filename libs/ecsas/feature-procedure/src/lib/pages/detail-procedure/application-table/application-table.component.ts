@@ -54,6 +54,18 @@ export class ApplicationTableComponent implements OnInit {
     { label: 'Dossier incomplet', value: 'INCOMPLETE' },
     { label: 'Demande du Maire', value: 'MAYOR_REQUEST' },
   ];
+  pageSizeOptions: { label: string; value: string | number | null }[] = [
+    { label: '10', value: 10 },
+    { label: '25', value: 25 },
+    { label: '50', value: 50 },
+    { label: '100', value: 100 },
+    { label: '1000', value: 1000 },
+    { label: '5000', value: 5000 },
+  ];
+
+  pageOptions = signal<{ label: string; value: string | number | null }[]>([
+    { label: '1', value: 1 },
+  ]);
 
   applications = signal<Partial<Application>[]>([]);
   procedure = this._procedureStateService.procedure;
@@ -73,16 +85,15 @@ export class ApplicationTableComponent implements OnInit {
     requestedAmount: null,
     status: null,
     state: null,
-    mailRef: null
+    mailRef: null,
   });
   filterForm = form(this.filterModel);
 
-constructor() {
-
-  effect(() => {
-    this.filterApplications();
-  });
-}
+  constructor() {
+    effect(() => {
+      this.filterApplications();
+    });
+  }
 
   ngOnInit() {
     this.initState();
@@ -163,19 +174,55 @@ constructor() {
       const firstName = fullName.slice(0, fullName.length - 1).join(' ');
       let birthdate = '';
       if (application.applicant?.birthdate) {
-        birthdate = formatDate(application.applicant.birthdate, 'dd/MM/yyyy', 'fr-FR');
+        birthdate = formatDate(
+          application.applicant.birthdate,
+          'dd/MM/yyyy',
+          'fr-FR',
+        );
       }
       return {
-      "N°": index + 1,
-      "Nom": lastName,
-      "Prénom": firstName,
-      "Date de naissance": birthdate,
-      "NIN": application.applicant?.nin ?? '',
-      "Adresse": application.applicant?.address ?? '',
-      "Telephone": application.applicant?.phoneNumber ?? '',
-      "Numéro courrier": application.mailRef ?? '',
-    }
-    })
+        'N°': index + 1,
+        Nom: lastName,
+        Prénom: firstName,
+        'Date de naissance': birthdate,
+        NIN: application.applicant?.nin ?? '',
+        Adresse: application.applicant?.address ?? '',
+        Telephone: application.applicant?.phoneNumber ?? '',
+        'Numéro courrier': application.mailRef ?? '',
+      };
+    });
     this._excelExportService.exportToExcel(data, 'liste_des_demandes');
+  }
+
+  nextPage() {
+    this.filterModel.update((model) => {
+      const page = Number(this.filterModel().page);
+      return {
+        ...model,
+        page: page + 1,
+      };
+    });
+    this.updatePageOptions();
+  }
+
+  previousPage() {
+    if (this.filterModel().page === 1) return;
+    this.filterModel.update((model) => {
+      const page = Number(this.filterModel().page);
+      return {
+        ...model,
+        page: page - 1,
+      };
+    });
+    this.updatePageOptions();
+  }
+
+  updatePageOptions() {
+    const totalPages = this.filterModel().page;
+    this.pageOptions.set(
+      Array.from({ length: totalPages }, (_, index) => index + 1).map(
+        (page) => ({ label: page.toString(), value: page }),
+      ),
+    );
   }
 }
