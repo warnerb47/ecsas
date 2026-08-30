@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Événements — Détail événement</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/primeicons@7.0.0/primeicons.css" />
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+  <!-- ================= Application shell ================= -->
+  <div class="flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-[#1A365D] text-white flex flex-col flex-shrink-0">
+      <div class="p-6 flex items-center space-x-3">
+        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#1A365D] font-bold">M</div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight">Mairie de Yoff</h1>
+          <p class="text-xs text-blue-200">Commision santé et action sociale</p>
+        </div>
+      </div>
+
+      <nav class="mt-6 flex-1">
+        <a href="#" class="flex items-center px-6 py-3 text-blue-100 hover:bg-[#3182CE]/10 transition shadow-sm">
+          <i class="pi pi-home mr-3"></i> Dashboard
+        </a>
+        <a href="#" class="flex items-center px-6 py-3 text-blue-100 hover:bg-[#3182CE]/10 transition shadow-sm">
+          <i class="pi pi-file mr-3"></i> Procédures
+        </a>
+        <a href="event-calendar.html" class="flex items-center px-6 py-3 text-blue-100 bg-[#3182CE]/10 transition shadow-sm">
+          <i class="pi pi-calendar mr-3"></i> Événements
+        </a>
+        <a href="#" class="flex items-center px-6 py-3 text-blue-100 hover:bg-[#3182CE]/10 transition">
+          <i class="pi pi-cog mr-3"></i> Paramètres
+        </a>
+      </nav>
+
+      <div class="px-6 py-4 border-t border-white/10 flex items-center justify-between">
+        <span class="text-xs text-blue-200">Version 0.4.0</span>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+
+      <!-- Topbar -->
+      <header class="bg-white border-b px-8 py-4 flex justify-between items-center sticky top-0 z-10">
+        <div class="flex items-center space-x-8">
+          <nav class="flex text-sm text-slate-400" aria-label="Breadcrumb">
+            <ol class="flex items-center space-x-2">
+              <li><a href="event-calendar.html" class="hover:text-slate-600">Événements</a></li>
+              <li class="flex items-center justify-center"><i class="pi pi-chevron-right"></i></li>
+              <li><a href="event-list.html" class="hover:text-slate-600">Liste</a></li>
+              <li class="flex items-center justify-center"><i class="pi pi-chevron-right"></i></li>
+              <li class="text-[#1A365D] font-semibold">Détail événement</li>
+            </ol>
+          </nav>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button type="button" class="px-4 py-2 text-sm font-medium rounded-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-sm">
+            <i class="pi pi-file-edit mr-2" style="font-size: 0.85rem"></i> Modifier l'événement
+          </button>
+        </div>
+      </header>
+
+      <div class="flex-1 overflow-y-auto p-8">
+        <div class="max-w-7xl mx-auto">
+
+          <!-- ============ Event header card ============ -->
+          <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-8">
+            <div class="px-6 py-5 flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+              <div>
+                <div class="flex items-center flex-wrap gap-3">
+                  <h2 class="text-2xl font-black text-slate-800">Secours Tabaski 2026</h2>
+                  <span class="px-3 py-1 rounded-full text-[11px] font-bold border bg-emerald-50 text-emerald-700 border-emerald-100">En cours</span>
+                  <span class="px-3 py-1 rounded-full text-[11px] font-bold border bg-rose-50 text-rose-700 border-rose-100">Secours social</span>
+                </div>
+                <div class="mt-4 flex flex-wrap items-center gap-x-8 gap-y-3 text-sm text-slate-500">
+                  <span class="flex items-center">
+                    <i class="pi pi-calendar mr-2 text-[#3182CE]"></i> 07 août 2026 · 13h00 – 17h00
+                  </span>
+                  <span class="flex items-center">
+                    <i class="pi pi-map-marker mr-2 text-[#3182CE]"></i> Place publique de Yoff, Dakar
+                  </span>
+                  <span class="flex items-center">
+                    <i class="pi pi-users mr-2 text-[#3182CE]"></i> 300 participants attendus
+                  </span>
+                  <span class="flex items-center">
+                    <i class="pi pi-money-bill mr-2 text-[#3182CE]"></i> Budget : 2 500 000 FCFA
+                  </span>
+                </div>
+              </div>
+              <a href="event-calendar.html" class="flex items-center space-x-2 text-[#3182CE] hover:text-blue-700 font-semibold text-sm shrink-0">
+                <i class="pi pi-calendar"></i> Vue calendrier
+              </a>
+            </div>
+          </div>
+
+          <!-- ============ Tabs ============ -->
+          <div class="flex space-x-1 bg-slate-200/50 p-1 rounded-xl w-fit mb-8 overflow-auto">
+            <button type="button" id="tab-overview" class="px-4 py-2 rounded-lg font-medium text-sm transition shrink-0 bg-white text-[#1A365D] shadow-sm" onclick="switchTab('overview')">Vue d'ensemble</button>
+            <button type="button" id="tab-documents" class="px-4 py-2 rounded-lg font-medium text-sm transition shrink-0 text-slate-600 hover:bg-white" onclick="switchTab('documents')">Documents</button>
+          </div>
+
+          <!-- ============ Panel : Vue d'ensemble ============ -->
+          <div id="panel-overview" class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+
+            <!-- Left column (3/5) -->
+            <div class="space-y-6 lg:col-span-3">
+
+              <!-- Description -->
+              <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                  <h3 class="text-sm font-black text-[#1A365D] uppercase tracking-wider">
+                    <i class="pi pi-align-left mr-2"></i> Description
+                  </h3>
+                </div>
+                <div class="p-6">
+                  <p class="text-sm text-slate-600 leading-relaxed">
+                    Soutien exceptionnel aux familles vulnérables de Yoff à l'occasion de la Tabaski 2026.
+                    Distribution de bétail et de kits alimentaires de base. Les bénéficiaires sont identifiés
+                    au préalable par la commission via les dossiers de demande soumis en mairie.
+                  </p>
+                  <div class="mt-4 flex items-center justify-between p-3 border border-slate-100 rounded-xl">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Procédure liée</span>
+                    <a href="#" class="flex items-center space-x-2 text-xs font-semibold text-[#3182CE] hover:text-blue-700">
+                      Secours Tabaski <i class="pi pi-arrow-right" style="font-size: 0.7rem"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Budget / Dépenses -->
+              <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                  <h3 class="text-sm font-black text-[#1A365D] uppercase tracking-wider">
+                    <i class="pi pi-money-bill mr-2"></i> Budget / Dépenses
+                  </h3>
+                  <button type="button" class="px-4 py-2 text-sm font-medium rounded-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-sm">
+                    <i class="pi pi-plus mr-2" style="font-size: 0.8rem"></i> Ajouter un poste
+                  </button>
+                </div>
+
+                <!-- Summary -->
+                <div class="grid grid-cols-3 gap-4 p-6 border-b border-slate-100">
+                  <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Budget prévu</p>
+                    <p class="mt-1 text-lg font-black text-[#1A365D]">2 500 000 FCFA</p>
+                  </div>
+                  <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Dépenses engagées</p>
+                    <p class="mt-1 text-lg font-black text-slate-700">1 850 000 FCFA</p>
+                  </div>
+                  <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Solde restant</p>
+                    <p class="mt-1 text-lg font-black text-emerald-600">650 000 FCFA</p>
+                  </div>
+                  <div class="col-span-3">
+                    <div class="flex items-center justify-between mb-1 text-xs font-semibold text-slate-500">
+                      <span>Taux d'exécution</span>
+                      <span>74%</span>
+                    </div>
+                    <div class="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+                      <div class="h-full rounded-full bg-[#3182CE]" style="width: 74%"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                  <table class="w-full text-left text-sm">
+                    <thead class="bg-slate-50 text-slate-500 font-medium">
+                      <tr>
+                        <th class="px-6 py-4">Poste</th>
+                        <th class="px-6 py-4">Catégorie</th>
+                        <th class="px-6 py-4">Prévu</th>
+                        <th class="px-6 py-4">Dépensé</th>
+                        <th class="px-6 py-4">Écart</th>
+                        <th class="px-6 py-4">Date</th>
+                        <th class="px-6 py-4"></th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                      <tr class="hover:bg-slate-50 transition">
+                        <td class="px-6 py-4 font-semibold text-slate-700">Location chapiteau & sonorisation</td>
+                        <td class="px-6 py-4">
+                          <span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-500">Logistique</span>
+                        </td>
+                        <td class="px-6 py-4">600 000 FCFA</td>
+                        <td class="px-6 py-4">600 000 FCFA</td>
+                        <td class="px-6 py-4 text-slate-400 font-semibold">—</td>
+                        <td class="px-6 py-4 text-slate-500">01 août 2026</td>
+                        <td class="px-6 py-4 text-right text-slate-400">
+                          <i class="pi pi-pencil cursor-pointer hover:text-[#3182CE] mr-3" style="font-size: 0.8rem"></i>
+                          <i class="pi pi-trash cursor-pointer hover:text-rose-500" style="font-size: 0.8rem"></i>
+                        </td>
+                      </tr>
+                      <tr class="hover:bg-slate-50 transition">
+                        <td class="px-6 py-4 font-semibold text-slate-700">Catering et restauration</td>
+                        <td class="px-6 py-4">
+                          <span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-700">Restauration</span>
+                        </td>
+                        <td class="px-6 py-4">800 000 FCFA</td>
+                        <td class="px-6 py-4">720 000 FCFA</td>
+                        <td class="px-6 py-4 text-emerald-600 font-semibold">+80 000 FCFA</td>
+                        <td class="px-6 py-4 text-slate-500">03 août 2026</td>
+                        <td class="px-6 py-4 text-right text-slate-400">
+                          <i class="pi pi-pencil cursor-pointer hover:text-[#3182CE] mr-3" style="font-size: 0.8rem"></i>
+                          <i class="pi pi-trash cursor-pointer hover:text-rose-500" style="font-size: 0.8rem"></i>
+                        </td>
+                      </tr>
+                      <tr class="hover:bg-slate-50 transition">
+                        <td class="px-6 py-4 font-semibold text-slate-700">Impression et affichage</td>
+                        <td class="px-6 py-4">
+                          <span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-700">Communication</span>
+                        </td>
+                        <td class="px-6 py-4">250 000 FCFA</td>
+                        <td class="px-6 py-4">180 000 FCFA</td>
+                        <td class="px-6 py-4 text-emerald-600 font-semibold">+70 000 FCFA</td>
+                        <td class="px-6 py-4 text-slate-500">04 août 2026</td>
+                        <td class="px-6 py-4 text-right text-slate-400">
+                          <i class="pi pi-pencil cursor-pointer hover:text-[#3182CE] mr-3" style="font-size: 0.8rem"></i>
+                          <i class="pi pi-trash cursor-pointer hover:text-rose-500" style="font-size: 0.8rem"></i>
+                        </td>
+                      </tr>
+                      <tr class="hover:bg-slate-50 transition">
+                        <td class="px-6 py-4 font-semibold text-slate-700">Sécurité et secourisme</td>
+                        <td class="px-6 py-4">
+                          <span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-500">Logistique</span>
+                        </td>
+                        <td class="px-6 py-4">200 000 FCFA</td>
+                        <td class="px-6 py-4">200 000 FCFA</td>
+                        <td class="px-6 py-4 text-slate-400 font-semibold">—</td>
+                        <td class="px-6 py-4 text-slate-500">05 août 2026</td>
+                        <td class="px-6 py-4 text-right text-slate-400">
+                          <i class="pi pi-pencil cursor-pointer hover:text-[#3182CE] mr-3" style="font-size: 0.8rem"></i>
+                          <i class="pi pi-trash cursor-pointer hover:text-rose-500" style="font-size: 0.8rem"></i>
+                        </td>
+                      </tr>
+                      <tr class="hover:bg-slate-50 transition">
+                        <td class="px-6 py-4 font-semibold text-slate-700">Cadeaux et kits aux familles</td>
+                        <td class="px-6 py-4">
+                          <span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-violet-100 text-violet-700">Distribution</span>
+                        </td>
+                        <td class="px-6 py-4">650 000 FCFA</td>
+                        <td class="px-6 py-4">150 000 FCFA</td>
+                        <td class="px-6 py-4 text-emerald-600 font-semibold">+500 000 FCFA</td>
+                        <td class="px-6 py-4 text-slate-500">En cours</td>
+                        <td class="px-6 py-4 text-right text-slate-400">
+                          <i class="pi pi-pencil cursor-pointer hover:text-[#3182CE] mr-3" style="font-size: 0.8rem"></i>
+                          <i class="pi pi-trash cursor-pointer hover:text-rose-500" style="font-size: 0.8rem"></i>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right column (2/5) -->
+            <div class="space-y-6 lg:col-span-2">
+
+              <!-- Liens utiles -->
+              <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                  <h3 class="text-sm font-black text-[#1A365D] uppercase tracking-wider">
+                    <i class="pi pi-link mr-2"></i> Liens utiles
+                  </h3>
+                  <button type="button" class="px-3 py-2 text-sm font-medium rounded-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-sm">
+                    <i class="pi pi-plus mr-2" style="font-size: 0.7rem"></i> Ajouter
+                  </button>
+                </div>
+                <div class="p-5 space-y-3">
+                  <div class="flex items-center justify-between p-3 border border-slate-100 rounded-xl hover:border-blue-500 transition">
+                    <div class="flex items-center min-w-0">
+                      <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded flex items-center justify-center mr-3 shrink-0">
+                        <i class="pi pi-link text-lg"></i>
+                      </div>
+                      <div class="min-w-0">
+                        <p class="text-sm font-bold text-slate-700 truncate">Arrêté municipal — Organisation Tabaski</p>
+                        <p class="text-[10px] text-slate-400 uppercase font-medium truncate">yoff.sn/arretes/tabaski-2026.pdf</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center space-x-2 shrink-0">
+                      <button type="button" class="p-2 text-slate-400 hover:text-[#3182CE] rounded-lg hover:bg-slate-50 transition"><i class="pi pi-external-link text-xs"></i></button>
+                      <button type="button" class="p-2 text-slate-400 hover:text-[#3182CE] rounded-lg hover:bg-slate-50 transition"><i class="pi pi-copy text-xs"></i></button>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center justify-between p-3 border border-slate-100 rounded-xl hover:border-blue-500 transition">
+                    <div class="flex items-center min-w-0">
+                      <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded flex items-center justify-center mr-3 shrink-0">
+                        <i class="pi pi-globe text-lg"></i>
+                      </div>
+                      <div class="min-w-0">
+                        <p class="text-sm font-bold text-slate-700 truncate">Site de la Mairie de Yoff</p>
+                        <p class="text-[10px] text-slate-400 uppercase font-medium truncate">mairiedeyoff.sn</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center space-x-2 shrink-0">
+                      <button type="button" class="p-2 text-slate-400 hover:text-[#3182CE] rounded-lg hover:bg-slate-50 transition"><i class="pi pi-external-link text-xs"></i></button>
+                      <button type="button" class="p-2 text-slate-400 hover:text-[#3182CE] rounded-lg hover:bg-slate-50 transition"><i class="pi pi-copy text-xs"></i></button>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center justify-between p-3 border border-slate-100 rounded-xl hover:border-blue-500 transition">
+                    <div class="flex items-center min-w-0">
+                      <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded flex items-center justify-center mr-3 shrink-0">
+                        <i class="pi pi-book text-lg"></i>
+                      </div>
+                      <div class="min-w-0">
+                        <p class="text-sm font-bold text-slate-700 truncate">Guide de la commission santé et action sociale</p>
+                        <p class="text-[10px] text-slate-400 uppercase font-medium truncate">docs/commission-sante.pdf</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center space-x-2 shrink-0">
+                      <button type="button" class="p-2 text-slate-400 hover:text-[#3182CE] rounded-lg hover:bg-slate-50 transition"><i class="pi pi-external-link text-xs"></i></button>
+                      <button type="button" class="p-2 text-slate-400 hover:text-[#3182CE] rounded-lg hover:bg-slate-50 transition"><i class="pi pi-copy text-xs"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Partenaires -->
+              <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                  <h3 class="text-sm font-black text-[#1A365D] uppercase tracking-wider">
+                    <i class="pi pi-users mr-2"></i> Partenaires
+                  </h3>
+                  <button type="button" class="px-3 py-2 text-sm font-medium rounded-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-sm">
+                    <i class="pi pi-plus mr-2" style="font-size: 0.7rem"></i> Ajouter
+                  </button>
+                </div>
+                <div class="p-5 space-y-3">
+                  <div class="flex items-center justify-between p-3 border border-slate-100 rounded-xl hover:border-blue-500 transition">
+                    <div class="flex items-center min-w-0">
+                      <div class="w-10 h-10 rounded-full bg-[#1A365D] text-white flex items-center justify-center mr-3 font-bold text-xs shrink-0">MY</div>
+                      <div class="min-w-0">
+                        <p class="text-sm font-bold text-slate-700 truncate">Mairie de Yoff</p>
+                        <p class="text-[10px] text-slate-400 uppercase font-medium truncate">commission sante</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center space-x-2 shrink-0">
+                      <span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-700">Institutionnel</span>
+                      <button type="button" class="p-2 text-slate-400 hover:text-[#3182CE] rounded-lg hover:bg-slate-50 transition"><i class="pi pi-pencil text-xs"></i></button>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center justify-between p-3 border border-slate-100 rounded-xl hover:border-blue-500 transition">
+                    <div class="flex items-center min-w-0">
+                      <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mr-3 font-bold text-xs shrink-0">CR</div>
+                      <div class="min-w-0">
+                        <p class="text-sm font-bold text-slate-700 truncate">Croix-Rouge Sénégalaise</p>
+                        <p class="text-[10px] text-slate-400 uppercase font-medium truncate">+221 33 889 19 21</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center space-x-2 shrink-0">
+                      <span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700">Technique</span>
+                      <button type="button" class="p-2 text-slate-400 hover:text-[#3182CE] rounded-lg hover:bg-slate-50 transition"><i class="pi pi-pencil text-xs"></i></button>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center justify-between p-3 border border-slate-100 rounded-xl hover:border-blue-500 transition">
+                    <div class="flex items-center min-w-0">
+                      <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mr-3 font-bold text-xs shrink-0">AD</div>
+                      <div class="min-w-0">
+                        <p class="text-sm font-bold text-slate-700 truncate">Aissetou Diop</p>
+                        <p class="text-[10px] text-slate-400 uppercase font-medium truncate">+221 77 555 12 34</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center space-x-2 shrink-0">
+                      <span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-700">Sponsor</span>
+                      <button type="button" class="p-2 text-slate-400 hover:text-[#3182CE] rounded-lg hover:bg-slate-50 transition"><i class="pi pi-pencil text-xs"></i></button>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center justify-between p-3 border border-slate-100 rounded-xl hover:border-blue-500 transition">
+                    <div class="flex items-center min-w-0">
+                      <div class="w-10 h-10 rounded-full bg-violet-100 text-violet-700 flex items-center justify-center mr-3 font-bold text-xs shrink-0">CY</div>
+                      <div class="min-w-0">
+                        <p class="text-sm font-bold text-slate-700 truncate">Clinique de Yoff</p>
+                        <p class="text-[10px] text-slate-400 uppercase font-medium truncate">Service de medecine</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center space-x-2 shrink-0">
+                      <span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-violet-100 text-violet-700">Médical</span>
+                      <button type="button" class="p-2 text-slate-400 hover:text-[#3182CE] rounded-lg hover:bg-slate-50 transition"><i class="pi pi-pencil text-xs"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============ Panel : Documents ============ -->
+          <div id="panel-documents" class="hidden">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+              <div>
+                <h2 class="text-2xl font-bold text-slate-800">Documents de l'événement</h2>
+                <p class="text-slate-500 text-sm mt-1">Générez ou chargez les documents officiels de l'événement.</p>
+              </div>
+              <button type="button" class="px-4 py-3 text-sm font-medium rounded-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-sm">
+                <i class="pi pi-download mr-2" style="font-size: 0.85rem"></i> Ouvrir le dossier
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+              <!-- Lettre d'invitation :: Généré -->
+              <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col">
+                <div class="flex items-start justify-between">
+                  <div class="w-12 h-12 rounded-xl bg-blue-50 text-[#3182CE] flex items-center justify-center">
+                    <i class="pi pi-file-edit text-xl"></i>
+                  </div>
+                  <span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700">Généré</span>
+                </div>
+                <h3 class="mt-4 font-bold text-slate-800">Lettre d'invitation</h3>
+                <p class="text-sm text-slate-500 mt-1 leading-relaxed">Générée à partir du modèle officiel avec les informations de l'événement.</p>
+                <div class="mt-3 flex items-center text-xs text-slate-600 p-2.5 bg-slate-50 rounded-lg border border-slate-100">
+                  <i class="pi pi-file-pdf mr-2 text-rose-500"></i> lettre_invitation_tabaski_2026.pdf
+                </div>
+                <div class="mt-4 pt-4 border-t border-slate-50 flex space-x-3 mt-auto">
+                  <button type="button" class="flex-1 px-4 py-2 text-sm font-medium rounded-lg text-white bg-[#1A365D] hover:bg-blue-800 transition shadow-sm">
+                    <i class="pi pi-eye mr-2" style="font-size: 0.8rem"></i> Consulter
+                  </button>
+                  <button type="button" class="flex-1 px-4 py-2 text-sm font-medium rounded-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-sm" onclick="document.getElementById('generate-dialog').classList.remove('hidden')">
+                    <i class="pi pi-refresh mr-2" style="font-size: 0.8rem"></i> Régénérer
+                  </button>
+                </div>
+              </div>
+
+              <!-- Lettre de demande de sponsoring :: Téléversé -->
+              <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col">
+                <div class="flex items-start justify-between">
+                  <div class="w-12 h-12 rounded-xl bg-blue-50 text-[#3182CE] flex items-center justify-center">
+                    <i class="pi pi-envelope text-xl"></i>
+                  </div>
+                  <span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-700">Téléversé</span>
+                </div>
+                <h3 class="mt-4 font-bold text-slate-800">Lettre de demande de sponsoring</h3>
+                <p class="text-sm text-slate-500 mt-1 leading-relaxed">Générée depuis le modèle pour solliciter les sponsors de l'événement.</p>
+                <div class="mt-3 flex items-center text-xs text-slate-600 p-2.5 bg-slate-50 rounded-lg border border-slate-100">
+                  <i class="pi pi-file-word mr-2 text-blue-500"></i> sponsoring_tabaski_2026.docx
+                </div>
+                <div class="mt-4 pt-4 border-t border-slate-50 flex space-x-3 mt-auto">
+                  <button type="button" class="flex-1 px-4 py-2 text-sm font-medium rounded-lg text-white bg-[#1A365D] hover:bg-blue-800 transition shadow-sm">
+                    <i class="pi pi-eye mr-2" style="font-size: 0.8rem"></i> Consulter
+                  </button>
+                  <button type="button" class="flex-1 px-4 py-2 text-sm font-medium rounded-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-sm" onclick="document.getElementById('generate-dialog').classList.remove('hidden')">
+                    <i class="pi pi-upload mr-2" style="font-size: 0.8rem"></i> Remplacer
+                  </button>
+                </div>
+              </div>
+
+              <!-- Budgetisation évènement :: Manquant -->
+              <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col">
+                <div class="flex items-start justify-between">
+                  <div class="w-12 h-12 rounded-xl bg-blue-50 text-[#3182CE] flex items-center justify-center">
+                    <i class="pi pi-money-bill text-xl"></i>
+                  </div>
+                  <span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-500">Manquant</span>
+                </div>
+                <h3 class="mt-4 font-bold text-slate-800">Budgetisation évènement</h3>
+                <p class="text-sm text-slate-500 mt-1 leading-relaxed">Générée automatiquement depuis les postes de la section Budget.</p>
+                <div class="mt-4 pt-4 border-t border-slate-50 flex space-x-3 mt-auto">
+                  <button type="button" class="flex-1 px-4 py-2 text-sm font-medium rounded-lg text-white bg-[#1A365D] hover:bg-blue-800 transition shadow-sm" onclick="document.getElementById('generate-dialog').classList.remove('hidden')">
+                    <i class="pi pi-magic mr-2" style="font-size: 0.8rem"></i> Générer
+                  </button>
+                  <button type="button" class="flex-1 px-4 py-2 text-sm font-medium rounded-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-sm">
+                    <i class="pi pi-upload mr-2" style="font-size: 0.8rem"></i> Charger
+                  </button>
+                </div>
+              </div>
+
+              <!-- Feuille de présence :: Manquant -->
+              <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col">
+                <div class="flex items-start justify-between">
+                  <div class="w-12 h-12 rounded-xl bg-blue-50 text-[#3182CE] flex items-center justify-center">
+                    <i class="pi pi-users text-xl"></i>
+                  </div>
+                  <span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-500">Manquant</span>
+                </div>
+                <h3 class="mt-4 font-bold text-slate-800">Feuille de présence</h3>
+                <p class="text-sm text-slate-500 mt-1 leading-relaxed">Générée depuis le modèle pour faire signer les participants à l'événement.</p>
+                <div class="mt-4 pt-4 border-t border-slate-50 flex space-x-3 mt-auto">
+                  <button type="button" class="flex-1 px-4 py-2 text-sm font-medium rounded-lg text-white bg-[#1A365D] hover:bg-blue-800 transition shadow-sm" onclick="document.getElementById('generate-dialog').classList.remove('hidden')">
+                    <i class="pi pi-magic mr-2" style="font-size: 0.8rem"></i> Générer
+                  </button>
+                  <button type="button" class="flex-1 px-4 py-2 text-sm font-medium rounded-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-sm">
+                    <i class="pi pi-upload mr-2" style="font-size: 0.8rem"></i> Charger
+                  </button>
+                </div>
+              </div>
+
+              <!-- Rapport d'évènement :: Manquant -->
+              <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col">
+                <div class="flex items-start justify-between">
+                  <div class="w-12 h-12 rounded-xl bg-blue-50 text-[#3182CE] flex items-center justify-center">
+                    <i class="pi pi-file-pdf text-xl text-rose-400"></i>
+                  </div>
+                  <span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-500">Manquant</span>
+                </div>
+                <h3 class="mt-4 font-bold text-slate-800">Rapport d'évènement</h3>
+                <p class="text-sm text-slate-500 mt-1 leading-relaxed">Généré après l'événement : bilan, participants, résultats et recommandations.</p>
+                <div class="mt-4 pt-4 border-t border-slate-50 flex space-x-3 mt-auto">
+                  <button type="button" class="flex-1 px-4 py-2 text-sm font-medium rounded-lg text-white bg-[#1A365D] hover:bg-blue-800 transition shadow-sm" onclick="document.getElementById('generate-dialog').classList.remove('hidden')">
+                    <i class="pi pi-magic mr-2" style="font-size: 0.8rem"></i> Générer
+                  </button>
+                  <button type="button" class="flex-1 px-4 py-2 text-sm font-medium rounded-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-sm">
+                    <i class="pi pi-upload mr-2" style="font-size: 0.8rem"></i> Charger
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Generate document dialog ================= -->
+  <div id="generate-dialog" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+    <div class="absolute inset-0 bg-slate-900/50" onclick="document.getElementById('generate-dialog').classList.add('hidden')"></div>
+    <div class="relative bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+      <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between sticky top-0">
+        <h3 class="text-sm font-black text-[#1A365D] uppercase tracking-wider">Générer un document — Lettre d'invitation</h3>
+        <button type="button" class="w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:bg-slate-200 transition" onclick="document.getElementById('generate-dialog').classList.add('hidden')">
+          <i class="pi pi-times" style="font-size: 0.9rem"></i>
+        </button>
+      </div>
+
+      <div class="px-6 py-4 bg-blue-50/60 border-b border-blue-100 flex items-start space-x-2">
+        <i class="pi pi-info-circle text-[#3182CE] mt-0.5"></i>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Un modèle officiel (template) sera utilisé. Les champs renseignés ci-dessous seront
+          injectés automatiquement dans le document. Les champs déjà renseignés sur l'événement sont pré-remplis.
+        </p>
+      </div>
+
+      <div class="p-6 grid grid-cols-2 gap-6">
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Destinataire (nom)</label>
+          <input type="text" placeholder="Ex: Mr Alassane Sarr" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Fonction / Organisation</label>
+          <input type="text" placeholder="Ex: Imam de la mosquée de Yoff" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Date de l'événement</label>
+          <input type="date" value="2026-08-07" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Heure</label>
+          <input type="time" value="13:00" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Lieu</label>
+          <input type="text" value="Place publique de Yoff" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Signature</label>
+          <input type="text" placeholder="Ex: Président de la commission" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+        </div>
+        <div class="col-span-2">
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Message / Texte personnalisé</label>
+          <textarea rows="4" placeholder="Nous avons l'honneur de vous inviter à la cérémonie de distribution du Secours Tabaski 2026..." class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all"></textarea>
+        </div>
+      </div>
+
+      <div class="px-6 py-4 border-t border-slate-200 flex justify-end space-x-4 bg-slate-50/50">
+        <button type="button" class="px-4 py-3 text-sm font-medium rounded-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-sm" onclick="document.getElementById('generate-dialog').classList.add('hidden')">Annuler</button>
+        <button type="button" class="px-4 py-3 text-sm font-medium rounded-lg text-white bg-[#1A365D] hover:bg-blue-800 transition shadow-sm">
+          <i class="pi pi-magic mr-2" style="font-size: 0.9rem"></i> Générer le document
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(tab) {
+      var overTab = document.getElementById('tab-overview');
+      var docTab = document.getElementById('tab-documents');
+      var overPanel = document.getElementById('panel-overview');
+      var docPanel = document.getElementById('panel-documents');
+      var isOverview = tab === 'overview';
+      overTab.className = 'px-4 py-2 rounded-lg font-medium text-sm transition shrink-0 ' + (isOverview ? 'bg-white text-[#1A365D] shadow-sm' : 'text-slate-600 hover:bg-white');
+      docTab.className = 'px-4 py-2 rounded-lg font-medium text-sm transition shrink-0 ' + (isOverview ? 'text-slate-600 hover:bg-white' : 'bg-white text-[#1A365D] shadow-sm');
+      overPanel.classList.toggle('hidden', !isOverview);
+      docPanel.classList.toggle('hidden', isOverview);
+    }
+  </script>
+
+</body>
+</html>

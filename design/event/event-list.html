@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Événements — Liste</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/primeicons@7.0.0/primeicons.css" />
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+  <!-- ================= Application shell ================= -->
+  <div class="flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-[#1A365D] text-white flex flex-col flex-shrink-0">
+      <div class="p-6 flex items-center space-x-3">
+        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#1A365D] font-bold">M</div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight">Mairie de Yoff</h1>
+          <p class="text-xs text-blue-200">Commision santé et action sociale</p>
+        </div>
+      </div>
+
+      <nav class="mt-6 flex-1">
+        <a href="#" class="flex items-center px-6 py-3 text-blue-100 hover:bg-[#3182CE]/10 transition shadow-sm">
+          <i class="pi pi-home mr-3"></i> Dashboard
+        </a>
+        <a href="#" class="flex items-center px-6 py-3 text-blue-100 hover:bg-[#3182CE]/10 transition shadow-sm">
+          <i class="pi pi-file mr-3"></i> Procédures
+        </a>
+        <a href="event-calendar.html" class="flex items-center px-6 py-3 text-blue-100 bg-[#3182CE]/10 transition shadow-sm">
+          <i class="pi pi-calendar mr-3"></i> Événements
+        </a>
+        <a href="#" class="flex items-center px-6 py-3 text-blue-100 hover:bg-[#3182CE]/10 transition">
+          <i class="pi pi-cog mr-3"></i> Paramètres
+        </a>
+      </nav>
+
+      <div class="px-6 py-4 border-t border-white/10 flex items-center justify-between">
+        <span class="text-xs text-blue-200">Version 0.4.0</span>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+
+      <!-- Topbar -->
+      <header class="bg-white border-b px-8 py-4 flex justify-between items-center sticky top-0 z-10">
+        <div class="flex items-center space-x-8">
+          <nav class="flex text-sm text-slate-400" aria-label="Breadcrumb">
+            <ol class="flex items-center space-x-2">
+              <li><a href="event-calendar.html" class="hover:text-slate-600">Événements</a></li>
+              <li class="flex items-center justify-center"><i class="pi pi-chevron-right"></i></li>
+              <li class="text-[#1A365D] font-semibold">Liste</li>
+            </ol>
+          </nav>
+          <div class="relative">
+            <i class="pi pi-search absolute left-3 top-3 text-xs text-slate-400"></i>
+            <input type="text" placeholder="Rechercher une demande ou un bénéficiaire..." class="pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm w-80 focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button type="button" class="px-4 py-2 text-sm font-medium rounded-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-sm">
+            <i class="pi pi-calendar mr-2" style="font-size: 0.85rem"></i> Vue calendrier
+          </button>
+        </div>
+      </header>
+
+      <div class="flex-1 overflow-y-auto p-8">
+        <div class="max-w-7xl mx-auto">
+
+          <!-- Header -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+            <div>
+              <h2 class="text-3xl font-bold text-[#1A365D]">Événements</h2>
+              <p class="text-slate-500 text-sm mt-2">Gérez les événements de la commission santé et action sociale.</p>
+            </div>
+            <div class="flex space-x-3">
+              <button type="button" class="px-4 py-3 text-sm font-medium rounded-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-sm">
+                <i class="pi pi-download mr-2" style="font-size: 0.85rem"></i> Exporter (Excel)
+              </button>
+              <button type="button" class="px-4 py-3 text-sm font-medium rounded-lg text-white bg-[#1A365D] hover:bg-blue-800 transition shadow-sm" onclick="document.getElementById('create-event-dialog').classList.remove('hidden')">
+                <i class="pi pi-plus mr-2" style="font-size: 0.85rem"></i> Nouvel événement
+              </button>
+            </div>
+          </div>
+
+          <!-- Table card -->
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+
+            <!-- Filter bar -->
+            <div class="bg-white p-4 border border-slate-100 flex flex-wrap items-end gap-2">
+              <div class="w-56">
+                <input type="text" placeholder="Nom / Référence" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+              </div>
+              <div class="w-44">
+                <select class="w-full px-4 py-3 pr-10 bg-slate-50 border border-slate-200 text-slate-600 rounded-lg focus:outline-none text-sm">
+                  <option>Type d'événement</option>
+                  <option>Secours social</option>
+                  <option>Santé</option>
+                  <option>Réunion</option>
+                  <option>Cérémonie</option>
+                  <option>Communautaire</option>
+                </select>
+              </div>
+              <div class="w-40">
+                <select class="w-full px-4 py-3 pr-10 bg-slate-50 border border-slate-200 text-slate-600 rounded-lg focus:outline-none text-sm">
+                  <option>Tous les statuts</option>
+                  <option>Planifié</option>
+                  <option>En cours</option>
+                  <option>Terminé</option>
+                  <option>Annulé</option>
+                </select>
+              </div>
+              <div class="w-44">
+                <input type="date" placeholder="Du" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+              </div>
+              <div class="w-44">
+                <input type="date" placeholder="Au" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+              </div>
+            </div>
+
+            <!-- Table -->
+            <table class="w-full text-left text-sm">
+              <thead class="bg-slate-50 text-slate-500 font-medium">
+                <tr>
+                  <th class="px-6 py-4">Événement</th>
+                  <th class="px-6 py-4">Date début</th>
+                  <th class="px-6 py-4">Date fin</th>
+                  <th class="px-6 py-4">Budget</th>
+                  <th class="px-6 py-4">Dépenses</th>
+                  <th class="px-6 py-4">Statut</th>
+                  <th class="px-6 py-4">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <!-- Row 1 -->
+                <tr class="hover:bg-slate-50 transition">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center">
+                      <div class="w-10 h-10 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center mr-3">
+                        <i class="pi pi-heart"></i>
+                      </div>
+                      <div>
+                        <p class="font-bold text-slate-800">Secours Tabaski 2026</p>
+                        <p class="text-xs text-slate-400">
+                          <i class="pi pi-map-marker mr-1" style="font-size: 0.7rem"></i> Place publique de Yoff
+                        </p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-slate-600">07 août 2026</td>
+                  <td class="px-6 py-4 text-slate-600">07 août 2026</td>
+                  <td class="px-6 py-4 font-semibold text-slate-700">2 500 000 FCFA</td>
+                  <td class="px-6 py-4 font-semibold text-slate-700">1 850 000 FCFA</td>
+                  <td class="px-6 py-4">
+                    <span class="px-3 py-1 rounded-full text-[11px] font-bold border bg-emerald-50 text-emerald-700 border-emerald-100">En cours</span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <a href="event-detail.html" class="flex items-center space-x-2 text-[#3182CE] hover:text-blue-700 font-semibold text-xs">
+                      <i class="pi pi-eye"></i> Voir
+                    </a>
+                  </td>
+                </tr>
+                <!-- Row 2 -->
+                <tr class="hover:bg-slate-50 transition">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center">
+                      <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center mr-3">
+                        <i class="pi pi-heartbeat"></i>
+                      </div>
+                      <div>
+                        <p class="font-bold text-slate-800">Caravane médicale du quartier</p>
+                        <p class="text-xs text-slate-400">
+                          <i class="pi pi-map-marker mr-1" style="font-size: 0.7rem"></i> Case des tout-petits, Yoff
+                        </p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-slate-600">15 août 2026</td>
+                  <td class="px-6 py-4 text-slate-600">16 août 2026</td>
+                  <td class="px-6 py-4 font-semibold text-slate-700">1 200 000 FCFA</td>
+                  <td class="px-6 py-4 font-semibold text-slate-700">420 000 FCFA</td>
+                  <td class="px-6 py-4">
+                    <span class="px-3 py-1 rounded-full text-[11px] font-bold border bg-blue-50 text-blue-700 border-blue-100">Planifié</span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <a href="event-detail.html" class="flex items-center space-x-2 text-[#3182CE] hover:text-blue-700 font-semibold text-xs">
+                      <i class="pi pi-eye"></i> Voir
+                    </a>
+                  </td>
+                </tr>
+                <!-- Row 3 -->
+                <tr class="hover:bg-slate-50 transition">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center">
+                      <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mr-3">
+                        <i class="pi pi-users"></i>
+                      </div>
+                      <div>
+                        <p class="font-bold text-slate-800">Réunion préparatoire commission</p>
+                        <p class="text-xs text-slate-400">
+                          <i class="pi pi-map-marker mr-1" style="font-size: 0.7rem"></i> Salle de réunion de la mairie
+                        </p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-slate-600">18 août 2026</td>
+                  <td class="px-6 py-4 text-slate-600">18 août 2026</td>
+                  <td class="px-6 py-4 font-semibold text-slate-700">—</td>
+                  <td class="px-6 py-4 font-semibold text-slate-700">—</td>
+                  <td class="px-6 py-4">
+                    <span class="px-3 py-1 rounded-full text-[11px] font-bold border bg-violet-50 text-violet-700 border-violet-100">Terminé</span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <a href="event-detail.html" class="flex items-center space-x-2 text-[#3182CE] hover:text-blue-700 font-semibold text-xs">
+                      <i class="pi pi-eye"></i> Voir
+                    </a>
+                  </td>
+                </tr>
+                <!-- Row 4 -->
+                <tr class="hover:bg-slate-50 transition">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center">
+                      <div class="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center mr-3">
+                        <i class="pi pi-star"></i>
+                      </div>
+                      <div>
+                        <p class="font-bold text-slate-800">Iftar communautaire</p>
+                        <p class="text-xs text-slate-400">
+                          <i class="pi pi-map-marker mr-1" style="font-size: 0.7rem"></i> Mosquée de Yoff Layenne
+                        </p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-slate-600">30 août 2026</td>
+                  <td class="px-6 py-4 text-slate-600">30 août 2026</td>
+                  <td class="px-6 py-4 font-semibold text-slate-700">800 000 FCFA</td>
+                  <td class="px-6 py-4 font-semibold text-slate-700">120 000 FCFA</td>
+                  <td class="px-6 py-4">
+                    <span class="px-3 py-1 rounded-full text-[11px] font-bold border bg-blue-50 text-blue-700 border-blue-100">Planifié</span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <a href="event-detail.html" class="flex items-center space-x-2 text-[#3182CE] hover:text-blue-700 font-semibold text-xs">
+                      <i class="pi pi-eye"></i> Voir
+                    </a>
+                  </td>
+                </tr>
+                <!-- Row 5 -->
+                <tr class="hover:bg-slate-50 transition">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center">
+                      <div class="w-10 h-10 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center mr-3">
+                        <i class="pi pi-heart"></i>
+                      </div>
+                      <div>
+                        <p class="font-bold text-slate-800">Secours Pâque 2026 (annulé)</p>
+                        <p class="text-xs text-slate-400">
+                          <i class="pi pi-map-marker mr-1" style="font-size: 0.7rem"></i> Place publique de Yoff
+                        </p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-slate-600">—</td>
+                  <td class="px-6 py-4 text-slate-600">—</td>
+                  <td class="px-6 py-4 font-semibold text-slate-700">—</td>
+                  <td class="px-6 py-4 font-semibold text-slate-700">—</td>
+                  <td class="px-6 py-4">
+                    <span class="px-3 py-1 rounded-full text-[11px] font-bold border bg-red-50 text-red-700 border-red-100">Annulé</span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <a href="event-detail.html" class="flex items-center space-x-2 text-[#3182CE] hover:text-blue-700 font-semibold text-xs">
+                      <i class="pi pi-eye"></i> Voir
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between">
+              <span class="text-sm text-slate-500">Affichage de 1 à 5 sur 12 événements</span>
+              <div class="flex items-center space-x-3">
+                <select class="px-3 py-2 pr-8 bg-white border border-slate-200 text-slate-600 rounded-lg focus:outline-none text-sm">
+                  <option>10</option>
+                  <option>25</option>
+                  <option>50</option>
+                </select>
+                <div class="flex space-x-2">
+                  <button type="button" class="px-3 py-2 text-sm font-medium rounded-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-sm" disabled>
+                    <i class="pi pi-chevron-left" style="font-size: 0.8rem"></i>
+                  </button>
+                  <select class="px-3 py-2 pr-8 bg-white border border-slate-200 text-slate-600 rounded-lg focus:outline-none text-sm">
+                    <option>1</option>
+                    <option>2</option>
+                  </select>
+                  <button type="button" class="px-3 py-2 text-sm font-medium rounded-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-sm">
+                    <i class="pi pi-chevron-right" style="font-size: 0.8rem"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Create event dialog (same as calendar) ================= -->
+  <div id="create-event-dialog" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+    <div class="absolute inset-0 bg-slate-900/50" onclick="document.getElementById('create-event-dialog').classList.add('hidden')"></div>
+    <div class="relative bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+      <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between sticky top-0">
+        <h3 class="text-sm font-black text-[#1A365D] uppercase tracking-wider">Nouvel évènement</h3>
+        <button type="button" class="w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:bg-slate-200 transition" onclick="document.getElementById('create-event-dialog').classList.add('hidden')">
+          <i class="pi pi-times" style="font-size: 0.9rem"></i>
+        </button>
+      </div>
+
+      <div class="p-6 grid grid-cols-2 gap-6">
+        <div class="col-span-2">
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Nom de l'événement</label>
+          <input type="text" placeholder="Ex: Secours Tabaski Octobre 2026" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Type d'événement</label>
+          <select class="w-full px-4 py-3 pr-10 bg-slate-50 border border-slate-200 text-slate-600 rounded-lg focus:outline-none">
+            <option>Secours social</option>
+            <option>Santé</option>
+            <option>Réunion</option>
+            <option>Cérémonie</option>
+            <option>Communautaire</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Statut</label>
+          <select class="w-full px-4 py-3 pr-10 bg-slate-50 border border-slate-200 text-slate-600 rounded-lg focus:outline-none">
+            <option>Planifié</option>
+            <option>En cours</option>
+            <option>Terminé</option>
+            <option>Annulé</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Date de début</label>
+          <input type="date" value="2026-10-01" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Date de fin</label>
+          <input type="date" value="2026-10-01" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Heure début</label>
+          <input type="time" value="13:00" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Heure fin</label>
+          <input type="time" value="17:00" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Lieu</label>
+          <input type="text" placeholder="Ex: Place publique de Yoff" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Participants attendus</label>
+          <input type="number" placeholder="Ex: 300" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+        </div>
+        <div class="col-span-2">
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Description</label>
+          <textarea rows="3" placeholder="Objectif de l'événement, public cible..." class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all"></textarea>
+        </div>
+        <div class="col-span-2">
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Budget prévu (FCFA)</label>
+          <input type="number" placeholder="Ex: 2500000" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+        </div>
+      </div>
+
+      <div class="px-6 py-4 border-t border-slate-200 flex justify-end space-x-4 bg-slate-50/50">
+        <button type="button" class="px-4 py-3 text-sm font-medium rounded-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-sm" onclick="document.getElementById('create-event-dialog').classList.add('hidden')">Annuler</button>
+        <button type="button" class="px-4 py-3 text-sm font-medium rounded-lg text-white bg-[#1A365D] hover:bg-blue-800 transition shadow-sm">
+          <i class="pi pi-calendar-plus mr-2" style="font-size: 0.9rem"></i> Créer l'événement
+        </button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
