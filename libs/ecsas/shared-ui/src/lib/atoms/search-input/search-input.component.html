@@ -3,8 +3,19 @@
         <i class="pi pi-search"></i>
     </span>
     <input class="w-full py-3 pl-10 pr-3 border border-slate-200 rounded-lg bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        [class.border-red-500]="invalid() && touched()"
         type="text"
         [placeholder]="placeholder()"
         [value]="value()" (input)="value.set($event.target.value)"
+        (blur)="touched.set(true)"
+        [disabled]="disabled()"
     />
+    <!-- Internal Error Display -->
+    @if (invalid() && touched()) {
+      <div class="text-red-500 text-xs mt-1">
+        @for (error of errors(); track error.kind) {
+          <span>{{ error.message }}</span>
+        }
+      </div>
+    }
 </div>

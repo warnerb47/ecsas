@@ -7,6 +7,17 @@
             {{phonePrefix()}}
         </span>
         <input id="phone-number-input" class="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-r-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all"
-            type="tel" [placeholder]="placeholder()" [value]="value()" (input)="value.set($event.target.value)">
+            [class.border-red-500]="invalid() && touched()"
+            type="tel" [placeholder]="placeholder()" [value]="value()" (input)="value.set($event.target.value)"
+            (blur)="touched.set(true)"
+            [disabled]="disabled()">
     </div>
+    <!-- Internal Error Display -->
+    @if (invalid() && touched()) {
+      <div class="text-red-500 text-xs mt-1">
+        @for (error of errors(); track error.kind) {
+          <span>{{ error.message }}</span>
+        }
+      </div>
+    }
 </div>

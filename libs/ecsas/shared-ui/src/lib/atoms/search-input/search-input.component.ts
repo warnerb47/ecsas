@@ -1,6 +1,10 @@
 import { Component, input, model } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {FormValueControl} from '@angular/forms/signals';
+import {
+  FormValueControl,
+  ValidationError,
+  WithOptionalFieldTree,
+} from '@angular/forms/signals';
 
 @Component({
   selector: 'lib-search-input',
@@ -11,4 +15,12 @@ import {FormValueControl} from '@angular/forms/signals';
 export class SearchInputComponent implements FormValueControl<string | null>{
   placeholder = input<string>('');
   value = model<string | null>(null);
+
+  // Interaction state (touched)
+  readonly touched = model<boolean>(false);
+
+  // State inputs automatically populated by [formField]
+  readonly invalid = input<boolean>(false);
+  readonly errors = input<readonly WithOptionalFieldTree<ValidationError>[]>([]);
+  readonly disabled = input<boolean>(false);
 }
