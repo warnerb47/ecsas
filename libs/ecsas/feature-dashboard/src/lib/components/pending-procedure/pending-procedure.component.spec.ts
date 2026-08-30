@@ -49,4 +49,17 @@ describe('PendingProcedureComponent', () => {
     component.viewProcedure({ id: '1' });
     expect(navigateSpy).toHaveBeenCalledWith(['/procedure/detail', '1']);
   });
+
+  it('should treat missing database table as empty procedures', async () => {
+    mockProcedureGateway.getRecentProcedures = vi
+      .fn()
+      .mockRejectedValue(
+        new Error('error returned from database: (code: 1) no such table: core_procedure'),
+      );
+
+    await component.fetchRecentProcedures();
+
+    expect(component.error()).toBe(false);
+    expect(component.procedures()).toEqual([]);
+  });
 });

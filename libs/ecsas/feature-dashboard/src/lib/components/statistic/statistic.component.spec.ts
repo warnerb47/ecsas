@@ -41,4 +41,20 @@ describe('StatisticComponent', () => {
     expect(component.approved()).toBe(35);
     expect(component.rejected()).toBe(25);
   });
+
+  it('should treat missing database table as empty statistics', async () => {
+    mockApplicationGateway.getApplicationStatistics = vi
+      .fn()
+      .mockRejectedValue(
+        new Error('error returned from database: (code: 1) no such table: core_application'),
+      );
+
+    await component.fetchStatistics();
+
+    expect(component.error()).toBe(false);
+    expect(component.total()).toBe(0);
+    expect(component.pending()).toBe(0);
+    expect(component.approved()).toBe(0);
+    expect(component.rejected()).toBe(0);
+  });
 });
