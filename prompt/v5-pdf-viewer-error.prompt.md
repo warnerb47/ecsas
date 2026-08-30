@@ -11,3 +11,4 @@ Display this message: `Impossible de charger le document cliquez sur ce bouton p
         </lib-button>
 `
 You can be inspired by `libs\ecsas\feature-procedure\src\lib\procedure-list\procedure-list.component.html` to see how I handle no data an loading state.
+- On click in refress button add an animation like make icon spin to make use feel data fetching
