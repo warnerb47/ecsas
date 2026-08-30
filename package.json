@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "pnpm exec nx run ecsas:serve",
     "build": "pnpm exec nx run ecsas:build",
+    "tauri-build": "pnpm exec tauri build",
     "start": "pnpm exec tauri dev"
   },
   "private": true,
