@@ -10,9 +10,7 @@ import {
 import {
   BreadcrumbItem,
   TopbarComponent,
-  DropdownComponent,
   ButtonComponent,
-  TextAreaComponent,
   PdfViewerComponent,
 } from '@org/ecsas/shared-ui';
 import {
@@ -25,18 +23,16 @@ import {
 import { DialogService } from 'primeng/dynamicdialog';
 import { map, Subject, takeUntil } from 'rxjs';
 import { UpdateApplicantComponent } from './update-applicant/update-applicant.component';
-import { form, FormField, required, submit } from '@angular/forms/signals';
+import { form, required } from '@angular/forms/signals';
+import { UpdateApplicationComponent } from './update-application/update-application.component';
 
 @Component({
   selector: 'lib-detail-application-component',
   imports: [
     RouterLink,
     TopbarComponent,
-    DropdownComponent,
     ButtonComponent,
-    TextAreaComponent,
     DatePipe,
-    FormField,
   ],
   providers: [DialogService],
   templateUrl: './detail-application.component.html',
@@ -192,30 +188,22 @@ export class DetailApplicationComponent implements OnInit {
       });
   }
 
-  async updateApplication() {
-    const applicantId = await this._applicationGateway.updateApplication({
-      application: this.applicationModel(),
-      applicationId: this.application()?.id ?? '',
-    });
-    return applicantId;
+  editApplication() {
+    this._dialogService
+      .open(UpdateApplicationComponent, {
+        header: 'Modifier le status de la demande',
+        width: '40vw',
+        focusOnShow: false,
+        closable: true,
+        closeOnEscape: true,
+        data: {...this.application(), procedure: this.procedure()},
+      })
+      ?.onClose.pipe(takeUntil(this._unsubscribe))
+      .subscribe((result) => {
+        if (!result) return;
+        this.fetchApplicationById();
+      });
   }
 
-  async submit() {
-    try {
-      await submit(this.applicationForm, async () => {
-        if (this.applicationForm().valid()) {
-          if (!this.applicationModel().id) {
-            return;
-          }
-          this.loadingSubmit.set(true);
-          await this.updateApplication();
-          this.fetchApplicationById();
-        }
-      });
-    } catch (error) {
-      console.error(error);
-    } finally {
-      this.loadingSubmit.set(false);
-    }
-  }
+
 }

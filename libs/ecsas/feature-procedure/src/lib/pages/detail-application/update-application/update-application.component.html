@@ -1,0 +1,15 @@
+<div class="flex flex-col space-y-4">
+  <div class="grid gap-4 pt-6">
+    <lib-dropdown [formField]="applicationForm.status" label="Statut de la demande" [options]="statuts"></lib-dropdown>
+    <lib-dropdown [formField]="applicationForm.state" label="État de conformité" [options]="conformities"></lib-dropdown>
+    <lib-text-area [formField]="applicationForm.comment" label="Commentaires" placeholder="Ajouter des commentaires"></lib-text-area>
+  </div>
+    <lib-button (click)="submit()" [disabled]="loadingSubmit()" type="primary">
+      @if (loadingSubmit()) {
+        <i class="pi pi-spin pi-spinner"></i>
+      } @else {
+        <span>Enregistrer</span>
+      }
+    </lib-button>
+
+</div>

@@ -10,119 +10,126 @@
 
         <div class="flex-1 overflow-y-auto p-8">
             <div class="max-w-4xl mx-auto">
-                <div class="grid grid-cols-3 gap-8">
-                    <div class="col-span-2 space-y-6">
-
-                        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                            <div class="px-6 py-4 bg-slate-50 border-b border-slate-100">
-                                <h3 class="text-sm font-black text-[#1A365D] uppercase tracking-wider">Bénéficiaire</h3>
+                <div class="grid gap-8">
+                  <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                      <div class="px-6 py-4 bg-slate-50 border-b border-slate-100">
+                        <div class="flex items-center justify-between">
+                          <h3 class="text-sm font-black text-[#1A365D] uppercase tracking-wider">Bénéficiaire</h3>
+                            <button type="button" class="w-8 h-8 flex items-center justify-center rounded-full text-white bg-[#1A365D] hover:bg-blue-800"
+                            (click)="editApplicant()">
+                              <i class="pi pi-pencil" style="font-size: 0.7rem"></i>
+                            </button>
+                        </div>
+                      </div>
+                      @if (applicant()?.id) {
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h2 class="text-2xl font-bold font-black text-slate-800 uppercase tracking-tight">
+                                      {{applicant()?.fullName}}
+                                    </h2>
+                                    <p class="text-blue-600 font-bold text-sm">
+                                      {{applicant()?.status}}
+                                    </p>
+                                </div>
                             </div>
-                            @if (applicant()?.id) {
-                              <div class="p-6">
-                                  <div class="flex justify-between items-start mb-4">
-                                      <div>
-                                          <h2 class="text-2xl font-bold font-black text-slate-800 uppercase tracking-tight">
-                                            {{applicant()?.fullName}}
-                                          </h2>
-                                          <p class="text-blue-600 font-bold text-sm">
-                                            {{applicant()?.status}}
-                                          </p>
-                                      </div>
-                                      <lib-button type="secondary" (click)="editApplicant()">
-                                        <i class="pi pi-pencil"></i>
-                                      </lib-button>
-                                  </div>
 
-                                  <div class="grid grid-cols-2 gap-y-6 gap-x-4 border-t border-slate-50 pt-6">
-                                      <div>
-                                          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Numéro d'identification National</p>
-                                          <p class="text-sm font-semibold text-slate-700">{{ applicant()?.nin }}</p>
+                            <div class="grid grid-cols-2 gap-y-6 gap-x-4 border-t border-slate-50 pt-6">
+                                <div>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Numéro d'identification National</p>
+                                    <p class="text-sm font-semibold text-slate-700">{{ applicant()?.nin }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Téléphone</p>
+                                    <p class="text-sm font-semibold text-slate-700">{{ applicant()?.phoneNumber }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Adresse Résidentielle</p>
+                                    <p class="text-sm font-semibold text-slate-700">{{ applicant()?.address }}</p>
+                                </div>
+                                @for (source of (applicant()?.sources ?? []); track $index) {
+                                  <div class="col-span-2 flex  items-center justify-between p-3 border border-slate-100 rounded-xl hover:border-blue-500 transition group cursor-pointer">
+                                      <div class="flex items-center">
+                                          <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded flex items-center justify-center font-bold text-xs mr-3">
+                                              <i class="pi pi-file text-lg"></i>
+                                          </div>
+                                          <div>
+                                              <p class="text-sm font-bold text-slate-700">{{ source?.name }}</p>
+                                              <p class="text-[10px] text-slate-400 uppercase font-medium">Ajouté le {{ source?.uploadedAt | date: 'dd/MM/yyyy' }}</p>
+                                          </div>
                                       </div>
-                                      <div>
-                                          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Téléphone</p>
-                                          <p class="text-sm font-semibold text-slate-700">{{ applicant()?.phoneNumber }}</p>
-                                      </div>
-                                      <div>
-                                          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Adresse Résidentielle</p>
-                                          <p class="text-sm font-semibold text-slate-700">{{ applicant()?.address }}</p>
-                                      </div>
-                                      @for (source of (applicant()?.sources ?? []); track $index) {
-                                        <div class="col-span-2 flex  items-center justify-between p-3 border border-slate-100 rounded-xl hover:border-blue-500 transition group cursor-pointer">
-                                            <div class="flex items-center">
-                                                <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded flex items-center justify-center font-bold text-xs mr-3">
-                                                    <i class="pi pi-file text-lg"></i>
-                                                </div>
-                                                <div>
-                                                    <p class="text-sm font-bold text-slate-700">{{ source?.name }}</p>
-                                                    <p class="text-[10px] text-slate-400 uppercase font-medium">Ajouté le {{ source?.uploadedAt | date: 'dd/MM/yyyy' }}</p>
-                                                </div>
-                                            </div>
-                                            <button type="button" (click)="displaySource(source)" class="p-2 text-slate-400" type="button">
-                                                <i class="pi pi-eye"></i>
-                                            </button>
-                                        </div>
-                                      }
+                                      <button type="button" (click)="displaySource(source)" class="p-2 text-slate-400" type="button">
+                                          <i class="pi pi-eye"></i>
+                                      </button>
                                   </div>
+                                }
+                            </div>
+                        </div>
+                      }
+                  </div>
+
+                  <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                      <div class="px-6 py-4 bg-slate-50 border-b border-slate-100">
+                        <div class="flex items-center justify-between">
+                          <h3 class="text-sm font-black text-[#1A365D] uppercase tracking-wider">Demande</h3>
+                            <button type="button" class="w-8 h-8 flex items-center justify-center rounded-full text-white bg-[#1A365D] hover:bg-blue-800"
+                            (click)="editApplication()">
+                              <i class="pi pi-pencil" style="font-size: 0.7rem"></i>
+                            </button>
+                        </div>
+                      </div>
+                      <div class="grid grid-cols-2 gap-4 p-6">
+                          <div>
+                              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Procédure</p>
+                              <p class="text-sm font-semibold text-slate-700">{{procedure()?.name}}</p>
+                          </div>
+                          <div>
+                              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Date de soumission</p>
+                              <p class="text-sm font-semibold text-slate-700">{{application()?.createdAt| date: 'dd/MM/yyyy'}}</p>
+                          </div>
+                          <div>
+                              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Référence Courrier</p>
+                              <p class="text-sm font-semibold text-slate-700">{{application()?.mailRef}}</p>
+                          </div>
+                          <div>
+                              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Statut de la demande</p>
+                              <p class="text-sm font-semibold text-slate-700">{{application()?.status}}</p>
+                          </div>
+                          <div>
+                              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">État de conformité</p>
+                              <p class="text-sm font-semibold text-slate-700">{{application()?.state ? application()?.state : '-'}}</p>
+                          </div>
+                          <div class="col-span-2">
+                              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Commentaires</p>
+                              <p class="text-sm font-semibold text-slate-700">{{application()?.comment ? application()?.comment : '-'}}</p>
+                          </div>
+                          @if(application()?.sources?.length) {
+                            @for (source of (application()?.sources ?? []); track $index) {
+                              <div class="col-span-2 flex  items-center justify-between p-3 border border-slate-100 rounded-xl hover:border-blue-500 transition group cursor-pointer">
+                                  <div class="flex items-center">
+                                      <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded flex items-center justify-center font-bold text-xs mr-3">
+                                          <i class="pi pi-file text-lg"></i>
+                                      </div>
+                                      <div>
+                                          <p class="text-sm font-bold text-slate-700">{{ source?.name }}</p>
+                                          <p class="text-[10px] text-slate-400 uppercase font-medium">Ajouté le {{ source?.uploadedAt | date: 'dd/MM/yyyy' }}</p>
+                                      </div>
+                                  </div>
+                                  <button type="button" (click)="displaySource(source)" class="p-2 text-slate-400" type="button">
+                                      <i class="pi pi-eye"></i>
+                                  </button>
                               </div>
                             }
-                        </div>
+                          }@else {
+                          <div class="col-span-2">
+                              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Documents</p>
+                              <p class="text-sm font-semibold text-slate-700">Aucun document soumis</p>
+                          </div>
 
-                        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                            <div class="px-6 py-4 bg-slate-50 border-b border-slate-100">
-                                <h3 class="text-sm font-black text-[#1A365D] uppercase tracking-wider">Demande</h3>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4 p-6">
-                                <div>
-                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Procédure</p>
-                                    <p class="text-sm font-semibold text-slate-700">{{procedure()?.name}}</p>
-                                </div>
-                                <div>
-                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Date de soumission</p>
-                                    <p class="text-sm font-semibold text-slate-700">{{application()?.createdAt| date: 'dd/MM/yyyy'}}</p>
-                                </div>
-                                <div>
-                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Référence Courrier</p>
-                                    <p class="text-sm font-semibold text-slate-700">{{application()?.mailRef}}</p>
-                                </div>
-                                  @for (source of (application()?.sources ?? []); track $index) {
-                                    <div class="col-span-2 flex  items-center justify-between p-3 border border-slate-100 rounded-xl hover:border-blue-500 transition group cursor-pointer">
-                                        <div class="flex items-center">
-                                            <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded flex items-center justify-center font-bold text-xs mr-3">
-                                                <i class="pi pi-file text-lg"></i>
-                                            </div>
-                                            <div>
-                                                <p class="text-sm font-bold text-slate-700">{{ source?.name }}</p>
-                                                <p class="text-[10px] text-slate-400 uppercase font-medium">Ajouté le {{ source?.uploadedAt | date: 'dd/MM/yyyy' }}</p>
-                                            </div>
-                                        </div>
-                                        <button type="button" (click)="displaySource(source)" class="p-2 text-slate-400" type="button">
-                                            <i class="pi pi-eye"></i>
-                                        </button>
-                                    </div>
-                                  }
-                            </div>
-                        </div>
-                    </div>
+                          }
+                      </div>
+                  </div>
 
-                    <div class="col-span-1 space-y-6">
-
-                        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                            <h3 class="text-sm font-black text-slate-400 tracking-widest mb-6">Progression du Workflow</h3>
-                            <form class="grid gap-4">
-                                <lib-dropdown [formField]="applicationForm.status" label="Statut de la demande" [options]="statuts"></lib-dropdown>
-                                <lib-dropdown [formField]="applicationForm.state" label="État de conformité" [options]="conformities"></lib-dropdown>
-                                <lib-text-area [formField]="applicationForm.comment" label="Commentaires" placeholder="Ajouter des commentaires"></lib-text-area>
-                                <lib-button (click)="submit()" [disabled]="loadingSubmit()" type="primary">
-                                  @if (loadingSubmit()) {
-                                    <i class="pi pi-spin pi-spinner"></i>
-                                  } @else {
-                                    <span>Enregistrer</span>
-                                  }
-                                </lib-button>
-                            </form>
-                        </div>
-
-                    </div>
                 </div>
             </div>
         </div>

@@ -1,8 +1,8 @@
 <div class="w-full">
-    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">
+    <label for="dropdown-select" class="block text-xs font-bold text-slate-500 uppercase mb-2">
         {{label()}}
     </label>
-    <select class="w-full px-4 py-3 pr-10 bg-slate-50 border border-slate-200 text-slate-600 rounded-lg focus:outline-none"
+    <select id="dropdown-select" class="w-full px-4 py-3 pr-10 bg-slate-50 border border-slate-200 text-slate-600 rounded-lg focus:outline-none"
         [class.border-red-500]="invalid() && touched()"
         [value]="value()" (input)="setValue($event)"
         (blur)="touched.set(true)">
