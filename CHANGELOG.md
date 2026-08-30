@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0](https://github.com/warnerb47/ecsas/compare/ecsas-v0.2.0...ecsas-v0.3.0) (2026-08-30)
+
+
+### Features
+
+* display app version ([186dcf6](https://github.com/warnerb47/ecsas/commit/186dcf6d85ea9fd05e38de98e9d4382aa28b0527))
+
+
+### Bug Fixes
+
+* update bundle size ([5ea5e8d](https://github.com/warnerb47/ecsas/commit/5ea5e8d2d2e8a9a1efc0b9a8f25a833191afedd4))
+
 ## [0.2.0](https://github.com/warnerb47/ecsas/compare/ecsas-v0.1.0...ecsas-v0.2.0) (2026-08-30)
 
 
