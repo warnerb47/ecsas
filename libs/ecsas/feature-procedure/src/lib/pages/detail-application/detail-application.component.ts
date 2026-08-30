@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -33,6 +33,7 @@ import { UpdateApplicationComponent } from './update-application/update-applicat
     TopbarComponent,
     ButtonComponent,
     DatePipe,
+    NgClass,
   ],
   providers: [DialogService],
   templateUrl: './detail-application.component.html',
@@ -203,6 +204,68 @@ export class DetailApplicationComponent implements OnInit {
         if (!result) return;
         this.fetchApplicationById();
       });
+  }
+
+  getApplicantStatusClasses(status: string | undefined): string {
+    const map: Record<string, string> = {
+      SOCIAL_CASE: 'bg-amber-50 text-amber-700 border-amber-100',
+      NON_ESSENTIAL: 'bg-slate-50 text-slate-700 border-slate-100',
+      RECENTLY_SUPPORTED: 'bg-violet-50 text-violet-700 border-violet-100',
+      INAPPROPRIATE_AGE: 'bg-red-50 text-red-700 border-red-100',
+      DEFAULT: 'bg-slate-50 text-slate-700 border-slate-100',
+    };
+    return (status && map[status]) ?? 'bg-slate-50 text-slate-700 border-slate-100';
+  }
+  getApplicantStatusLabel(status: string | undefined): string {
+    if (!status) return 'Non défini';
+    const map: Record<string, string> = {
+      SOCIAL_CASE: 'Cas social',
+      NON_ESSENTIAL: 'Non nécessiteux',
+      RECENTLY_SUPPORTED: 'Déjà prise en charge',
+      INAPPROPRIATE_AGE: 'Âge non conforme',
+      DEFAULT: 'Aucun',
+    };
+    return map[status] ?? 'Non défini';
+  }
+
+  getStatusClasses(status: string | undefined): string {
+    if (!status) return 'bg-slate-50 text-slate-700 border-slate-100';
+    const map: Record<string, string> = {
+      PENDING: 'bg-amber-50 text-amber-700 border-amber-100',
+      APPROVED: 'bg-emerald-50 text-emerald-700 border-emerald-100',
+      REJECTED: 'bg-red-50 text-red-700 border-red-100',
+    };
+    return map[status] ?? 'bg-slate-50 text-slate-700 border-slate-100';
+  }
+  getStatusLabel(status: string | undefined): string {
+    if (!status) return 'Non défini';
+    const map: Record<string, string> = {
+      PENDING: 'En cours',
+      APPROVED: 'Acceptée',
+      REJECTED: 'Refusée',
+    };
+    return map[status] ?? 'Non défini';
+  }
+
+  getStateClasses(state: string | undefined): string {
+    if (!state) return 'bg-slate-50 text-slate-700 border-slate-100';
+    const map: Record<string, string> = {
+      COMPLIANT: 'bg-emerald-50 text-emerald-700 border-emerald-100',
+      OUT_OF_ZONE: 'bg-violet-50 text-violet-700 border-violet-100',
+      INCOMPLETE: 'bg-amber-50 text-amber-700 border-amber-100',
+      MAYOR_REQUEST: 'bg-blue-50 text-blue-700 border-blue-100',
+    };
+    return map[state] ?? 'bg-slate-50 text-slate-700 border-slate-100';
+  }
+  getStateLabel(state: string | undefined): string {
+    if (!state) return 'Non défini';
+    const map: Record<string, string> = {
+      COMPLIANT: 'Conforme',
+      OUT_OF_ZONE: 'Hors zone',
+      INCOMPLETE: 'Dossier incomplet',
+      MAYOR_REQUEST: 'Demande du Maire',
+    };
+    return map[state] ?? 'Non défini';
   }
 
 

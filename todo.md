@@ -39,13 +39,13 @@
 ✅ update detail-application design (add demande section edit btn like for applicant)
 ✅ fix applicant filter by phonenumber or nin
 - fix: set dropdown option label to '' when value is null (it is selecting the first option label)
-- update detail-application design (use badge for status and state)
-- update detail-application design (add label for applicant.status)
+✅ update detail-application design (use badge for status and state)
+✅ update detail-application design (add label for applicant.status)
 
 # Refactoring
-✅- add applicant.birthDate 
+✅ add applicant.birthDate 
+✅ add error handling for all shared-ui input
 - update applicant.sources to applicant.source (applicant have only one source the CNI)
-- add error handling for all shared-ui input
 
 # Database
 - use transaction for commands

@@ -28,9 +28,10 @@
                                     <h2 class="text-2xl font-bold font-black text-slate-800 uppercase tracking-tight">
                                       {{applicant()?.fullName}}
                                     </h2>
-                                    <p class="text-blue-600 font-bold text-sm">
-                                      {{applicant()?.status}}
-                                    </p>
+                                    <span class="inline-block mt-1 px-3 py-1 rounded-full text-[11px] font-bold border"
+                                      [ngClass]="getApplicantStatusClasses(applicant()?.status)">
+                                      {{ getApplicantStatusLabel(applicant()?.status) }}
+                                    </span>
                                 </div>
                             </div>
 
@@ -93,11 +94,17 @@
                           </div>
                           <div>
                               <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Statut de la demande</p>
-                              <p class="text-sm font-semibold text-slate-700">{{application()?.status}}</p>
+                              <span class="inline-block mt-1 px-3 py-1 rounded-full text-[11px] font-bold border"
+                                [ngClass]="getStatusClasses(application()?.status)">
+                                {{ getStatusLabel(application()?.status) }}
+                              </span>
                           </div>
                           <div>
                               <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">État de conformité</p>
-                              <p class="text-sm font-semibold text-slate-700">{{application()?.state ? application()?.state : '-'}}</p>
+                              <span class="inline-block mt-1 px-3 py-1 rounded-full text-[11px] font-bold border"
+                                [ngClass]="getStateClasses(application()?.state)">
+                                {{ getStateLabel(application()?.state) }}
+                              </span>
                           </div>
                           <div class="col-span-2">
                               <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Commentaires</p>
