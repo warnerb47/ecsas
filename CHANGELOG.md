@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.0](https://github.com/warnerb47/ecsas/compare/ecsas-v0.3.0...ecsas-v0.4.0) (2026-08-30)
+
+
+### Features
+
+* add app icon ([ceb778f](https://github.com/warnerb47/ecsas/commit/ceb778f31c908c09766bb89a98d0638b3ba1a814))
+* update procedure-list empty-state design ([b790cb5](https://github.com/warnerb47/ecsas/commit/b790cb544d63607d05ec9aa42a0f2e744c960f3e))
+
+
+### Bug Fixes
+
+* handle empty dashboard state ([d626f9b](https://github.com/warnerb47/ecsas/commit/d626f9b6a34664964e28c639f21440162384eb25))
+
 ## [0.3.0](https://github.com/warnerb47/ecsas/compare/ecsas-v0.2.0...ecsas-v0.3.0) (2026-08-30)
 
 
