@@ -59,3 +59,10 @@ export interface ApplicationFilters {
   applicantStatus: ApplicantStatus | null;
   mailRef: string | null;
 }
+
+export interface ApplicationStatistics {
+  total: number;
+  pending: number;
+  approved: number;
+  rejected: number;
+}

@@ -3,17 +3,38 @@ import {
   ApplicationDocument,
   ApplicationFilters,
   ApplicationPayload,
+  ApplicationStatistics,
 } from '@org/models';
 import { closeConnection, openConnection, parseKey } from '../db.utils';
 import {
   GET_APPLICATION_BY_ID,
   GET_APPLICATIONS_BY_PROCEDURE_ID,
+  GET_APPLICATION_STATISTICS_QUERY,
 } from './query';
 import { v4 as uuidv4 } from 'uuid';
 import { DocumentManager } from '@org/api/products';
 
 export class ApplicationRepository {
   private readonly _documentManager = new DocumentManager();
+
+  async getApplicationStatistics(): Promise<ApplicationStatistics> {
+    const db = await openConnection();
+    if (!db) {
+      throw new Error('No database connection');
+    }
+    const stats: ApplicationStatistics[] = await db.select(
+      GET_APPLICATION_STATISTICS_QUERY,
+    );
+    await closeConnection(db);
+    return (
+      stats[0] ?? {
+        total: 0,
+        pending: 0,
+        approved: 0,
+        rejected: 0,
+      }
+    );
+  }
 
   async getApplicationsByProcedureId(procedureId: string) {
     const db = await openConnection();
@@ -256,6 +277,10 @@ export class ApplicationRepository {
         'status', apt.status,
         'birthdate', apt.birthdate
       ) as applicant,
+      json_object(
+        'id', p.id,
+        'name', p.name
+      ) as procedure,
       a.mail_ref as mailRef,
       a.created_at as createdAt,
       a.status,
@@ -268,10 +293,10 @@ export class ApplicationRepository {
       JOIN core_applicant apt ON a.applicant_id = apt.id
       JOIN core_procedure p ON a.procedure_id = p.id
     WHERE
-      p.id = ?
+      1 = 1
   `;
 
-    const params: unknown[] = [procedureId];
+    const params: unknown[] = [];
 
     // Helper to add conditions safely
     const addCondition = (condition: string, value: unknown) => {
@@ -280,6 +305,9 @@ export class ApplicationRepository {
     };
 
     // Apply filters
+    if (procedureId) {
+      addCondition('p.id = ?', procedureId);
+    }
     if (status) {
       addCondition('a.status = ?', status);
     }
@@ -331,6 +359,7 @@ export class ApplicationRepository {
         return {
           ...application,
           ...parseKey({ entity: application, key: 'applicant' }),
+          ...parseKey({ entity: application, key: 'procedure' }),
         };
       });
 

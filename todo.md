@@ -40,7 +40,7 @@
 ✅ fix applicant filter by phonenumber or nin
 ✅ update detail-application design (use badge for status and state)
 ✅ update detail-application design (add label for applicant.status)
-- fix: set dropdown option label to '' when value is null (it is selecting the first option label)
+✅ fix dropdown value not applied on render (add [selected] binding on options)
 
 # Refactoring
 ✅ add applicant.birthDate 
@@ -52,6 +52,12 @@
 - add full text search with FTS5 for application.comment, applicant.address
 
 # Module Dashboard
+✅ plug statistics (total, pending, approved, rejected with percentage) with error/loading states
+✅ plug recent procedures (last 6 months) card list with error/loading states
+✅ plug recent applications (this month) table with filters, pagination and error/loading states
+✅ add application statistics query in application repository + gateway
+✅ add recent procedures query in procedure repository + gateway
+✅ make filterApplications procedureId optional with procedure name
 
 # Module Setting
 
