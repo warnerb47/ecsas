@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { SidebarComponent } from './sidebar.component';
+import packageInfo from '../../../../../../package.json';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
@@ -8,6 +10,7 @@ describe('SidebarComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SidebarComponent],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SidebarComponent);
@@ -17,5 +20,10 @@ describe('SidebarComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should display the app version', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.textContent).toContain(`Version ${packageInfo.version}`);
   });
 });

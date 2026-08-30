@@ -12,6 +12,10 @@ export class ProcedureGateway {
     return this._procedureRepository.getProcedures();
   }
 
+  getRecentProcedures(limit?: number) {
+    return this._procedureRepository.getRecentProcedures(limit);
+  }
+
   getProcedureById(procedureId: string) {
     return this._procedureRepository.getProcedureById(procedureId);
   }

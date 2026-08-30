@@ -32,4 +32,8 @@ export class ApplicationGateway {
   filterApplications(filters: ApplicationFilters) {
     return this._applicationRepository.filterApplications(filters);
   }
+
+  getApplicationStatistics() {
+    return this._applicationRepository.getApplicationStatistics();
+  }
 }

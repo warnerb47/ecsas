@@ -3,6 +3,7 @@ export interface Procedure {
   name: string;
   description: string;
   icon: string;
+  createdAt?: string;
   applicationCount?: number;
   documents?: Partial<ProcedureDocument>[];
   deleted?: boolean;

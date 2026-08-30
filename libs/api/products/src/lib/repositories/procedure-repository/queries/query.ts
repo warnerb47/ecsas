@@ -45,3 +45,35 @@ export const GET_PROCEDURE_QUERY_BY_ID = `
       WHERE p.id = ?1
       GROUP BY p.id
     `;
+
+export const GET_RECENT_PROCEDURES_QUERY = `
+      SELECT
+          p.id,
+          p.name,
+          p.description,
+          p.icon,
+          p.deleted,
+          p.created_at as createdAt,
+          (
+            SELECT COALESCE(
+              json_group_array(
+                json_object(
+                  'id', d.id,
+                  'name', d.name,
+                  'required', d.required
+                )
+              ),
+              '[]'
+            )
+            FROM core_procedure_document d
+            WHERE d.procedure_id = p.id
+          ) as documents,
+          COUNT(a.id) as applicationCount
+      FROM core_procedure p
+      JOIN core_application a ON a.procedure_id = p.id
+      WHERE p.deleted = 0
+        AND a.created_at >= datetime('now', '-6 months')
+      GROUP BY p.id
+      ORDER BY MAX(a.created_at) DESC
+      LIMIT ?1;
+    `;

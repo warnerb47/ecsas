@@ -53,3 +53,13 @@ WHERE
   a.id = ?1
 GROUP BY a.id
 `;
+
+export const GET_APPLICATION_STATISTICS_QUERY = `
+SELECT
+  COUNT(*) AS total,
+  COALESCE(SUM(CASE WHEN a.status = 'PENDING' THEN 1 ELSE 0 END), 0) AS pending,
+  COALESCE(SUM(CASE WHEN a.status = 'APPROVED' THEN 1 ELSE 0 END), 0) AS approved,
+  COALESCE(SUM(CASE WHEN a.status = 'REJECTED' THEN 1 ELSE 0 END), 0) AS rejected
+FROM
+  core_application a
+`;

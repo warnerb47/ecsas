@@ -1,9 +1,34 @@
 import { Procedure, ProcedureDocument } from '@org/models';
-import { GET_PROCEDURE_QUERY_BY_ID, GET_PROCEDURES_QUERY } from './queries';
+import {
+  GET_PROCEDURE_QUERY_BY_ID,
+  GET_PROCEDURES_QUERY,
+  GET_RECENT_PROCEDURES_QUERY,
+} from './queries';
 import { v4 as uuidv4 } from 'uuid';
 import { closeConnection, openConnection, parseKey } from '../db.utils';
 
 export class ProcedureRepository {
+
+  async getRecentProcedures(limit = 6) {
+    const db = await openConnection();
+    if (!db) {
+      throw new Error('No database connection');
+    }
+    const procedures: Partial<Procedure>[] = await db.select(
+      GET_RECENT_PROCEDURES_QUERY,
+      [limit],
+    );
+    const results =
+      (procedures.map((procedure) => {
+        return {
+          ...procedure,
+          ...parseKey({ entity: procedure, key: 'documents' }),
+          ...parseKey({ entity: procedure, key: 'type' }),
+        };
+      }) as Partial<Procedure>[]) ?? [];
+    await closeConnection(db);
+    return results;
+  }
 
   async getProcedureById(procedureId: string) {
     const db = await openConnection();
