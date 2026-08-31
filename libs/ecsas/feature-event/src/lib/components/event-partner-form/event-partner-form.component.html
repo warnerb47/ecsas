@@ -1,0 +1,8 @@
+<div class="flex flex-col space-y-4">
+  <lib-text-input [formField]="partnerForm.name" label="Nom du partenaire" placeholder="Ex: Dr. Mohamed Diop"></lib-text-input>
+  <lib-dropdown [formField]="partnerForm.role" label="Rôle" [options]="types"></lib-dropdown>
+  <lib-text-input [formField]="partnerForm.contact" label="Contact" placeholder="Ex: +221 77 000 00 00"></lib-text-input>
+  <lib-button class="w-full" (click)="submit()" type="primary">
+    Ajouter le partenaire
+  </lib-button>
+</div>

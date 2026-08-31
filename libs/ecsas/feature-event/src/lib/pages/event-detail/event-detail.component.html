@@ -1,0 +1,247 @@
+<div class="flex-1 flex flex-col overflow-hidden">
+  <lib-topbar [breadcrumbItems]="breadcrumbItems" searchPlaceholder="Rechercher un événement..."></lib-topbar>
+
+  <div class="flex-1 overflow-y-auto p-8">
+    <div class="max-w-6xl mx-auto">
+      @if (event(); as event) {
+
+        <!-- Header card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-6">
+          <div class="px-8 py-6 flex flex-col md:flex-row justify-between gap-4">
+            <div class="flex items-start">
+              <div class="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mr-4">
+                <i class="pi text-2xl" [class]="getTypeIcon(event.type)"></i>
+              </div>
+              <div>
+                <h2 class="text-3xl font-black text-[#1A365D]">{{ event.name }}</h2>
+                <div class="flex items-center gap-4 mt-2 text-sm text-slate-500 flex-wrap">
+                  <span class="flex items-center"><i class="pi pi-map-marker mr-2"></i>{{ event.location }}</span>
+                  <span class="flex items-center"><i class="pi pi-calendar mr-2"></i>{{ formatDate(event.startDate) }} → {{ formatDate(event.endDate) }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="px-3 py-1 rounded-full text-xs font-bold border" [class]="getStatusClasses(event.status)">
+                {{ getStatusLabel(event.status) }}
+              </span>
+              <lib-button type="secondary" (click)="onEdit()">
+                <i class="pi pi-pencil mr-2"></i>
+                Modifier
+              </lib-button>
+              <lib-button type="secondary" routerLink="/event/list">
+                <i class="pi pi-arrow-left mr-2"></i>
+                Retour
+              </lib-button>
+            </div>
+            @if (event.spent !== undefined && event.spent !== null && event.budget) {
+              <p class="mt-2 text-xs text-slate-400">
+                Budget : {{ formatAmount(event.budget) }} · Dépensé : {{ formatAmount(event.spent) }}
+              </p>
+            }
+          </div>
+
+          <!-- Tabs -->
+          <div class="border-t border-slate-100 px-8">
+            <lib-tabs [tabs]="tabs" (activeTabChange)="onTabChange($event)"></lib-tabs>
+          </div>
+        </div>
+
+        <!-- Overview tab -->
+        @if (activeTab() === 'Vue d\'ensemble') {
+          <div class="grid lg:grid-cols-3 gap-6">
+
+            <!-- Left column -->
+            <div class="lg:col-span-2 space-y-6">
+
+              <!-- Description -->
+              <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h3 class="text-lg font-bold text-slate-700 mb-4">Description</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                  {{ event.description || 'Aucune description renseignée.' }}
+                </p>
+              </div>
+
+              <!-- Budget / Dépenses -->
+              <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <div class="flex justify-between items-center mb-4">
+                  <h3 class="text-lg font-bold text-slate-700">Budget &amp; Dépenses</h3>
+                  <lib-button type="secondary" (click)="onAddExpense()">
+                    <i class="pi pi-plus mr-2"></i>
+                    Ajouter une dépense
+                  </lib-button>
+                </div>
+                @if (expenses().length) {
+                  <div class="border border-slate-100 rounded-xl overflow-hidden">
+                    <table class="w-full text-sm">
+                      <thead class="bg-slate-50 text-slate-500 font-medium">
+                        <tr>
+                          <th class="px-4 py-3 text-left">Poste</th>
+                          <th class="px-4 py-3 text-left">Budgété</th>
+                          <th class="px-4 py-3 text-left">Dépensé</th>
+                          <th class="px-4 py-3 text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-slate-100">
+                        @for (expense of expenses(); track expense.id) {
+                          <tr>
+                            <td class="px-4 py-3 font-semibold text-slate-700">{{ expense.label }}</td>
+                            <td class="px-4 py-3 text-slate-600">{{ formatAmount(expense.planned) }}</td>
+                            <td class="px-4 py-3 text-slate-600">{{ formatAmount(expense.spent) }}</td>
+                            <td class="px-4 py-3">
+                              <div class="flex justify-end gap-2">
+                                <button type="button" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition" (click)="onEditExpense(expense)">
+                                  <i class="pi pi-pencil text-xs"></i>
+                                </button>
+                                <button type="button" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition" (click)="onDeleteExpense(expense)">
+                                  <i class="pi pi-trash text-xs"></i>
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="text-sm text-slate-600">
+                    Total budgété : <span class="font-bold">{{ formatAmount((expenses() || []).reduce((s, e) => s + (e.planned ?? 0), 0)) }}</span>
+                    · Total dépensé : <span class="font-bold">{{ formatAmount(totalSpent()) }}</span>
+                  </div>
+                } @else {
+                  <p class="text-sm text-slate-400">Aucune dépense renseignée pour cet événement.</p>
+                }
+              </div>
+
+              <!-- Liens utiles -->
+              <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <div class="flex justify-between items-center mb-4">
+                  <h3 class="text-lg font-bold text-slate-700">Liens utiles</h3>
+                  <lib-button type="secondary" (click)="onAddLink()">
+                    <i class="pi pi-plus mr-2"></i>
+                    Ajouter un lien
+                  </lib-button>
+                </div>
+                @if (usefulLinks().length) {
+                  <ul class="space-y-2">
+                    @for (link of usefulLinks(); track link.id) {
+                      <li class="flex items-center justify-between bg-slate-50 rounded-lg px-4 py-3">
+                        <a class="flex items-center text-blue-600 hover:text-blue-800 font-semibold text-sm" [href]="link.url" target="_blank">
+                          <i class="pi pi-external-link mr-2"></i>{{ link.label }}
+                        </a>
+                        <button type="button" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition" (click)="onDeleteLink(link)">
+                          <i class="pi pi-trash text-xs"></i>
+                        </button>
+                      </li>
+                    }
+                  </ul>
+                } @else {
+                  <p class="text-sm text-slate-400">Aucun lien utile ajouté.</p>
+                }
+              </div>
+            </div>
+
+            <!-- Right column -->
+            <div class="space-y-6">
+              <!-- Partenaires -->
+              <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <div class="flex justify-between items-center mb-4">
+                  <h3 class="text-lg font-bold text-slate-700">Partenaires</h3>
+                  <lib-button type="secondary" (click)="onAddPartner()">
+                    <i class="pi pi-user-plus mr-2"></i>
+                    Ajouter
+                  </lib-button>
+                </div>
+                @if (partners().length) {
+                  <div class="space-y-3">
+                    @for (partner of partners(); track partner.id) {
+                      <div class="flex items-center justify-between p-3 rounded-xl border border-slate-100">
+                        <div class="flex items-center">
+                          <div class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-black mr-3"
+                            [style.background]="partner.color ?? '#E2E8F0'" [style.color]="'#475569'">
+                            {{ (partner.name || '?').charAt(0).toUpperCase() }}
+                          </div>
+                          <div>
+                            <p class="font-bold text-slate-700 text-sm">{{ partner.name }}</p>
+                            <p class="text-xs text-slate-400">{{ partner.role }}</p>
+                          </div>
+                        </div>
+                        <button type="button" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition" (click)="onDeletePartner(partner)">
+                          <i class="pi pi-trash text-xs"></i>
+                        </button>
+                      </div>
+                    }
+                  </div>
+                } @else {
+                  <p class="text-sm text-slate-400">Aucun partenaire ajouté.</p>
+                }
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Documents tab -->
+        @if (activeTab() === 'Documents') {
+          <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <h3 class="text-lg font-bold text-slate-700 mb-2">Documents de l'évènement</h3>
+            <p class="text-sm text-slate-400 mb-6">Générez ou téléversez les documents officiels de l'événement.</p>
+            <div class="grid md:grid-cols-2 gap-4">
+              @for (def of documentDefs; track def.type) {
+                @if (getDocument(def); as doc) {
+                  <div class="border border-slate-100 rounded-xl p-4 flex flex-col">
+                    <div class="flex items-center mb-3">
+                      <div class="w-11 h-11 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center mr-3">
+                        <i [class]="def.icon" class="pi"></i>
+                      </div>
+                      <div>
+                        <p class="font-bold text-slate-700 text-sm">{{ def.label }}</p>
+                        <p class="text-xs text-slate-400">{{ def.description }}</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between mt-auto">
+                      <span class="px-3 py-1 rounded-full text-[11px] font-bold border"
+                        [class]="doc.status === 'GENERATED' ? 'bg-violet-50 text-violet-700 border-violet-100' : (doc.status === 'UPLOADED' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-slate-50 text-slate-500 border-slate-100')">
+                        {{ doc.status === 'GENERATED' ? 'Généré' : (doc.status === 'UPLOADED' ? 'Téléversé' : 'Manquant') }}
+                      </span>
+                      <div class="flex gap-3 items-center">
+                        <lib-button type="secondary" (click)="onGenerateDocument(def.type)">
+                          <i class="pi pi-file-pdf mr-1 text-xs"></i> Générer
+                        </lib-button>
+                        <lib-upload-document-card label="Téléverser" placeholder="Choisir un fichier"
+                          (selectedFile)="onUploadDocument(def.type, $event)"></lib-upload-document-card>
+                      </div>
+                    </div>
+                  </div>
+                } @else {
+                  <div class="border border-slate-100 rounded-xl p-4 flex flex-col">
+                    <div class="flex items-center mb-3">
+                      <div class="w-11 h-11 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center mr-3">
+                        <i [class]="def.icon" class="pi"></i>
+                      </div>
+                      <div>
+                        <p class="font-bold text-slate-700 text-sm">{{ def.label }}</p>
+                        <p class="text-xs text-slate-400">{{ def.description }}</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between mt-auto">
+                      <span class="px-3 py-1 rounded-full text-[11px] font-bold border bg-slate-50 text-slate-500 border-slate-100">Manquant</span>
+                      <div class="flex gap-3 items-center">
+                        <lib-button type="secondary" (click)="onGenerateDocument(def.type)">
+                          <i class="pi pi-file-pdf mr-1 text-xs"></i> Générer
+                        </lib-button>
+                        <lib-upload-document-card label="Téléverser" placeholder="Choisir un fichier"
+                          (selectedFile)="onUploadDocument(def.type, $event)"></lib-upload-document-card>
+                      </div>
+                    </div>
+                  </div>
+                }
+              }
+            </div>
+          </div>
+        }
+      } @else {
+        <div class="flex items-center justify-center py-24 text-slate-400">
+          <i class="pi pi-spin pi-spinner mr-2"></i> Chargement...
+        </div>
+      }
+    </div>
+  </div>
+</div>

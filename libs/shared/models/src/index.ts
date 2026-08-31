@@ -4,3 +4,4 @@ export * from './lib/application.model';
 export * from './lib/procedure.model';
 export * from './lib/user.model';
 export * from './lib/source.model';
+export * from './lib/event.model';

@@ -1,10 +1,10 @@
 {
-  "name": "ecsas-data",
+  "name": "feature-event",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/ecsas/ecsas-data/src",
+  "sourceRoot": "libs/ecsas/feature-event/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": ["scope:ecsas"],
+  "tags": ["scope:ecsas", "type:feature"],
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint"

@@ -1,0 +1,89 @@
+<div class="flex-1 flex flex-col overflow-hidden">
+  <lib-topbar [breadcrumbItems]="breadcrumbItems" searchPlaceholder="Rechercher un événement..."></lib-topbar>
+
+  <div class="flex-1 overflow-y-auto p-8">
+    <div class="max-w-7xl mx-auto">
+
+      <!-- Header + actions -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+        <div>
+          <h2 class="text-3xl font-bold text-[#1A365D]">Calendrier des événements</h2>
+          <p class="text-slate-500 text-sm mt-2">Visualisez et planifiez les événements de la commission santé et action sociale.</p>
+        </div>
+        <div class="flex space-x-3">
+          <lib-button type="secondary" routerLink="/event/list">
+            <i class="pi pi-list mr-2"></i>
+            Liste des événements
+          </lib-button>
+          <lib-button type="primary" (click)="onCreate()">
+            <i class="pi pi-plus mr-2"></i>
+            Nouvel événement
+          </lib-button>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div class="flex items-center gap-6 mb-6 text-xs font-semibold text-slate-500 flex-wrap">
+        <span class="flex items-center"><i class="pi pi-heart mr-2 text-rose-500"></i> Secours social</span>
+        <span class="flex items-center"><i class="pi pi-heartbeat mr-2 text-emerald-500"></i> Santé</span>
+        <span class="flex items-center"><i class="pi pi-users mr-2 text-blue-500"></i> Réunion</span>
+        <span class="flex items-center"><i class="pi pi-gift mr-2 text-violet-500"></i> Cérémonie</span>
+        <span class="flex items-center"><i class="pi pi-star mr-2 text-amber-500"></i> Communautaire</span>
+      </div>
+
+      <!-- Calendar card -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <!-- Month navigation -->
+        <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <button type="button" class="w-9 h-9 flex items-center justify-center rounded-lg bg-white border-2 border-slate-200 text-slate-600 hover:bg-slate-50 transition shadow-sm" (click)="prevMonth()">
+              <i class="pi pi-angle-left"></i>
+            </button>
+            <h3 class="text-lg font-black text-[#1A365D] capitalize">{{ monthLabel() }}</h3>
+            <button type="button" class="w-9 h-9 flex items-center justify-center rounded-lg bg-white border-2 border-slate-200 text-slate-600 hover:bg-slate-50 transition shadow-sm" (click)="nextMonth()">
+              <i class="pi pi-angle-right"></i>
+            </button>
+          </div>
+          <button type="button" class="px-4 py-2 text-sm font-medium rounded-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-sm" (click)="goToToday()">
+            Aujourd'hui
+          </button>
+        </div>
+
+        <!-- Weekday header -->
+        <div class="grid grid-cols-7 border-b border-slate-100">
+          @for (day of weekdays; track day) {
+            <div class="px-3 py-3 text-center text-xs font-bold text-slate-400 uppercase tracking-wider">{{ day }}</div>
+          }
+        </div>
+
+        <!-- Month grid -->
+        <div class="grid grid-cols-7">
+          @for (day of calendarDays(); track $index) {
+            <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition"
+              [class.bg-slate-50/40]="!day.inMonth">
+              <div class="flex justify-between">
+                <span class="text-sm font-semibold"
+                  [class.text-slate-300]="!day.inMonth"
+                  [class.text-slate-600]="day.inMonth">
+                  {{ prettyDay(day) }}
+                </span>
+                @if (day.isToday) {
+                  <span class="w-6 h-6 flex items-center justify-center rounded-full bg-[#3182CE] text-white text-sm font-bold">{{ prettyDay(day) }}</span>
+                }
+              </div>
+              <div class="mt-2 space-y-1">
+                @for (event of day.events; track event.id) {
+                  <button type="button" class="w-full text-left text-[10px] font-bold rounded-md px-2 py-1 truncate cursor-pointer"
+                    [class]="getEventClasses(event.type)"
+                    title="{{ event.name }}" (click)="onDayEvent(event)">
+                    {{ event.name }}
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

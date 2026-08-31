@@ -1,0 +1,150 @@
+<div class="flex-1 flex flex-col overflow-hidden">
+  <lib-topbar [breadcrumbItems]="breadcrumbItems" searchPlaceholder="Rechercher un événement..."></lib-topbar>
+
+  <div class="flex-1 overflow-y-auto p-8">
+    <div class="max-w-7xl mx-auto">
+
+      <!-- Header -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+        <div>
+          <h2 class="text-3xl font-bold text-[#1A365D]">Événements</h2>
+          <p class="text-slate-500 text-sm mt-2">Gérez les événements de la commission santé et action sociale.</p>
+        </div>
+        <div class="flex space-x-3">
+          <lib-button type="secondary" routerLink="/event">
+            <i class="pi pi-calendar mr-2"></i>
+            Vue calendrier
+          </lib-button>
+          <lib-button type="primary" (click)="onCreate()">
+            <i class="pi pi-plus mr-2"></i>
+            Nouvel événement
+          </lib-button>
+        </div>
+      </div>
+
+      <!-- Table card -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+
+        <!-- Filter bar -->
+        <div class="bg-white p-4 border border-slate-100 flex flex-wrap items-end gap-2">
+          <div class="w-56">
+            <input type="text" placeholder="Nom / Référence"
+              class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all"
+              (change)="onFilterChange('name', $any($event.target).value)" />
+          </div>
+          <div class="w-44">
+            <select class="w-full px-4 py-3 pr-10 bg-slate-50 border border-slate-200 text-slate-600 rounded-lg focus:outline-none text-sm"
+              (change)="onFilterChange('type', $any($event.target).value)">
+              <option value="">Type d'événement</option>
+              @for (opt of typeOptions; track opt.value) {
+                <option [value]="opt.value">{{ opt.label }}</option>
+              }
+            </select>
+          </div>
+          <div class="w-40">
+            <select class="w-full px-4 py-3 pr-10 bg-slate-50 border border-slate-200 text-slate-600 rounded-lg focus:outline-none text-sm"
+              (change)="onFilterChange('status', $any($event.target).value)">
+              <option value="">Tous les statuts</option>
+              @for (opt of statusOptions; track opt.value) {
+                <option [value]="opt.value">{{ opt.label }}</option>
+              }
+            </select>
+          </div>
+          <div class="w-44">
+            <input type="date" placeholder="Du"
+              class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all"
+              (change)="onFilterChange('dateFrom', $any($event.target).value)" />
+          </div>
+          <div class="w-44">
+            <input type="date" placeholder="Au"
+              class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all"
+              (change)="onFilterChange('dateTo', $any($event.target).value)" />
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 text-slate-500 font-medium">
+              <tr>
+                <th class="px-6 py-4">Événement</th>
+                <th class="px-6 py-4">Date début</th>
+                <th class="px-6 py-4">Date fin</th>
+                <th class="px-6 py-4">Budget</th>
+                <th class="px-6 py-4">Dépenses</th>
+                <th class="px-6 py-4">Statut</th>
+                <th class="px-6 py-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              @if (loading()) {
+                <tr>
+                  <td colspan="7" class="px-6 py-8 text-center text-slate-400">
+                    <i class="pi pi-spin pi-spinner mr-2"></i> Chargement...
+                  </td>
+                </tr>
+              } @else if (!events().length) {
+                <tr>
+                  <td colspan="7" class="px-6 py-8 text-center text-slate-400 text-sm">
+                    Aucun événement trouvé.
+                  </td>
+                </tr>
+              } @else {
+                @for (event of events(); track event.id) {
+                  <tr class="hover:bg-slate-50 transition">
+                    <td class="px-6 py-4">
+                      <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center mr-3">
+                          <i [class]="getTypeIcon(event.type)" class="pi"></i>
+                        </div>
+                        <div>
+                          <p class="font-bold text-slate-800">{{ event.name }}</p>
+                          <p class="text-xs text-slate-400">
+                            <i class="pi pi-map-marker mr-1"></i> {{ event.location }}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 text-slate-600">{{ formatDate(event.startDate) }}</td>
+                    <td class="px-6 py-4 text-slate-600">{{ formatDate(event.endDate) }}</td>
+                    <td class="px-6 py-4 font-semibold text-slate-700">{{ formatAmount(event.budget) }}</td>
+                    <td class="px-6 py-4 font-semibold text-slate-700">{{ formatAmount(event.spent) }}</td>
+                    <td class="px-6 py-4">
+                      <span class="px-3 py-1 rounded-full text-[11px] font-bold border" [class]="getStatusClasses(event.status)">
+                        {{ getStatusLabel(event.status) }}
+                      </span>
+                    </td>
+                    <td class="px-6 py-4" (click)="$event.stopPropagation()">
+                      <a class="flex items-center space-x-2 text-[#3182CE] hover:text-blue-700 font-semibold text-xs cursor-pointer"
+                        [routerLink]="['/event/detail', event.id]">
+                        <i class="pi pi-eye"></i> Voir
+                      </a>
+                    </td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between">
+          <span class="text-sm text-slate-500">
+            Affichage de {{ events().length }} événements sur {{ total() }}
+          </span>
+          <div class="flex items-center space-x-3">
+            <button type="button" class="px-3 py-2 text-sm font-medium rounded-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-sm"
+              [disabled]="filters().page <= 1" (click)="goToPage(filters().page - 1)">
+              <i class="pi pi-chevron-left"></i>
+            </button>
+            <span class="text-sm text-slate-600 font-medium">Page {{ filters().page }}</span>
+            <button type="button" class="px-3 py-2 text-sm font-medium rounded-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-sm"
+              (click)="goToPage(filters().page + 1)">
+              <i class="pi pi-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -12,7 +12,7 @@ pub fn run() {
         .plugin(tauri_plugin_fs::init())
         .plugin(
             tauri_plugin_sql::Builder::new()
-                // .add_migrations("sqlite:ecsas.db", db::migrations::get_migrations())
+                .add_migrations("sqlite:ecsas.db", db::migrations::get_migrations())
                 .build(),
         )
         .setup(|app| {

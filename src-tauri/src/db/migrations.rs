@@ -31,5 +31,11 @@ pub fn get_migrations() -> Vec<Migration> {
             sql: include_str!("../../migrations/V1.0.6__insert_core_application_for_filter.sql"),
             kind: MigrationKind::Up,
         },
+        Migration {
+            version: 6,
+            description: "V1.0.7__insert_core_event.sql",
+            sql: include_str!("../../migrations/V1.0.7__insert_core_event.sql"),
+            kind: MigrationKind::Up,
+        },
     ]
 }
