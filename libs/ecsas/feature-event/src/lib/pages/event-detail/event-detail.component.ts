@@ -3,9 +3,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   BreadcrumbItem,
   ButtonComponent,
-  TabsComponent,
   TopbarComponent,
-  UploadDocumentCardComponent,
 } from '@org/ecsas/shared-ui';
 import {
   Event,
@@ -88,14 +86,36 @@ const EVENT_TYPE_ICONS: Record<EventType, string> = {
   COMMUNITY: 'pi-star',
 };
 
+const EVENT_TYPE_LABELS: Record<EventType, string> = {
+  SOCIAL_CARE: 'Secours social',
+  HEALTH: 'Santé',
+  MEETING: 'Réunion',
+  CEREMONY: 'Cérémonie',
+  COMMUNITY: 'Communautaire',
+};
+
+const EVENT_TYPE_CLASSES: Record<EventType, string> = {
+  SOCIAL_CARE: 'bg-rose-50 text-rose-700 border-rose-100',
+  HEALTH: 'bg-emerald-50 text-emerald-700 border-emerald-100',
+  MEETING: 'bg-blue-50 text-blue-700 border-blue-100',
+  CEREMONY: 'bg-violet-50 text-violet-700 border-violet-100',
+  COMMUNITY: 'bg-amber-50 text-amber-700 border-amber-100',
+};
+
+const EXPENSE_CATEGORY_CLASSES: Record<string, string> = {
+  Logistique: 'bg-slate-100 text-slate-500',
+  Restauration: 'bg-amber-100 text-amber-700',
+  Communication: 'bg-blue-100 text-blue-700',
+  Distribution: 'bg-violet-100 text-violet-700',
+  Autre: 'bg-slate-100 text-slate-500',
+};
+
 @Component({
   selector: 'lib-event-detail-component',
   imports: [
     RouterLink,
     TopbarComponent,
-    TabsComponent,
     ButtonComponent,
-    UploadDocumentCardComponent,
   ],
   providers: [DialogService],
   templateUrl: './event-detail.component.html',
@@ -125,6 +145,24 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   totalSpent = computed(() =>
     (this.event()?.expenses ?? []).reduce((sum, e) => sum + (e.spent ?? 0), 0),
   );
+
+  totalPlanned = computed(() =>
+    (this.event()?.expenses ?? []).reduce(
+      (sum, e) => sum + (e.planned ?? 0),
+      0,
+    ),
+  );
+
+  remaining = computed(() => {
+    const budget = this.event()?.budget ?? 0;
+    return budget - this.totalSpent();
+  });
+
+  executionRate = computed(() => {
+    const budget = this.event()?.budget ?? 0;
+    if (budget <= 0) return 0;
+    return Math.round((this.totalSpent() / budget) * 100);
+  });
 
   ngOnInit(): void {
     this._route.params.pipe(takeUntil(this._unsubscribe)).subscribe((params) => {
@@ -305,16 +343,19 @@ export class EventDetailComponent implements OnInit, OnDestroy {
       });
   }
 
-  onUploadDocument(type: EventDocumentType, file: File | null) {
+  onUploadDocument(type: EventDocumentType, inputEvent: { target: EventTarget | null }) {
     const eventId = this.event()?.id;
+    const file = (inputEvent.target as HTMLInputElement | null)?.files?.[0] ?? null;
     if (!eventId) return;
     // Upload persistence would stream the file; here we record the document.
-    this._eventGateway.upsertDocument({
-      eventId,
-      type,
-      status: 'UPLOADED',
-      fileName: file?.name ?? '',
-    }).then(() => this.fetchEvent(eventId));
+    this._eventGateway
+      .upsertDocument({
+        eventId,
+        type,
+        status: 'UPLOADED',
+        fileName: file?.name ?? '',
+      })
+      .then(() => this.fetchEvent(eventId));
   }
 
   getDocument(def: DocumentDef): Partial<EventDocument> | undefined {
@@ -331,6 +372,40 @@ export class EventDetailComponent implements OnInit, OnDestroy {
 
   getTypeIcon(type: EventType | undefined): string {
     return EVENT_TYPE_ICONS[type ?? 'MEETING'];
+  }
+
+  getTypeLabel(type: EventType | undefined): string {
+    return EVENT_TYPE_LABELS[type ?? 'MEETING'];
+  }
+
+  getTypeClasses(type: EventType | undefined): string {
+    return EVENT_TYPE_CLASSES[type ?? 'MEETING'];
+  }
+
+  getCategoryClasses(category: string | undefined): string {
+    if (!category) return 'bg-slate-100 text-slate-500';
+    return EXPENSE_CATEGORY_CLASSES[category] ?? 'bg-slate-100 text-slate-500';
+  }
+
+  formatTime(value: string | undefined): string {
+    if (!value) return '—';
+    return new Date(`1970-01-01T${value}`).toLocaleTimeString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }
+
+  formatEcart(planned: number | undefined, spent: number | undefined): string {
+    if (planned === null || planned === undefined) return '—';
+    const diff = planned - (spent ?? 0);
+    if (diff === 0) return '—';
+    const formatted = new Intl.NumberFormat('fr-FR').format(Math.abs(diff));
+    return diff > 0 ? `+${formatted} FCFA` : `-${formatted} FCFA`;
+  }
+
+  isEcartPositive(planned: number | undefined, spent: number | undefined): boolean {
+    if (planned === null || planned === undefined) return false;
+    return planned - (spent ?? 0) > 0;
   }
 
   formatDayMonth(value: string | undefined): string {
