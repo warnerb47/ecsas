@@ -51,6 +51,13 @@ export class DocumentManager {
   async uploadFile(params: { file: File; fullPath: string }) {
     try {
       const { file, fullPath } = params;
+      const folderPath = fullPath.substring(0, fullPath.lastIndexOf('/'));
+      if (folderPath) {
+        const folderExists = await this.checkExist(folderPath);
+        if (!folderExists) {
+          await this.createFolder(folderPath);
+        }
+      }
       const arrayBuffer = await file.arrayBuffer();
       const fileData = new Uint8Array(arrayBuffer);
       await writeFile(fullPath, fileData, {
