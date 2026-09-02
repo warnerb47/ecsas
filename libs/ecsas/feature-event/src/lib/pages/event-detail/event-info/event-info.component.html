@@ -1,6 +1,5 @@
-<div class="grid lg:grid-cols-5 gap-6">
-  <!-- Left column -->
-  <div class="lg:col-span-3 space-y-6">
+<div class="flex flex-col gap-6">
+  <div class="space-y-6">
     <lib-event-expense-list
       [expenses]="expenses()"
       [budget]="budget()"
@@ -11,16 +10,19 @@
       (editExpense)="editExpense.emit($event)"
       (deleteExpense)="deleteExpense.emit($event)"></lib-event-expense-list>
   </div>
+  <div class="flex space-x-6 w-full">
+    <div class="w-full">
+      <lib-event-link-list
+        [links]="links()"
+        (addLink)="addLink.emit()"
+        (deleteLink)="deleteLink.emit($event)"></lib-event-link-list>
+    </div>
+    <div class="w-full">
+      <lib-event-partner-list
+        [partners]="partners()"
+        (addPartner)="addPartner.emit()"
+        (deletePartner)="deletePartner.emit($event)"></lib-event-partner-list>
 
-  <!-- Right column -->
-  <div class="lg:col-span-2 space-y-6">
-    <lib-event-link-list
-      [links]="links()"
-      (addLink)="addLink.emit()"
-      (deleteLink)="deleteLink.emit($event)"></lib-event-link-list>
-    <lib-event-partner-list
-      [partners]="partners()"
-      (addPartner)="addPartner.emit()"
-      (deletePartner)="deletePartner.emit($event)"></lib-event-partner-list>
+    </div>
   </div>
 </div>

@@ -1,5 +1,4 @@
 import { Component, input, output } from '@angular/core';
-import { ButtonComponent } from '@org/ecsas/shared-ui';
 import { EventExpense } from '@org/models';
 
 const EXPENSE_CATEGORY_CLASSES: Record<string, string> = {
@@ -13,7 +12,7 @@ const EXPENSE_CATEGORY_CLASSES: Record<string, string> = {
 @Component({
   selector: 'lib-event-expense-list',
   standalone: true,
-  imports: [ButtonComponent],
+  imports: [],
   templateUrl: './event-expense-list.component.html',
 })
 export class EventExpenseListComponent {

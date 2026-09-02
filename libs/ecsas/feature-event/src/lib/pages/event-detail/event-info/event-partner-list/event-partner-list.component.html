@@ -2,13 +2,14 @@
 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
   <div class="flex items-center justify-between px-6 py-4 bg-slate-50 border-b border-slate-100">
     <div class="flex items-center gap-3">
-      <i class="pi pi-users"></i>
-      <h3 class="text-base font-bold text-slate-700 uppercase tracking-wide">Partenaires</h3>
+      <h3 class="text-sm font-black text-[#1A365D] uppercase tracking-wider">
+        <i class="pi pi-users mr-2"></i> Partenaires
+      </h3>
     </div>
-    <lib-button type="secondary" (click)="addPartner.emit()">
-      <i class="pi pi-user-plus mr-2"></i>
-      Ajouter
-    </lib-button>
+    <button type="button" class="w-8 h-8 flex items-center justify-center rounded-full text-white bg-[#1A365D] hover:bg-blue-800"
+      (click)="addPartner.emit()">
+      <i class="pi pi-plus" style="font-size: 0.7rem"></i>
+    </button>
   </div>
   <div class="px-6 py-5">
     @if (partners().length) {

@@ -1,6 +1,4 @@
-import { Component, input, OnInit, output } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { ButtonComponent } from '@org/ecsas/shared-ui';
+import { Component, input, output } from '@angular/core';
 import { Event, EventStatus, EventType } from '@org/models';
 
 const EVENT_STATUS_LABELS: Record<EventStatus, string> = {
@@ -44,7 +42,7 @@ const EVENT_TYPE_CLASSES: Record<EventType, string> = {
 @Component({
   selector: 'lib-event-header',
   standalone: true,
-  imports: [RouterLink, ButtonComponent],
+  imports: [],
   templateUrl: './event-header.component.html',
 })
 export class EventHeaderComponent {

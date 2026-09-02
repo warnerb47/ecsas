@@ -1,11 +1,10 @@
 import { Component, input, output } from '@angular/core';
-import { ButtonComponent } from '@org/ecsas/shared-ui';
 import { EventPartner } from '@org/models';
 
 @Component({
   selector: 'lib-event-partner-list',
   standalone: true,
-  imports: [ButtonComponent],
+  imports: [],
   templateUrl: './event-partner-list.component.html',
 })
 export class EventPartnerListComponent {
