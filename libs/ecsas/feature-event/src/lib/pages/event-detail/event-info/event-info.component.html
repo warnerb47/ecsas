@@ -1,0 +1,26 @@
+<div class="grid lg:grid-cols-5 gap-6">
+  <!-- Left column -->
+  <div class="lg:col-span-3 space-y-6">
+    <lib-event-expense-list
+      [expenses]="expenses()"
+      [budget]="budget()"
+      [totalSpent]="totalSpent()"
+      [remaining]="remaining()"
+      [executionRate]="executionRate()"
+      (addExpense)="addExpense.emit()"
+      (editExpense)="editExpense.emit($event)"
+      (deleteExpense)="deleteExpense.emit($event)"></lib-event-expense-list>
+  </div>
+
+  <!-- Right column -->
+  <div class="lg:col-span-2 space-y-6">
+    <lib-event-link-list
+      [links]="links()"
+      (addLink)="addLink.emit()"
+      (deleteLink)="deleteLink.emit($event)"></lib-event-link-list>
+    <lib-event-partner-list
+      [partners]="partners()"
+      (addPartner)="addPartner.emit()"
+      (deletePartner)="deletePartner.emit($event)"></lib-event-partner-list>
+  </div>
+</div>

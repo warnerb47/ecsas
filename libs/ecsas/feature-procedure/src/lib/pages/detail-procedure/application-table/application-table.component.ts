@@ -5,6 +5,7 @@ import { Application, ApplicationFilters } from '@org/models';
 import {
   ButtonComponent,
   DropdownComponent,
+  MultiselectComponent,
   TextInputComponent,
 } from '@org/ecsas/shared-ui';
 import { ProcedureStateService } from '../../../state/procedure-state.service';
@@ -22,6 +23,7 @@ import { ExcelExportService } from '@org/api/products';
     NgClass,
     ButtonComponent,
     DropdownComponent,
+    MultiselectComponent,
     TextInputComponent,
     DatePipe,
     FormField,
@@ -41,14 +43,12 @@ export class ApplicationTableComponent implements OnInit {
   );
 
   statusOptions = [
-    { label: 'Tous les statuts', value: '' },
     { label: 'En attente', value: 'PENDING' },
     { label: 'Approuvé', value: 'APPROVED' },
     { label: 'Rejeté', value: 'REJECTED' },
   ];
 
   conformities = [
-    { label: 'Tous les statuts de Conformité', value: '' },
     { label: 'Conforme', value: 'COMPLIANT' },
     { label: 'Hors zone', value: 'OUT_OF_ZONE' },
     { label: 'Dossier incomplet', value: 'INCOMPLETE' },
@@ -86,8 +86,7 @@ export class ApplicationTableComponent implements OnInit {
     status: null,
     state: null,
     mailRef: null,
-  });
-  filterForm = form(this.filterModel);
+  });  filterForm = form(this.filterModel);
 
   constructor() {
     effect(() => {

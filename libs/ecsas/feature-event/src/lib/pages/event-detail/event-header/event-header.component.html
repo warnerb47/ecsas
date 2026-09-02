@@ -1,0 +1,77 @@
+<!-- Header -->
+<div class="bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden mb-6">
+  <div class="px-8 py-6">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border"
+            [class]="getStatusClasses(event().status)">
+            {{ getStatusLabel(event().status) }}
+          </span>
+          <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold border"
+            [class]="getTypeClasses(event().type)">
+            <i class="pi text-[10px]" [class]="getTypeIcon(event().type)"></i>
+            {{ getTypeLabel(event().type) }}
+          </span>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-black text-[#1A365D]">{{ event().name  }} (name)</h2>
+
+        <!-- Metadata row -->
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-5 text-sm text-slate-600">
+          <div class="flex items-start gap-2">
+            <i class="pi pi-calendar text-blue-500 mt-0.5"></i>
+            <div>
+              <p class="text-xs text-slate-400 uppercase tracking-wide font-semibold">Date &amp; heure</p>
+              <p class="font-semibold">{{ formatDate(event().startDate) }}</p>
+              <p class="text-slate-500">{{ formatTime(event().startTime) }} – {{ formatTime(event().endTime) }}</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-2">
+            <i class="pi pi-map-marker text-blue-500 mt-0.5"></i>
+            <div>
+              <p class="text-xs text-slate-400 uppercase tracking-wide font-semibold">Lieu</p>
+              <p class="font-semibold">{{ event().location || '—' }}</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-2">
+            <i class="pi pi-users text-blue-500 mt-0.5"></i>
+            <div>
+              <p class="text-xs text-slate-400 uppercase tracking-wide font-semibold">Participants</p>
+              <p class="font-semibold">{{ event().expectedParticipants ?? '—' }} personnes</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-2">
+            <i class="pi pi-wallet text-blue-500 mt-0.5"></i>
+            <div>
+              <p class="text-xs text-slate-400 uppercase tracking-wide font-semibold">Budget</p>
+              <p class="font-semibold">{{ formatAmount(event().budget) }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 md:flex-col md:items-stretch">
+        <a routerLink="/event" class="inline-flex items-center justify-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-800 transition">
+          <i class="pi pi-calendar-plus"></i>
+          Vue calendrier
+        </a>
+        <div class="flex items-center gap-3">
+          <lib-button type="secondary" (click)="edit.emit()">
+            <i class="pi pi-pencil mr-2"></i>
+            Modifier
+          </lib-button>
+          <lib-button type="secondary" routerLink="/event/list">
+            <i class="pi pi-arrow-left mr-2"></i>
+            Retour
+          </lib-button>
+        </div>
+      </div>
+    </div>
+
+    @if (event().description) {
+      <p class="mt-5 text-sm text-slate-500">{{ event().description }}</p>
+    } @else {
+      <p class="mt-5 text-sm text-slate-400">Aucune description renseignée.</p>
+    }
+  </div>
+</div>

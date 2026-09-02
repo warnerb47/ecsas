@@ -1,0 +1,38 @@
+<div class="w-full relative">
+    <label for="multiselect-select" class="block text-xs font-bold text-slate-500 uppercase mb-2">
+        {{label()}}
+    </label>
+    <button type="button" id="multiselect-select"
+        class="w-full px-4 py-3 pr-10 bg-slate-50 border border-slate-200 text-slate-600 rounded-lg focus:outline-none text-left"
+        [class.border-red-500]="invalid() && touched()"
+        (click)="toggleOpen()" (blur)="onBlur()">
+        @if (selectedCount() > 0) {
+            <span class="text-slate-800">{{ selectedCount() }} sélectionné(s)</span>
+        } @else {
+            <span class="text-slate-400">{{ placeholder() || 'Sélectionner' }}</span>
+        }
+    </button>
+    @if (open) {
+        <div class="absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-auto">
+            @for (option of options(); track option.value) {
+                <label class="flex items-center px-4 py-2 cursor-pointer hover:bg-slate-50">
+                    <input type="checkbox"
+                        class="mr-2"
+                        [checked]="isSelected(option.value)"
+                        (change)="toggle(option.value)" />
+                    <span [class]="isSelected(option.value) ? 'font-semibold text-slate-800' : 'text-slate-600'">
+                        {{option.label}}
+                    </span>
+                </label>
+            }
+        </div>
+    }
+    <!-- Internal Error Display -->
+    @if (invalid() && touched()) {
+      <div class="text-red-500 text-xs mt-1">
+        @for (error of errors(); track error.kind) {
+          <span>{{ error.message }}</span>
+        }
+      </div>
+    }
+</div>

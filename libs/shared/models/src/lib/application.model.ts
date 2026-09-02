@@ -44,8 +44,8 @@ export type ApplicationStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 
 export interface ApplicationFilters {
   procedureId: string | null;
-  status: ApplicationStatus | null | null;
-  state: ApplicationState | null;
+  status: ApplicationStatus[] | null;
+  state: ApplicationState[] | null;
   fullName: string | null;
   nin: string | null;
   phoneNumber: string | null;

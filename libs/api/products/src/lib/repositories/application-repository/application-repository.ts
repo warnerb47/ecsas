@@ -304,15 +304,23 @@ export class ApplicationRepository {
       params.push(value);
     };
 
+    // Helper to add an IN condition from a list of values
+    const addInCondition = (column: string, values: string[]) => {
+      if (!values.length) return;
+      const placeholders = values.map(() => '?').join(', ');
+      sql += ` AND ${column} IN (${placeholders})`;
+      params.push(...values);
+    };
+
     // Apply filters
     if (procedureId) {
       addCondition('p.id = ?', procedureId);
     }
-    if (status) {
-      addCondition('a.status = ?', status);
+    if (status?.length) {
+      addInCondition('a.status', status);
     }
-    if (state) {
-      addCondition('a.state = ?', state);
+    if (state?.length) {
+      addInCondition('a.state', state);
     }
     if (mailRef) {
       addCondition('a.mail_ref LIKE ?', `%${mailRef}%`);

@@ -24,8 +24,8 @@
         <lib-text-input [formField]="filterForm.phoneNumber" placeholder="Téléphone"></lib-text-input>
         <lib-text-input [formField]="filterForm.nin" placeholder="NIN"></lib-text-input>
         <lib-text-input [formField]="filterForm.mailRef" placeholder="Numéro courrier"></lib-text-input>
-        <lib-dropdown [formField]="filterForm.status" [options]="statusOptions"></lib-dropdown>
-        <lib-dropdown [formField]="filterForm.state" [options]="conformities"></lib-dropdown>
+        <lib-multiselect [formField]="filterForm.status" [options]="statusOptions" placeholder="Statuts"></lib-multiselect>
+        <lib-multiselect [formField]="filterForm.state" [options]="conformities" placeholder="États"></lib-multiselect>
     </div>
     <table class="w-full text-left text-sm">
         <thead class="bg-slate-50 text-slate-500 font-medium">

@@ -1,0 +1,27 @@
+<div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+  <div class="flex items-center justify-between px-6 py-4 bg-slate-50 border-b border-slate-100">
+    <div class="flex items-center gap-3">
+      <i class="pi pi-folder-open text-blue-500"></i>
+      <div>
+        <h3 class="text-base font-bold text-slate-700 uppercase tracking-wide">Dossier documentaire</h3>
+        <p class="text-sm text-slate-400">Générez ou téléversez les documents officiels de l'événement.</p>
+      </div>
+    </div>
+    <lib-button type="secondary" (click)="openFolder.emit()">
+      <i class="pi pi-folder mr-2"></i>
+      Ouvrir le dossier
+    </lib-button>
+  </div>
+
+  <div class="px-6 py-6">
+    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+      @for (def of documentDefs; track def.type) {
+        <lib-event-document-card
+          [def]="def"
+          [doc]="getDocument(def)"
+          (generate)="generate.emit($event)"
+          (upload)="upload.emit($event)"></lib-event-document-card>
+      }
+    </div>
+  </div>
+</div>

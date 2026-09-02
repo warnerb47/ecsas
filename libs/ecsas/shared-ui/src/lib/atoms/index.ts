@@ -5,6 +5,7 @@ export * from './tabs/tabs.component';
 export * from './text-input/text-input.component';
 export * from './phone-input/phone-input.component';
 export * from './dropdown/dropdown.component';
+export * from './multiselect/multiselect.component';
 export * from './password-input/password-input.component';
 export * from './breadcum/breadcum.component';
 export * from './search-input/search-input.component';

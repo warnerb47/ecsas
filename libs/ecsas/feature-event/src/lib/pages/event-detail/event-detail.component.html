@@ -3,83 +3,11 @@
 
   <div class="flex-1 overflow-y-auto p-8">
     <div class="max-w-6xl mx-auto">
-      @if (event(); as event) {
+      @if (event(); as current) {
 
-        <!-- Header card -->
-        <div class="bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden mb-6">
-          <div class="px-8 py-6">
-            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-              <div>
-                <div class="flex items-center gap-2 mb-3">
-                  <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border"
-                    [class]="getStatusClasses(event.status)">
-                    {{ getStatusLabel(event.status) }}
-                  </span>
-                  <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold border"
-                    [class]="getTypeClasses(event.type)">
-                    <i class="pi text-[10px]" [class]="getTypeIcon(event.type)"></i>
-                    {{ getTypeLabel(event.type) }}
-                  </span>
-                </div>
-                <h2 class="text-2xl md:text-3xl font-black text-[#1A365D]">{{ event.name }}</h2>
-
-                <!-- Metadata row -->
-                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-5 text-sm text-slate-600">
-                  <div class="flex items-start gap-2">
-                    <i class="pi pi-calendar text-blue-500 mt-0.5"></i>
-                    <div>
-                      <p class="text-xs text-slate-400 uppercase tracking-wide font-semibold">Date &amp; heure</p>
-                      <p class="font-semibold">{{ formatDate(event.startDate) }}</p>
-                      <p class="text-slate-500">{{ formatTime(event.startTime) }} – {{ formatTime(event.endTime) }}</p>
-                    </div>
-                  </div>
-                  <div class="flex items-start gap-2">
-                    <i class="pi pi-map-marker text-blue-500 mt-0.5"></i>
-                    <div>
-                      <p class="text-xs text-slate-400 uppercase tracking-wide font-semibold">Lieu</p>
-                      <p class="font-semibold">{{ event.location || '—' }}</p>
-                    </div>
-                  </div>
-                  <div class="flex items-start gap-2">
-                    <i class="pi pi-users text-blue-500 mt-0.5"></i>
-                    <div>
-                      <p class="text-xs text-slate-400 uppercase tracking-wide font-semibold">Participants</p>
-                      <p class="font-semibold">{{ event.expectedParticipants ?? '—' }} personnes</p>
-                    </div>
-                  </div>
-                  <div class="flex items-start gap-2">
-                    <i class="pi pi-wallet text-blue-500 mt-0.5"></i>
-                    <div>
-                      <p class="text-xs text-slate-400 uppercase tracking-wide font-semibold">Budget</p>
-                      <p class="font-semibold">{{ formatAmount(event.budget) }}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex items-center gap-3 md:flex-col md:items-stretch">
-                <a routerLink="/event" class="inline-flex items-center justify-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-800 transition">
-                  <i class="pi pi-calendar-plus"></i>
-                  Vue calendrier
-                </a>
-                <div class="flex items-center gap-3">
-                  <lib-button type="secondary" (click)="onEdit()">
-                    <i class="pi pi-pencil mr-2"></i>
-                    Modifier
-                  </lib-button>
-                  <lib-button type="secondary" routerLink="/event/list">
-                    <i class="pi pi-arrow-left mr-2"></i>
-                    Retour
-                  </lib-button>
-                </div>
-              </div>
-            </div>
-
-            @if (event.description) {
-              <p class="mt-5 text-sm text-slate-500">{{ event.description }}</p>
-            }
-          </div>
-        </div>
+        <lib-event-header
+          [event]="current"
+          (edit)="onEdit()"></lib-event-header>
 
         <!-- Tabs -->
         <div class="bg-slate-200/50 p-1 rounded-xl w-fit mb-6 flex gap-1">
@@ -96,297 +24,30 @@
 
         <!-- Overview tab -->
         @if (activeTab() === 'Vue d\'ensemble') {
-          <div class="grid lg:grid-cols-5 gap-6">
-
-            <!-- Left column -->
-            <div class="lg:col-span-3 space-y-6">
-
-              <!-- Description -->
-              <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="flex items-center justify-between px-6 py-4 bg-slate-50 border-b border-slate-100">
-                  <div class="flex items-center gap-3">
-                    <i class="pi pi-align-left"></i>
-                    <h3 class="text-base font-bold text-slate-700 uppercase tracking-wide">Description</h3>
-                  </div>
-                </div>
-                <div class="px-6 py-5">
-                  <p class="text-slate-600 text-sm leading-relaxed">
-                    {{ event.description || 'Aucune description renseignée.' }}
-                  </p>
-                  <div class="mt-4 pt-4 border-t border-slate-100 flex items-center gap-2 text-sm">
-                    <i class="pi pi-link text-slate-400"></i>
-                    <span class="text-slate-500">Procédure liée :</span>
-                    <button type="button" class="text-blue-600 hover:text-blue-800 font-semibold">Aucune procédure</button>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Budget / Dépenses -->
-              <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="flex items-center justify-between px-6 py-4 bg-slate-50 border-b border-slate-100">
-                  <div class="flex items-center gap-3">
-                    <i class="pi pi-chart-pie"></i>
-                    <h3 class="text-base font-bold text-slate-700 uppercase tracking-wide">Budget &amp; Dépenses</h3>
-                  </div>
-                  <lib-button type="secondary" (click)="onAddExpense()">
-                    <i class="pi pi-plus mr-2"></i>
-                    Ajouter un poste
-                  </lib-button>
-                </div>
-
-                <div class="px-6 py-5">
-                  <!-- Summary grid -->
-                  <div class="grid md:grid-cols-3 gap-4 mb-6">
-                    <div class="bg-slate-50 rounded-xl p-4">
-                      <p class="text-xs text-slate-400 uppercase tracking-wide font-semibold">Budget prévu</p>
-                      <p class="text-xl font-black text-[#1A365D] mt-1">{{ formatAmount(event.budget) }}</p>
-                    </div>
-                    <div class="bg-slate-50 rounded-xl p-4">
-                      <p class="text-xs text-slate-400 uppercase tracking-wide font-semibold">Dépenses engagées</p>
-                      <p class="text-xl font-black text-rose-600 mt-1">{{ formatAmount(totalSpent()) }}</p>
-                    </div>
-                    <div class="bg-slate-50 rounded-xl p-4">
-                      <p class="text-xs text-slate-400 uppercase tracking-wide font-semibold">Solde restant</p>
-                      <p class="text-xl font-black text-emerald-600 mt-1">{{ formatAmount(remaining()) }}</p>
-                    </div>
-                  </div>
-
-                  <!-- Execution rate -->
-                  <div class="mb-6">
-                    <div class="flex items-center justify-between text-sm mb-1.5">
-                      <span class="text-slate-500 font-semibold">Taux d'exécution du budget</span>
-                      <span class="text-slate-700 font-bold">{{ executionRate() }}%</span>
-                    </div>
-                    <div class="w-full bg-slate-100 rounded-full h-2.5">
-                      <div class="h-2.5 rounded-full transition-all"
-                        [class]="executionRate() > 90 ? 'bg-rose-500' : (executionRate() > 60 ? 'bg-amber-500' : 'bg-emerald-500')"
-                        [style.width.%]="executionRate()"></div>
-                    </div>
-                  </div>
-
-                  @if (expenses().length) {
-                    <div class="border border-slate-100 rounded-xl overflow-hidden">
-                      <table class="w-full text-sm">
-                        <thead class="bg-slate-50 text-slate-500 font-medium">
-                          <tr>
-                            <th class="px-4 py-3 text-left">Poste</th>
-                            <th class="px-4 py-3 text-left">Catégorie</th>
-                            <th class="px-4 py-3 text-left">Prévu</th>
-                            <th class="px-4 py-3 text-left">Dépensé</th>
-                            <th class="px-4 py-3 text-left">Écart</th>
-                            <th class="px-4 py-3 text-left">Date</th>
-                            <th class="px-4 py-3 text-right">Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100">
-                          @for (expense of expenses(); track expense.id) {
-                            <tr>
-                              <td class="px-4 py-3 font-semibold text-slate-700">{{ expense.label }}</td>
-                              <td class="px-4 py-3">
-                                <span class="px-2.5 py-1 rounded-full text-[11px] font-bold"
-                                  [class]="getCategoryClasses(expense.category)">
-                                  {{ expense.category || 'Autre' }}
-                                </span>
-                              </td>
-                              <td class="px-4 py-3 text-slate-600">{{ formatAmount(expense.planned) }}</td>
-                              <td class="px-4 py-3 text-slate-600">{{ formatAmount(expense.spent) }}</td>
-                              <td class="px-4 py-3"
-                                [class]="isEcartPositive(expense.planned, expense.spent) ? 'text-emerald-600 font-semibold' : 'text-slate-500'">
-                                {{ formatEcart(expense.planned, expense.spent) }}
-                              </td>
-                              <td class="px-4 py-3 text-slate-500">{{ expense.date ? formatDate(expense.date) : 'En cours' }}</td>
-                              <td class="px-4 py-3">
-                                <div class="flex justify-end gap-2">
-                                  <button type="button" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition" (click)="onEditExpense(expense)">
-                                    <i class="pi pi-pencil text-xs"></i>
-                                  </button>
-                                  <button type="button" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition" (click)="onDeleteExpense(expense)">
-                                    <i class="pi pi-trash text-xs"></i>
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          }
-                        </tbody>
-                      </table>
-                    </div>
-                  } @else {
-                    <p class="text-sm text-slate-400">Aucune dépense renseignée pour cet événement.</p>
-                  }
-                </div>
-              </div>
-            </div>
-
-            <!-- Right column -->
-            <div class="lg:col-span-2 space-y-6">
-
-              <!-- Liens utiles -->
-              <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="flex items-center justify-between px-6 py-4 bg-slate-50 border-b border-slate-100">
-                  <div class="flex items-center gap-3">
-                    <i class="pi pi-bookmark"></i>
-                    <h3 class="text-base font-bold text-slate-700 uppercase tracking-wide">Liens utiles</h3>
-                  </div>
-                  <lib-button type="secondary" (click)="onAddLink()">
-                    <i class="pi pi-plus mr-2"></i>
-                    Ajouter
-                  </lib-button>
-                </div>
-                <div class="px-6 py-5">
-                  @if (usefulLinks().length) {
-                    <ul class="space-y-3">
-                      @for (link of usefulLinks(); track link.id) {
-                        <li class="flex items-center justify-between gap-3">
-                          <div class="flex items-center gap-3 min-w-0">
-                            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
-                              <i class="pi pi-link text-sm"></i>
-                            </div>
-                            <div class="min-w-0">
-                              <p class="font-bold text-slate-700 text-sm truncate">{{ link.label }}</p>
-                              <p class="text-xs text-slate-400 truncate">{{ link.url }}</p>
-                            </div>
-                          </div>
-                          <div class="flex items-center gap-1 shrink-0">
-                            <a [href]="link.url" target="_blank" rel="noopener"
-                              class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition">
-                              <i class="pi pi-external-link text-xs"></i>
-                            </a>
-                            <button type="button" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition" (click)="onDeleteLink(link)">
-                              <i class="pi pi-trash text-xs"></i>
-                            </button>
-                          </div>
-                        </li>
-                      }
-                    </ul>
-                  } @else {
-                    <p class="text-sm text-slate-400">Aucun lien utile ajouté.</p>
-                  }
-                </div>
-              </div>
-
-              <!-- Partenaires -->
-              <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="flex items-center justify-between px-6 py-4 bg-slate-50 border-b border-slate-100">
-                  <div class="flex items-center gap-3">
-                    <i class="pi pi-users"></i>
-                    <h3 class="text-base font-bold text-slate-700 uppercase tracking-wide">Partenaires</h3>
-                  </div>
-                  <lib-button type="secondary" (click)="onAddPartner()">
-                    <i class="pi pi-user-plus mr-2"></i>
-                    Ajouter
-                  </lib-button>
-                </div>
-                <div class="px-6 py-5">
-                  @if (partners().length) {
-                    <ul class="space-y-3">
-                      @for (partner of partners(); track partner.id) {
-                        <li class="flex items-center justify-between gap-3">
-                          <div class="flex items-center gap-3 min-w-0">
-                            <div class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-black shrink-0"
-                              [style.background]="partner.color ?? '#E2E8F0'" [style.color]="'#475569'">
-                              {{ (partner.name || '?').charAt(0).toUpperCase() }}
-                            </div>
-                            <div class="min-w-0">
-                              <p class="font-bold text-slate-700 text-sm truncate">{{ partner.name }}</p>
-                              <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 inline-block">
-                                {{ partner.role || 'Partenaire' }}
-                              </span>
-                            </div>
-                          </div>
-                          <button type="button" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition shrink-0" (click)="onDeletePartner(partner)">
-                            <i class="pi pi-trash text-xs"></i>
-                          </button>
-                        </li>
-                      }
-                    </ul>
-                  } @else {
-                    <p class="text-sm text-slate-400">Aucun partenaire ajouté.</p>
-                  }
-                </div>
-              </div>
-            </div>
-          </div>
+          <lib-event-info
+            [expenses]="expenses()"
+            [partners]="partners()"
+            [links]="usefulLinks()"
+            [budget]="current.budget"
+            [totalSpent]="totalSpent()"
+            [remaining]="remaining()"
+            [executionRate]="executionRate()"
+            (addExpense)="onAddExpense()"
+            (editExpense)="onEditExpense($event)"
+            (deleteExpense)="onDeleteExpense($event)"
+            (addLink)="onAddLink()"
+            (deleteLink)="onDeleteLink($event)"
+            (addPartner)="onAddPartner()"
+            (deletePartner)="onDeletePartner($event)"></lib-event-info>
         }
 
         <!-- Documents tab -->
         @if (activeTab() === 'Documents') {
-          <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="flex items-center justify-between px-6 py-4 bg-slate-50 border-b border-slate-100">
-              <div class="flex items-center gap-3">
-                <i class="pi pi-folder-open text-blue-500"></i>
-                <div>
-                  <h3 class="text-base font-bold text-slate-700 uppercase tracking-wide">Dossier documentaire</h3>
-                  <p class="text-sm text-slate-400">Générez ou téléversez les documents officiels de l'événement.</p>
-                </div>
-              </div>
-              <lib-button type="secondary" (click)="goBack()">
-                <i class="pi pi-folder mr-2"></i>
-                Ouvrir le dossier
-              </lib-button>
-            </div>
-
-            <div class="px-6 py-6">
-              <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-                @for (def of documentDefs; track def.type) {
-                  @if (getDocument(def); as doc) {
-                    <div class="border border-slate-100 rounded-xl p-5 flex flex-col">
-                      <div class="flex items-start justify-between mb-3">
-                        <div class="w-11 h-11 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
-                          <i [class]="def.icon" class="pi"></i>
-                        </div>
-                        <span class="px-3 py-1 rounded-full text-[11px] font-bold border"
-                          [class]="doc.status === 'GENERATED'
-                            ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
-                            : 'bg-blue-50 text-blue-700 border-blue-100'">
-                          {{ doc.status === 'GENERATED' ? 'Généré' : 'Téléversé' }}
-                        </span>
-                      </div>
-                      <p class="font-bold text-slate-700">{{ def.label }}</p>
-                      <p class="text-xs text-slate-400 mt-1">{{ def.description }}</p>
-                      <div class="flex items-center gap-2 mt-3 text-xs text-slate-500 bg-slate-50 rounded-lg px-3 py-2">
-                        <i class="pi pi-file"></i>
-                        <span class="truncate">{{ doc.fileName || (def.label + '.pdf') }}</span>
-                      </div>
-                      <div class="flex items-center gap-2 justify-end mt-4 pt-4 border-t border-slate-100">
-                        <lib-button type="secondary">
-                          <i class="pi pi-eye mr-1 text-xs"></i> Consulter
-                        </lib-button>
-                        <lib-button type="secondary" (click)="onGenerateDocument(def.type)">
-                          <i class="pi pi-refresh mr-1 text-xs"></i> Régénérer
-                        </lib-button>
-                        <input #uploadInput type="file" class="hidden" (change)="onUploadDocument(def.type, $event)" />
-                        <lib-button type="secondary" (click)="uploadInput.click()">
-                          <i class="pi pi-upload mr-1 text-xs"></i> Remplacer
-                        </lib-button>
-                      </div>
-                    </div>
-                  } @else {
-                    <div class="border border-dashed border-slate-200 rounded-xl p-5 flex flex-col bg-slate-50/50">
-                      <div class="flex items-start justify-between mb-3">
-                        <div class="w-11 h-11 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center">
-                          <i [class]="def.icon" class="pi"></i>
-                        </div>
-                        <span class="px-3 py-1 rounded-full text-[11px] font-bold border bg-slate-50 text-slate-500 border-slate-100">
-                          Manquant
-                        </span>
-                      </div>
-                      <p class="font-bold text-slate-700">{{ def.label }}</p>
-                      <p class="text-xs text-slate-400 mt-1">{{ def.description }}</p>
-                      <div class="flex items-center justify-end gap-2 mt-6 pt-4 border-t border-slate-100">
-                        <lib-button type="secondary" (click)="onGenerateDocument(def.type)">
-                          <i class="pi pi-file-pdf mr-1 text-xs"></i> Générer
-                        </lib-button>
-                        <input #uploadInput type="file" class="hidden" (change)="onUploadDocument(def.type, $event)" />
-                        <lib-button type="secondary" (click)="uploadInput.click()">
-                          <i class="pi pi-upload mr-1 text-xs"></i> Charger
-                        </lib-button>
-                      </div>
-                    </div>
-                  }
-                }
-              </div>
-            </div>
-          </div>
+          <lib-event-document
+            [documents]="current.documents ?? []"
+            (generate)="onGenerateDocument($event)"
+            (upload)="onUploadDocument($event)"
+            (openFolder)="goBack()"></lib-event-document>
         }
       } @else {
         <div class="flex items-center justify-center py-24 text-slate-400">

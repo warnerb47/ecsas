@@ -1,0 +1,89 @@
+<!-- Budget / Dépenses -->
+<div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+  <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+    <h3 class="text-sm font-black text-[#1A365D] uppercase tracking-wider">
+      <i class="pi pi-money-bill mr-2"></i> Budget / Dépenses
+    </h3>
+    <lib-button type="secondary" (click)="addExpense.emit()">
+      <i class="pi pi-plus mr-2" style="font-size: 0.8rem"></i> Ajouter un poste
+    </lib-button>
+  </div>
+
+  <!-- Summary -->
+  <div class="grid grid-cols-3 gap-4 p-6 border-b border-slate-100">
+    <div>
+      <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Budget prévu</p>
+      <p class="mt-1 text-lg font-black text-[#1A365D]">{{ formatAmount(budget()) }}</p>
+    </div>
+    <div>
+      <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Dépenses engagées</p>
+      <p class="mt-1 text-lg font-black text-slate-700">{{ formatAmount(totalSpent()) }}</p>
+    </div>
+    <div>
+      <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Solde restant</p>
+      <p class="mt-1 text-lg font-black text-emerald-600">{{ formatAmount(remaining()) }}</p>
+    </div>
+    <div class="col-span-3">
+      <div class="flex items-center justify-between mb-1 text-xs font-semibold text-slate-500">
+        <span>Taux d'exécution</span>
+        <span>{{ executionRate() }}%</span>
+      </div>
+      <div class="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+        <div class="h-full rounded-full bg-[#3182CE]" [style.width.%]="executionRate()"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto">
+    @if (expenses().length) {
+      <table class="w-full text-left text-sm">
+        <thead class="bg-slate-50 text-slate-500 font-medium">
+          <tr>
+            <th class="px-6 py-4">Poste</th>
+            <th class="px-6 py-4">Catégorie</th>
+            <th class="px-6 py-4">Prévu</th>
+            <th class="px-6 py-4">Dépensé</th>
+            <th class="px-6 py-4">Écart</th>
+            <th class="px-6 py-4">Date</th>
+            <th class="px-6 py-4"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          @for (expense of expenses(); track expense.id) {
+            <tr class="hover:bg-slate-50 transition">
+              <td class="px-6 py-4 font-semibold text-slate-700">{{ expense.label }}</td>
+              <td class="px-6 py-4">
+                <span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider"
+                  [class]="getCategoryClasses(expense.category)">
+                  {{ expense.category || 'Autre' }}
+                </span>
+              </td>
+              <td class="px-6 py-4">{{ formatAmount(expense.planned) }}</td>
+              <td class="px-6 py-4">{{ formatAmount(expense.spent) }}</td>
+              <td class="px-6 py-4"
+                [class]="isEcartPositive(expense.planned, expense.spent) ? 'text-emerald-600 font-semibold' : 'text-slate-500'">
+                {{ formatEcart(expense.planned, expense.spent) }}
+              </td>
+              <td class="px-6 py-4 text-slate-500">{{ expense.date ? formatDate(expense.date) : 'En cours' }}</td>
+              <td class="px-6 py-4 text-right">
+                <div class="flex justify-end gap-2">
+                  <button type="button" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition" (click)="editExpense.emit(expense)">
+                    <i class="pi pi-pencil text-xs"></i>
+                  </button>
+                  <button type="button" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition" (click)="deleteExpense.emit(expense)">
+                    <i class="pi pi-trash text-xs"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    } @else {
+      <div class="px-6 py-10 text-center text-sm text-slate-400">
+        Aucune dépense renseignée pour cet événement.
+      </div>
+    }
+  </div>
+</div>
