@@ -1,6 +1,6 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { form, FormField, required, submit } from '@angular/forms/signals';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import {
   ButtonComponent,
   DateInputComponent,
@@ -22,9 +22,10 @@ import { EventExpense } from '@org/models';
   ],
   templateUrl: './event-expense-form.component.html',
 })
-export class EventExpenseFormComponent {
+export class EventExpenseFormComponent implements OnInit {
   private readonly _dialogRef = inject(DynamicDialogRef);
-  expense = input<Partial<EventExpense> | null>(null);
+  private readonly _dialogConfig = inject(DynamicDialogConfig);
+  expense = signal<Partial<EventExpense> | null>(null);
 
   categories = [
     { label: 'Logistique', value: 'Logistique' },
@@ -45,6 +46,20 @@ export class EventExpenseFormComponent {
   expenseForm = form(this.model, (f) => {
     required(f.label, { message: 'Le poste est requis' });
   });
+
+    ngOnInit() {
+      this.initFormState();
+    }
+
+    async initFormState() {
+      const expense: Partial<EventExpense> | null = this._dialogConfig.data;
+      if (expense) {
+        this.expense.set(expense);
+        this.model.update(value => ({
+          ...value, ...expense
+        }));
+      }
+    }
 
   async submit() {
     await submit(this.expenseForm, async () => {

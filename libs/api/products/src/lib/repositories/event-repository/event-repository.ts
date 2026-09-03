@@ -267,7 +267,7 @@ export class EventRepository {
     if (!db) {
       throw new Error('No database connection');
     }
-    const expenseId = payload.id ?? uuidv4();
+    const expenseId = uuidv4();
     try {
       if (!payload.eventId) {
         throw new Error('Event ID is required');

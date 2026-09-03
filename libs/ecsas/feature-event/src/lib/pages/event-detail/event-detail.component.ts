@@ -1,10 +1,19 @@
-import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import {
-  BreadcrumbItem,
-  TopbarComponent,
-} from '@org/ecsas/shared-ui';
-import { Event, EventExpense, EventPartner, EventUsefulLink } from '@org/models';
+  Component,
+  computed,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BreadcrumbItem, TopbarComponent } from '@org/ecsas/shared-ui';
+import {
+  Event,
+  EventExpense,
+  EventPartner,
+  EventUsefulLink,
+} from '@org/models';
 import { EventGateway } from '@org/ecsas/ecsas-data';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Subject, takeUntil } from 'rxjs';
@@ -45,9 +54,9 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   ];
 
   event = signal<Partial<Event> | null>(null);
-  activeTab = signal('Vue d\'ensemble');
+  activeTab = signal("Vue d'ensemble");
 
-  tabs = ['Vue d\'ensemble', 'Documents'];
+  tabs = ["Vue d'ensemble", 'Documents'];
 
   expenses = computed(() => this.event()?.expenses ?? []);
   partners = computed(() => this.event()?.partners ?? []);
@@ -69,12 +78,14 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   });
 
   ngOnInit(): void {
-    this._route.params.pipe(takeUntil(this._unsubscribe)).subscribe((params) => {
-      const eventId = params['eventId'];
-      if (eventId) {
-        this.fetchEvent(eventId);
-      }
-    });
+    this._route.params
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((params) => {
+        const eventId = params['eventId'];
+        if (eventId) {
+          this.fetchEvent(eventId);
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -104,7 +115,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     if (!current) return;
     this._dialogService
       .open(EventCreateDialogComponent, {
-        header: 'Modifier l\'évènement',
+        header: "Modifier l'évènement",
         width: '50vw',
         focusOnShow: false,
         closable: true,
@@ -154,7 +165,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
         focusOnShow: false,
         closable: true,
         closeOnEscape: true,
-        data: { expense },
+        data: expense,
       })
       ?.onClose.pipe(takeUntil(this._unsubscribe))
       .subscribe(async (result) => {
