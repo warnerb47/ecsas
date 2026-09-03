@@ -267,7 +267,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
         eventId,
         type: params.type,
         status: 'UPLOADED',
-        fileName: params.file.name,
+        fileName: params?.file?.name,
       })
       .then(() => this.fetchEvent(eventId));
   }
