@@ -49,7 +49,14 @@ SELECT
       'id', d.id,
       'type', d.type,
       'status', d.status,
-      'fileName', d.file_name
+      'fileName', d.file_name,
+      'source', CASE WHEN s.id IS NOT NULL THEN json_object(
+        'id', s.id,
+        'name', s.name,
+        'path', s.path,
+        'mimeType', s.mime_type,
+        'uploadedAt', s.uploaded_at
+      ) ELSE NULL END
     )) FILTER (WHERE d.id IS NOT NULL),
     '[]'
   ) as documents
@@ -59,6 +66,7 @@ FROM
   LEFT JOIN core_event_partner p ON e.id = p.event_id
   LEFT JOIN core_event_link l ON e.id = l.event_id
   LEFT JOIN core_event_document d ON e.id = d.event_id
+  LEFT JOIN core_source s ON d.source_id = s.id
 WHERE
   e.id = ?1
 GROUP BY e.id

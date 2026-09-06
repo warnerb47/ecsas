@@ -12,6 +12,7 @@ export class DocumentManager {
   appDataConfig = {
     applicantFolder: { path: 'Documents/Demandeurs', exist: false },
     applicationFolder: { path: 'Documents/Demandes', exist: false },
+    eventFolder: { path: 'Documents/Événements', exist: false },
   };
   async initAppFolder() {
     this.appDataConfig.applicantFolder.exist = await this.checkExist(

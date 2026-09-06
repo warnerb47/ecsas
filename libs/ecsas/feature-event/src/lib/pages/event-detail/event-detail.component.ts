@@ -7,9 +7,14 @@ import {
   signal,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BreadcrumbItem, TopbarComponent } from '@org/ecsas/shared-ui';
+import {
+  BreadcrumbItem,
+  PdfViewerComponent,
+  TopbarComponent,
+} from '@org/ecsas/shared-ui';
 import {
   Event,
+  EventDocumentType,
   EventExpense,
   EventPartner,
   EventUsefulLink,
@@ -28,6 +33,7 @@ import {
   EventDocumentComponent,
   GenerateDocumentEvent,
   UploadDocumentEvent,
+  VisualizeDocumentEvent,
 } from './event-document/event-document.component';
 
 @Component({
@@ -257,7 +263,12 @@ export class EventDetailComponent implements OnInit, OnDestroy {
       ?.onClose.pipe(takeUntil(this._unsubscribe))
       .subscribe(async (result) => {
         if (!result) return;
-        await this._eventGateway.upsertDocument({ eventId, ...result });
+        const payload = { eventId, ...result };
+        if (this.hasDocument(params.type)) {
+          await this._eventGateway.updateDocument(payload);
+        } else {
+          await this._eventGateway.createDocument(payload);
+        }
         this.fetchEvent(eventId);
       });
   }
@@ -265,15 +276,36 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   onUploadDocument(params: UploadDocumentEvent) {
     const eventId = this.event()?.id;
     if (!eventId) return;
-    // Upload persistence would stream the file; here we record the document.
-    this._eventGateway
-      .upsertDocument({
-        eventId,
-        type: params.type,
-        status: 'UPLOADED',
-        fileName: params?.file?.name,
-      })
-      .then(() => this.fetchEvent(eventId));
+    const payload = {
+      eventId,
+      type: params.type,
+      status: 'UPLOADED',
+      fileName: params.file?.name,
+      file: params.file,
+    };
+    const call = this.hasDocument(params.type)
+      ? this._eventGateway.updateDocument(payload)
+      : this._eventGateway.createDocument(payload);
+    call.then(() => this.fetchEvent(eventId));
+  }
+
+  private hasDocument(type: EventDocumentType): boolean {
+    return !!this.event()?.documents?.some((d) => d.type === type);
+  }
+
+  onVisualizeDocument(params: VisualizeDocumentEvent) {
+    const source = params.doc?.source;
+    if (!source) return;
+    this._dialogService.open(PdfViewerComponent, {
+      header: params.doc?.fileName ?? params.type,
+      width: '80vw',
+      height: '100vh',
+      focusOnShow: false,
+      closable: true,
+      closeOnEscape: true,
+      maximizable: true,
+      data: source,
+    });
   }
 
   private getPartnerColor(): string {

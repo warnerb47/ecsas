@@ -47,6 +47,7 @@
             [documents]="current.documents ?? []"
             (generate)="onGenerateDocument($event)"
             (upload)="onUploadDocument($event)"
+            (visualize)="onVisualizeDocument($event)"
             (openFolder)="openFolder()"></lib-event-document>
         }
       } @else {

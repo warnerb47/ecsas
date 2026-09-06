@@ -1,12 +1,10 @@
 import { Component, input, output } from '@angular/core';
-import {
-  ButtonComponent,
-  UploadDocumentCardComponent,
-} from '@org/ecsas/shared-ui';
+import { ButtonComponent } from '@org/ecsas/shared-ui';
 import {
   EventDocument,
   EventDocumentType,
 } from '@org/models';
+import { EventDocumentCardComponent } from './event-document-card/event-document-card.component';
 
 export interface DocumentDef {
   type: EventDocumentType;
@@ -43,13 +41,18 @@ export interface GenerateDocumentEvent {
 
 export interface UploadDocumentEvent {
   type: EventDocumentType;
-  file: File | null;
+  file: File;
+}
+
+export interface VisualizeDocumentEvent {
+  type: EventDocumentType;
+  doc: Partial<EventDocument>;
 }
 
 @Component({
   selector: 'lib-event-document',
   standalone: true,
-  imports: [ButtonComponent, UploadDocumentCardComponent],
+  imports: [ButtonComponent, EventDocumentCardComponent],
   templateUrl: './event-document.component.html',
 })
 export class EventDocumentComponent {
@@ -58,6 +61,7 @@ export class EventDocumentComponent {
 
   generate = output<GenerateDocumentEvent>();
   upload = output<UploadDocumentEvent>();
+  visualize = output<VisualizeDocumentEvent>();
   openFolder = output<void>();
 
   getDocument(def: DocumentDef): Partial<EventDocument> | undefined {

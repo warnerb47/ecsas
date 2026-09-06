@@ -70,12 +70,23 @@ export class EventGateway {
     return this._eventRepository.deleteUsefulLink(params);
   }
 
-  upsertDocument(params: {
+  createDocument(params: {
     eventId: string;
     type: string;
     status: string;
     fileName?: string;
+    file?: File;
   }) {
-    return this._eventRepository.upsertDocument(params);
+    return this._eventRepository.createDocument(params);
+  }
+
+  updateDocument(params: {
+    eventId: string;
+    type: string;
+    status: string;
+    fileName?: string;
+    file?: File;
+  }) {
+    return this._eventRepository.updateDocument(params);
   }
 }

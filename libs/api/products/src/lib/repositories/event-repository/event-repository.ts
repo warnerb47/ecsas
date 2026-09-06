@@ -10,8 +10,11 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { closeConnection, openConnection, parseKey } from '../db.utils';
 import { GET_EVENT_BY_ID } from './queries';
+import { DocumentManager } from '@org/api/products';
+import Database from '@tauri-apps/plugin-sql';
 
 export class EventRepository {
+  private readonly _documentManager = new DocumentManager();
   async getEvents() {
     const db = await openConnection();
     if (!db) {
@@ -437,36 +440,96 @@ export class EventRepository {
     }
   }
 
-  async upsertDocument(params: {
+
+
+  private async createCoreSource(params: { file: File; type: string, db: Database }) {
+    const { file, type, db } = params;
+    if (!db) {
+      throw new Error('No database connection');
+    }
+    const sourceId = uuidv4();
+    const mimeType = file.type;
+    const fullPath = `${this._documentManager.appDataConfig.eventFolder.path}/${type}_${Date.now()}_${file.name}`;
+
+    const uploaded = await this._documentManager.uploadFile({ file, fullPath });
+    if (!uploaded) {
+      throw new Error('File upload failed');
+    }
+
+    const result = await db.execute(
+      `INSERT INTO core_source (id, name, path, mime_type)
+        VALUES ($1, $2, $3, $4)`,
+      [sourceId, file.name, fullPath, mimeType],
+    );
+    if (!result.rowsAffected) {
+      throw new Error('core_source creation failed');
+    }
+    return sourceId;
+  }
+
+  async createDocument(params: {
     eventId: string;
     type: string;
     status: string;
     fileName?: string;
+    file?: File;
   }) {
-    const { eventId, type, status, fileName } = params;
+    const { eventId, type, status, fileName, file } = params;
     const db = await openConnection();
     if (!db) {
       throw new Error('No database connection');
     }
     try {
-      const existing: { id: string }[] = await db.select(
-        `SELECT id FROM core_event_document WHERE event_id = $1 AND type = $2`,
-        [eventId, type],
-      );
-      if (existing[0]) {
-        await db.execute(
-          `UPDATE core_event_document SET status = $1, file_name = $2 WHERE id = $3`,
-          [status, fileName ?? null, existing[0].id],
-        );
-        return existing[0].id;
+      let sourceId: string | null = null;
+      if (file) {
+        sourceId = await this.createCoreSource({ file, type, db });
       }
       const docId = uuidv4();
       await db.execute(
-        `INSERT INTO core_event_document (id, event_id, type, status, file_name)
-         VALUES ($1, $2, $3, $4, $5)`,
-        [docId, eventId, type, status, fileName ?? null],
+        `INSERT INTO core_event_document (id, event_id, type, status, file_name, source_id)
+         VALUES ($1, $2, $3, $4, $5, $6)`,
+        [docId, eventId, type, status, fileName ?? null, sourceId],
       );
       return docId;
+    } finally {
+      await closeConnection(db);
+    }
+  }
+
+  async updateDocument(params: {
+    eventId: string;
+    type: string;
+    status: string;
+    fileName?: string;
+    file?: File;
+  }) {
+    const { eventId, type, status, fileName, file } = params;
+    const db = await openConnection();
+    if (!db) {
+      throw new Error('No database connection');
+    }
+    try {
+      const existing: { id: string; sourceId: string | null }[] =
+        await db.select(
+          `SELECT id, source_id as sourceId
+           FROM core_event_document
+           WHERE event_id = $1 AND type = $2`,
+          [eventId, type],
+        );
+      if (!existing[0]) {
+        throw new Error('Event document not found');
+      }
+      let sourceId = existing[0].sourceId;
+      if (file) {
+        sourceId = await this.createCoreSource({ file, type, db });
+      }
+      await db.execute(
+        `UPDATE core_event_document
+         SET status = $1, file_name = $2, source_id = $3
+         WHERE id = $4`,
+        [status, fileName ?? null, sourceId, existing[0].id],
+      );
+      return existing[0].id;
     } finally {
       await closeConnection(db);
     }
