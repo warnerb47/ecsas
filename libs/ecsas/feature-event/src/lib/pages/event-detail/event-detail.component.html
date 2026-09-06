@@ -47,7 +47,7 @@
             [documents]="current.documents ?? []"
             (generate)="onGenerateDocument($event)"
             (upload)="onUploadDocument($event)"
-            (openFolder)="goBack()"></lib-event-document>
+            (openFolder)="openFolder()"></lib-event-document>
         }
       } @else {
         <div class="flex items-center justify-center py-24 text-slate-400">

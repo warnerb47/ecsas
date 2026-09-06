@@ -110,6 +110,10 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     this._router.navigate(['/event']);
   }
 
+  openFolder() {
+    console.log('openFolder');
+  }
+
   onEdit() {
     const current = this.event();
     if (!current) return;
