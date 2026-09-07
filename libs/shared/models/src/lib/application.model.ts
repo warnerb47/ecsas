@@ -84,3 +84,18 @@ export interface ApplicationImportResult {
   applicationsCreated: number;
   failed: number;
 }
+
+export type ApplicationImportIssueType = 'error' | 'warning' | 'info';
+
+export interface ApplicationImportIssue {
+  type: ApplicationImportIssueType;
+  message: string;
+}
+
+export interface ApplicationImportPreviewRow {
+  row: ApplicationImportRow;
+  selected: boolean;
+  existingApplicant: boolean;
+  safe: boolean;
+  issues: ApplicationImportIssue[];
+}

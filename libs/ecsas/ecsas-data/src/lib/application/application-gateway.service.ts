@@ -26,6 +26,10 @@ export class ApplicationGateway {
     return this._applicationRepository.createImportApplication(params);
   }
 
+  getMailRefsByProcedureId(procedureId: string) {
+    return this._applicationRepository.getMailRefsByProcedureId(procedureId);
+  }
+
   getApplicationById(applicationId: string) {
     return this._applicationRepository.getApplicationById(applicationId);
   }

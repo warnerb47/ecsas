@@ -273,6 +273,23 @@ export class ApplicationRepository {
     return applicationId;
   }
 
+  async getMailRefsByProcedureId(procedureId: string) {
+    const db = await openConnection();
+    if (!db) {
+      throw new Error('No database connection');
+    }
+    const rows: { mailRef?: string | null }[] = await db.select(
+      `
+      SELECT mail_ref as mailRef
+      FROM core_application
+      WHERE procedure_id = ?1 AND mail_ref IS NOT NULL AND mail_ref != ''
+      `,
+      [procedureId],
+    );
+    await closeConnection(db);
+    return rows.map((row) => row.mailRef).filter(Boolean) as string[];
+  }
+
   async filterApplications(filters: ApplicationFilters) {
     const db = await openConnection();
     if (!db) {

@@ -4,12 +4,18 @@ import {
   effect,
   ElementRef,
   inject,
+  OnDestroy,
   OnInit,
   signal,
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { Application, ApplicationFilters } from '@org/models';
+import {
+  Application,
+  ApplicationFilters,
+  ApplicationImportPreviewRow,
+  ApplicationImportRow,
+} from '@org/models';
 import {
   ButtonComponent,
   DropdownComponent,
@@ -22,10 +28,12 @@ import {
   ApplicationImportService,
   ProcedureGateway,
 } from '@org/ecsas/ecsas-data';
-import { map } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { form, FormField } from '@angular/forms/signals';
 import { ExcelExportService, ExcelImportService } from '@org/api/products';
+import { DialogService } from 'primeng/dynamicdialog';
+import { ApplicationImportPreviewComponent } from './application-import-preview/application-import-preview.component';
 
 @Component({
   selector: 'lib-application-table',
@@ -40,9 +48,10 @@ import { ExcelExportService, ExcelImportService } from '@org/api/products';
     DatePipe,
     FormField,
   ],
+  providers: [DialogService],
   templateUrl: './application-table.component.html',
 })
-export class ApplicationTableComponent implements OnInit {
+export class ApplicationTableComponent implements OnInit, OnDestroy {
   private readonly _procedureStateService = inject(ProcedureStateService);
   private readonly _applicationGateway = inject(ApplicationGateway);
   private readonly _procedureGateway = inject(ProcedureGateway);
@@ -50,6 +59,8 @@ export class ApplicationTableComponent implements OnInit {
   private readonly _excelExportService = new ExcelExportService();
   private readonly _excelImportService = new ExcelImportService();
   private readonly _applicationImportService = inject(ApplicationImportService);
+  private readonly _dialogService = inject(DialogService);
+  private readonly _unsubscribe = new Subject<void>();
 
   @ViewChild('importFileInput', { static: false })
   importFileInput: ElementRef<HTMLInputElement> | undefined;
@@ -115,6 +126,11 @@ export class ApplicationTableComponent implements OnInit {
 
   ngOnInit() {
     this.initState();
+  }
+
+  ngOnDestroy() {
+    this._unsubscribe.next();
+    this._unsubscribe.complete();
   }
 
   async initState() {
@@ -223,37 +239,78 @@ export class ApplicationTableComponent implements OnInit {
     if (!file) {
       return;
     }
-    this.loadingApplications.set(true);
     try {
       const rows = await this._excelImportService.parseApplicationsFile(file);
       if (!rows.length) {
         this.importMessage.set('Aucune ligne à importer dans le fichier.');
         return;
       }
-      if (!this.procedure()?.id) {
+      const procedureId = this.procedure()?.id;
+      if (!procedureId) {
         this.importMessage.set(
           'Impossible de déterminer la procédure courante.',
         );
         return;
       }
-      const result = await this._applicationImportService.importApplications(
-        rows,
-        this.procedure()?.id ?? '',
-      );
-      this.importMessage.set(
-        `Import terminé : ${result.applicationsCreated} demande(s) créée(s)` +
-          `, ${result.applicantsCreated} demandeur(s) créé(s)` +
-          (result.failed ? `, ${result.failed} échec(s).` : '.'),
-      );
-      this.filterApplications();
+      const previewRows =
+        await this._applicationImportService.previewApplications(
+          rows,
+          procedureId,
+        );
+      this.openImportPreview(previewRows, procedureId);
     } catch (error) {
       console.error(error);
       this.importMessage.set(
         "L'import a échoué. Vérifiez que le fichier respecte le format d'export.",
       );
-    } finally {
-      this.loadingApplications.set(false);
     }
+  }
+
+  private openImportPreview(
+    previewRows: ApplicationImportPreviewRow[],
+    procedureId: string,
+  ) {
+    this._dialogService
+      .open(ApplicationImportPreviewComponent, {
+        header: "Aperçu de l'import (Excel)",
+        width: '90vw',
+        height: '85vh',
+        focusOnShow: false,
+        closable: true,
+        closeOnEscape: true,
+        maximizable: true,
+        data: {
+          procedureName: this.procedure()?.name,
+          rows: previewRows,
+        },
+      })
+      ?.onClose.pipe(takeUntil(this._unsubscribe))
+      .subscribe(async (selectedRows: ApplicationImportRow[] | undefined) => {
+        if (!selectedRows?.length) {
+          return;
+        }
+        this.loadingApplications.set(true);
+        try {
+          const result =
+            await this._applicationImportService.importApplications(
+              selectedRows,
+              procedureId,
+            );
+          this.importMessage.set(
+            `Import terminé : ${result.applicationsCreated} demande(s) créée(s)` +
+              `, ${result.applicantsCreated} demandeur(s) créé(s)` +
+              (result.failed ? `, ${result.failed} échec(s).` : '.'),
+          );
+          this.filterApplications();
+        } catch (error) {
+          console.error(error);
+          this.importMessage.set(
+            "L'import a échoué pendant l'enregistrement des demandes.",
+          );
+        } finally {
+          this.loadingApplications.set(false);
+        }
+      });
   }
 
   nextPage() {

@@ -1,5 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import {
+  ApplicationImportIssue,
+  ApplicationImportPreviewRow,
   ApplicationImportResult,
   ApplicationImportRow,
   ApplicantPayload,
@@ -13,6 +15,73 @@ import { ApplicationGateway } from './application-gateway.service';
 export class ApplicationImportService {
   private readonly _applicantGateway = inject(ApplicantGateway);
   private readonly _applicationGateway = inject(ApplicationGateway);
+
+  async previewApplications(
+    rows: ApplicationImportRow[],
+    procedureId: string,
+  ): Promise<ApplicationImportPreviewRow[]> {
+    const existingMailRefs =
+      await this._applicationGateway.getMailRefsByProcedureId(procedureId);
+    const mailRefCounts = new Map<string, number>();
+    for (const row of rows) {
+      if (!row.mailRef) {
+        continue;
+      }
+      mailRefCounts.set(row.mailRef, (mailRefCounts.get(row.mailRef) ?? 0) + 1);
+    }
+
+    const previewRows: ApplicationImportPreviewRow[] = [];
+    for (const row of rows) {
+      const issues: ApplicationImportIssue[] = [];
+
+      if (!row.nin) {
+        issues.push({
+          type: 'error',
+          message: 'NIN manquant, la ligne ne peut pas être importée',
+        });
+      }
+
+      if (row.mailRef) {
+        if ((mailRefCounts.get(row.mailRef) ?? 0) > 1) {
+          issues.push({
+            type: 'warning',
+            message: `Doublon dans le fichier : le numéro de courrier "${row.mailRef}" apparaît plusieurs fois`,
+          });
+        }
+        if (existingMailRefs.includes(row.mailRef)) {
+          issues.push({
+            type: 'warning',
+            message: `Conflit : une demande avec le numéro de courrier "${row.mailRef}" existe déjà pour cette procédure`,
+          });
+        }
+      }
+
+      const existing =
+        row.nin && (await this._applicantGateway.getApplicantByNin(row.nin));
+      const existingApplicant = Boolean(existing);
+      if (existingApplicant && issues.length === 0) {
+        issues.push({
+          type: 'info',
+          message: 'Demandeur existant, il sera réutilisé',
+        });
+      }
+
+      previewRows.push({
+        row,
+        selected: issues.some(
+          (issue) => issue.type === 'error' || issue.type === 'warning',
+        )
+          ? false
+          : true,
+        existingApplicant,
+        safe: !issues.some(
+          (issue) => issue.type === 'error' || issue.type === 'warning',
+        ),
+        issues,
+      });
+    }
+    return previewRows;
+  }
 
   async importApplications(
     rows: ApplicationImportRow[],
