@@ -5,7 +5,7 @@
     <button type="button" id="multiselect-select"
         class="w-full px-4 py-3 pr-10 bg-slate-50 border border-slate-200 text-slate-600 rounded-lg focus:outline-none text-left"
         [class.border-red-500]="invalid() && touched()"
-        (click)="toggleOpen()" (blur)="onBlur()">
+        (click)="toggleOpen()">
         @if (selectedCount() > 0) {
             <span class="text-slate-800">{{ selectedCount() }} sélectionné(s)</span>
         } @else {
@@ -13,14 +13,14 @@
         }
     </button>
     @if (open) {
-        <div class="absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-auto">
+        <div class="absolute z-10 left-0 mt-1 w-max min-w-full bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-auto">
             @for (option of options(); track option.value) {
                 <label class="flex items-center px-4 py-2 cursor-pointer hover:bg-slate-50">
                     <input type="checkbox"
-                        class="mr-2"
+                        class="mr-2 shrink-0"
                         [checked]="isSelected(option.value)"
                         (change)="toggle(option.value)" />
-                    <span [class]="isSelected(option.value) ? 'font-semibold text-slate-800' : 'text-slate-600'">
+                    <span class="whitespace-nowrap" [class]="isSelected(option.value) ? 'font-semibold text-slate-800' : 'text-slate-600'">
                         {{option.label}}
                     </span>
                 </label>

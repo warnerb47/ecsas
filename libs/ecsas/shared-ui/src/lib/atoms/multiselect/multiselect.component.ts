@@ -1,4 +1,11 @@
-import { Component, input, model } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  inject,
+  input,
+  model,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormValueControl,
@@ -12,9 +19,9 @@ import {
   imports: [CommonModule],
   templateUrl: './multiselect.component.html',
 })
-export class MultiselectComponent
-  implements FormValueControl<string | number | null | (string | number | null)[]>
-{
+export class MultiselectComponent implements FormValueControl<
+  string | number | null | (string | number | null)[]
+> {
   label = input('');
   placeholder = input<string>('');
   options = input<{ label: string; value: string | number | null }[]>([]);
@@ -29,6 +36,8 @@ export class MultiselectComponent
     [],
   );
   readonly disabled = input<boolean>(false);
+
+  private readonly _elementRef = inject(ElementRef);
 
   open = false;
 
@@ -58,8 +67,14 @@ export class MultiselectComponent
     this.open = !this.open;
   }
 
-  onBlur() {
-    this.touched.set(true);
+  @HostListener('document:click', ['$event'])
+  handleDocumentClick(event: MouseEvent) {
+    if (this._elementRef.nativeElement.contains(event.target)) {
+      return;
+    }
+    if (this.open) {
+      this.touched.set(true);
+    }
     this.open = false;
   }
 }
