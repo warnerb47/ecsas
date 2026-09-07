@@ -1,6 +1,10 @@
 import { Applicant, ApplicantPayload } from '@org/models';
 import { closeConnection, openConnection, parseKey } from '../db.utils';
-import { GET_APPLICANT_BY_ID, SEARCH_APPLICANT } from './query';
+import {
+  GET_APPLICANT_BY_ID,
+  GET_APPLICANT_BY_NIN,
+  SEARCH_APPLICANT,
+} from './query';
 import { v4 as uuidv4 } from 'uuid';
 import { DocumentManager } from '@org/api/products';
 
@@ -37,6 +41,19 @@ export class ApplicantRepository {
       }) as Partial<Applicant>[]) ?? [];
     await closeConnection(db);
     return results[0];
+  }
+
+  async getApplicantByNin(nin: string) {
+    const db = await openConnection();
+    if (!db) {
+      throw new Error('No database connection');
+    }
+    const applicants: Partial<Applicant>[] = await db.select(
+      GET_APPLICANT_BY_NIN,
+      [nin],
+    );
+    await closeConnection(db);
+    return applicants[0];
   }
 
   async createCoreSource(file: File) {
@@ -176,6 +193,15 @@ export class ApplicantRepository {
       const applicantId = await this.createCoreApplicant(payload);
       await this.createCoreApplicantSource({ applicantId, sourceId });
       return applicantId;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async createImportApplicant(payload: ApplicantPayload) {
+    try {
+      return await this.createCoreApplicant(payload);
     } catch (error) {
       console.error(error);
       throw error;

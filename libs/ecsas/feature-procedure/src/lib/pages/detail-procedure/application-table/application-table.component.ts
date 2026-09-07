@@ -1,5 +1,13 @@
 import { DatePipe, formatDate, NgClass } from '@angular/common';
-import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  effect,
+  ElementRef,
+  inject,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Application, ApplicationFilters } from '@org/models';
 import {
@@ -9,11 +17,15 @@ import {
   TextInputComponent,
 } from '@org/ecsas/shared-ui';
 import { ProcedureStateService } from '../../../state/procedure-state.service';
-import { ApplicationGateway, ProcedureGateway } from '@org/ecsas/ecsas-data';
+import {
+  ApplicationGateway,
+  ApplicationImportService,
+  ProcedureGateway,
+} from '@org/ecsas/ecsas-data';
 import { map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { form, FormField } from '@angular/forms/signals';
-import { ExcelExportService } from '@org/api/products';
+import { ExcelExportService, ExcelImportService } from '@org/api/products';
 
 @Component({
   selector: 'lib-application-table',
@@ -36,6 +48,13 @@ export class ApplicationTableComponent implements OnInit {
   private readonly _procedureGateway = inject(ProcedureGateway);
   private readonly _activatedRoute = inject(ActivatedRoute);
   private readonly _excelExportService = new ExcelExportService();
+  private readonly _excelImportService = new ExcelImportService();
+  private readonly _applicationImportService = inject(ApplicationImportService);
+
+  @ViewChild('importFileInput', { static: false })
+  importFileInput: ElementRef<HTMLInputElement> | undefined;
+
+  importMessage = signal('');
 
   procedureId = toSignal(
     this._activatedRoute.paramMap.pipe(map((p) => p.get('procedureId'))),
@@ -191,6 +210,50 @@ export class ApplicationTableComponent implements OnInit {
       };
     });
     this._excelExportService.exportToExcel(data, 'liste_des_demandes');
+  }
+
+  openImportDialog() {
+    this.importFileInput?.nativeElement.click();
+  }
+
+  async onImportFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = '';
+    if (!file) {
+      return;
+    }
+    this.loadingApplications.set(true);
+    try {
+      const rows = await this._excelImportService.parseApplicationsFile(file);
+      if (!rows.length) {
+        this.importMessage.set('Aucune ligne à importer dans le fichier.');
+        return;
+      }
+      if (!this.procedure()?.id) {
+        this.importMessage.set(
+          'Impossible de déterminer la procédure courante.',
+        );
+        return;
+      }
+      const result = await this._applicationImportService.importApplications(
+        rows,
+        this.procedure()?.id ?? '',
+      );
+      this.importMessage.set(
+        `Import terminé : ${result.applicationsCreated} demande(s) créée(s)` +
+          `, ${result.applicantsCreated} demandeur(s) créé(s)` +
+          (result.failed ? `, ${result.failed} échec(s).` : '.'),
+      );
+      this.filterApplications();
+    } catch (error) {
+      console.error(error);
+      this.importMessage.set(
+        "L'import a échoué. Vérifiez que le fichier respecte le format d'export.",
+      );
+    } finally {
+      this.loadingApplications.set(false);
+    }
   }
 
   nextPage() {

@@ -240,6 +240,39 @@ export class ApplicationRepository {
     }
   }
 
+  async createImportApplication(params: {
+    applicantId: string;
+    procedureId: string;
+    mailRef: string;
+  }) {
+    const db = await openConnection();
+    if (!db) {
+      throw new Error('No database connection');
+    }
+    const applicationId = uuidv4();
+    const result = await db.execute(
+      `INSERT INTO
+        core_application (
+          id,
+          applicant_id,
+          procedure_id,
+          mail_ref,
+          status,
+          state,
+          requested_amount,
+          received_amount,
+          comment
+        )
+        VALUES ($1, $2, $3, $4, 'PENDING', NULL, NULL, NULL, NULL)`,
+      [applicationId, params.applicantId, params.procedureId, params.mailRef],
+    );
+    if (!result.rowsAffected) {
+      throw new Error('core_application creation failed');
+    }
+    await closeConnection(db);
+    return applicationId;
+  }
+
   async filterApplications(filters: ApplicationFilters) {
     const db = await openConnection();
     if (!db) {

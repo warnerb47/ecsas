@@ -9,12 +9,27 @@
             <i class="pi pi-download"></i>
             Exporter (Excel)
         </lib-button>
+        <lib-button (click)="openImportDialog()" type="secondary">
+            <i class="pi pi-upload"></i>
+            Importer (Excel)
+        </lib-button>
+        <input
+            #importFileInput
+            type="file"
+            accept=".csv,.xlsx"
+            class="hidden"
+            (change)="onImportFileSelected($event)"
+        />
         <lib-button routerLink="/procedure/detail/{{procedure()?.id}}/new-application" type="primary">
             <i class="pi pi-plus"></i>
             Nouvelle Demande
         </lib-button>
     </div>
 </div>
+
+@if (importMessage()) {
+    <p class="text-sm text-slate-600 mb-4">{{ importMessage() }}</p>
+}
 
 <!-- table -->
 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">

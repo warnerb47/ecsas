@@ -18,6 +18,14 @@ export class ApplicationGateway {
     return this._applicationRepository.createApplication(application);
   }
 
+  createImportApplication(params: {
+    applicantId: string;
+    procedureId: string;
+    mailRef: string;
+  }) {
+    return this._applicationRepository.createImportApplication(params);
+  }
+
   getApplicationById(applicationId: string) {
     return this._applicationRepository.getApplicationById(applicationId);
   }

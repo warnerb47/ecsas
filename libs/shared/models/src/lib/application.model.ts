@@ -66,3 +66,21 @@ export interface ApplicationStatistics {
   approved: number;
   rejected: number;
 }
+
+export interface ApplicationImportRow {
+  index: number;
+  lastName: string;
+  firstName: string;
+  birthdate: string | null; // ISO yyyy-MM-dd
+  nin: string;
+  address: string;
+  phoneNumber: string;
+  mailRef: string;
+}
+
+export interface ApplicationImportResult {
+  total: number;
+  applicantsCreated: number;
+  applicationsCreated: number;
+  failed: number;
+}

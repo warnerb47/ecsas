@@ -16,8 +16,16 @@ export class ApplicantGateway {
     return this._applicantRepository.getApplicantById(applicantId);
   }
 
+  getApplicantByNin(nin: string) {
+    return this._applicantRepository.getApplicantByNin(nin);
+  }
+
   createApplicant(applicant: ApplicantPayload) {
     return this._applicantRepository.createApplicant(applicant);
+  }
+
+  createImportApplicant(applicant: ApplicantPayload) {
+    return this._applicantRepository.createImportApplicant(applicant);
   }
 
   updateApplicant(params: { applicant: ApplicantPayload; sourceId: string }) {
