@@ -11,3 +11,4 @@
   1. Display only icone for column `Vérification` message should be a tooltip or title which can be seen only on icon hover
   2. add excel missing column: `Telephone`, `Adress`, `Date de naissance`
   3. applicant description (`Nouveau demandeur`, `Demandeur existant`) should be a tag like in application-table status column whith values: `nouveau` or `existant`
+- Use primeng alert, toast message or dialog to display `importMessage`

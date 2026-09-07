@@ -27,8 +27,17 @@
     </div>
 </div>
 
-@if (importMessage()) {
-    <p class="text-sm text-slate-600 mb-4">{{ importMessage() }}</p>
+@for (key of [importMessageKey()]; track key) {
+    @if (importMessage()) {
+        <p-message
+            class="mb-4 block"
+            [severity]="importMessageSeverity()"
+            [closable]="true"
+            [life]="8000"
+        >
+            {{ importMessage() }}
+        </p-message>
+    }
 }
 
 <!-- table -->

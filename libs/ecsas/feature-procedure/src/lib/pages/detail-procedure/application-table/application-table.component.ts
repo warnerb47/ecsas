@@ -33,6 +33,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { form, FormField } from '@angular/forms/signals';
 import { ExcelExportService, ExcelImportService } from '@org/api/products';
 import { DialogService } from 'primeng/dynamicdialog';
+import { Message } from 'primeng/message';
 import { ApplicationImportPreviewComponent } from './application-import-preview/application-import-preview.component';
 
 @Component({
@@ -47,6 +48,7 @@ import { ApplicationImportPreviewComponent } from './application-import-preview/
     TextInputComponent,
     DatePipe,
     FormField,
+    Message,
   ],
   providers: [DialogService],
   templateUrl: './application-table.component.html',
@@ -66,6 +68,17 @@ export class ApplicationTableComponent implements OnInit, OnDestroy {
   importFileInput: ElementRef<HTMLInputElement> | undefined;
 
   importMessage = signal('');
+  importMessageSeverity = signal<'success' | 'info' | 'error'>('success');
+  importMessageKey = signal(0);
+
+  private setImportMessage(
+    message: string,
+    severity: 'success' | 'info' | 'error' = 'success',
+  ) {
+    this.importMessage.set(message);
+    this.importMessageSeverity.set(severity);
+    this.importMessageKey.update((key) => key + 1);
+  }
 
   procedureId = toSignal(
     this._activatedRoute.paramMap.pipe(map((p) => p.get('procedureId'))),
@@ -242,13 +255,17 @@ export class ApplicationTableComponent implements OnInit, OnDestroy {
     try {
       const rows = await this._excelImportService.parseApplicationsFile(file);
       if (!rows.length) {
-        this.importMessage.set('Aucune ligne à importer dans le fichier.');
+        this.setImportMessage(
+          'Aucune ligne à importer dans le fichier.',
+          'info',
+        );
         return;
       }
       const procedureId = this.procedure()?.id;
       if (!procedureId) {
-        this.importMessage.set(
+        this.setImportMessage(
           'Impossible de déterminer la procédure courante.',
+          'error',
         );
         return;
       }
@@ -260,8 +277,9 @@ export class ApplicationTableComponent implements OnInit, OnDestroy {
       this.openImportPreview(previewRows, procedureId);
     } catch (error) {
       console.error(error);
-      this.importMessage.set(
+      this.setImportMessage(
         "L'import a échoué. Vérifiez que le fichier respecte le format d'export.",
+        'error',
       );
     }
   }
@@ -296,7 +314,7 @@ export class ApplicationTableComponent implements OnInit, OnDestroy {
               selectedRows,
               procedureId,
             );
-          this.importMessage.set(
+          this.setImportMessage(
             `Import terminé : ${result.applicationsCreated} demande(s) créée(s)` +
               `, ${result.applicantsCreated} demandeur(s) créé(s)` +
               (result.failed ? `, ${result.failed} échec(s).` : '.'),
@@ -304,8 +322,9 @@ export class ApplicationTableComponent implements OnInit, OnDestroy {
           this.filterApplications();
         } catch (error) {
           console.error(error);
-          this.importMessage.set(
+          this.setImportMessage(
             "L'import a échoué pendant l'enregistrement des demandes.",
+            'error',
           );
         } finally {
           this.loadingApplications.set(false);
