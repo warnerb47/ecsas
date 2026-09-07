@@ -128,7 +128,9 @@ export class EventListComponent implements OnInit, OnDestroy {
       COMPLETED: 'bg-violet-50 text-violet-700 border-violet-100',
       CANCELLED: 'bg-red-50 text-red-700 border-red-100',
     };
-    return status ? (map[status] ?? 'bg-blue-50 text-blue-700 border-blue-100') : 'bg-blue-50 text-blue-700 border-blue-100';
+    return status
+      ? (map[status] ?? 'bg-blue-50 text-blue-700 border-blue-100')
+      : 'bg-blue-50 text-blue-700 border-blue-100';
   }
 
   getTypeLabel(type: EventType | undefined): string {
