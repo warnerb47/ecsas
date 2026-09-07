@@ -21,6 +21,11 @@ export const appRoutes: Route[] = [
       ),
   },
   {
+    path: 'event',
+    loadChildren: () =>
+      import('@org/ecsas/feature-event').then((m) => m.featureEventRoutes),
+  },
+  {
     path: 'setting',
     loadChildren: () =>
       import('@org/ecsas/feature-setting').then((m) => m.featureSettingRoutes),

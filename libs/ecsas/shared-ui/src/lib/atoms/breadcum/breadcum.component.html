@@ -1,6 +1,6 @@
 <nav class="flex text-sm text-slate-400" aria-label="Breadcrumb">
     <ol class="flex items-center space-x-2">
-        @for (item of items(); track item.route) {
+        @for (item of items(); track $index;) {
             @if (!$last) {
                 <li><a [routerLink]="item.route" class="hover:text-slate-600">{{ item.label }}</a></li>
                 <li class="flex items-center justify-center">

@@ -5,7 +5,10 @@ use tauri::{AppHandle, Manager};
 use zip::write::ZipWriter;
 
 #[tauri::command]
-pub async fn create_backup(app: AppHandle) -> Result<String, String> {
+pub async fn create_backup(
+    app: AppHandle,
+    backup_path: Option<String>,
+) -> Result<String, String> {
     // Get app local data directory
     let app_local_data_dir = app.path().app_local_data_dir().map_err(|e| e.to_string())?;
 
@@ -19,15 +22,34 @@ pub async fn create_backup(app: AppHandle) -> Result<String, String> {
         return Err("Database file not found".to_string());
     }
 
-    // Create backup directory if it doesn't exist
-    let backup_dir = app_local_data_dir.join("backups");
-    fs::create_dir_all(&backup_dir)
-        .map_err(|e| format!("Failed to create backup directory: {}", e))?;
+    // Resolve target zip path (user-specified or default)
+    let zip_path: PathBuf = match backup_path {
+        Some(path) => {
+            let mut path = PathBuf::from(path);
+            let ext = path
+                .extension()
+                .and_then(|e| e.to_str())
+                .map(|e| e.to_lowercase());
+            if ext.as_deref() != Some("zip") {
+                path.set_extension("zip");
+            }
+            if let Some(parent) = path.parent() {
+                fs::create_dir_all(parent)
+                    .map_err(|e| format!("Failed to create directory: {}", e))?;
+            }
+            path
+        }
+        None => {
+            // Create backup directory if it doesn't exist
+            let backup_dir = app_local_data_dir.join("backups");
+            fs::create_dir_all(&backup_dir)
+                .map_err(|e| format!("Failed to create backup directory: {}", e))?;
 
-    // Create zip file
-    let timestamp = chrono::Local::now().format("%d_%m_%Y_%H%M%S");
-    let zip_filename = format!("ecsas_backup_{}.zip", timestamp);
-    let zip_path = backup_dir.join(&zip_filename);
+            // Create zip file
+            let timestamp = chrono::Local::now().format("%d_%m_%Y_%H%M%S");
+            backup_dir.join(format!("ecsas_backup_{}.zip", timestamp))
+        }
+    };
 
     let zip_file =
         File::create(&zip_path).map_err(|e| format!("Failed to create zip file: {}", e))?;

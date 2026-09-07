@@ -1,0 +1,60 @@
+<div class="flex-1 flex flex-col overflow-hidden">
+  <lib-topbar [breadcrumbItems]="breadcrumbItems" searchPlaceholder="Rechercher un événement..."></lib-topbar>
+
+  <div class="flex-1 overflow-y-auto p-8">
+    <div class="max-w-6xl mx-auto">
+      @if (event(); as current) {
+
+        <lib-event-header
+          [event]="current"
+          (edit)="onEdit()"></lib-event-header>
+
+        <!-- Tabs -->
+        <div class="bg-slate-200/50 p-1 rounded-xl w-fit mb-6 flex gap-1">
+          @for (tab of tabs; track tab) {
+            <button type="button" (click)="onTabChange(tab)"
+              class="px-5 py-2 rounded-lg text-sm font-semibold transition"
+              [class]="activeTab() === tab
+                ? 'bg-white text-[#1A365D] shadow-sm'
+                : 'text-slate-500 hover:text-slate-700'">
+              {{ tab }}
+            </button>
+          }
+        </div>
+
+        <!-- Overview tab -->
+        @if (activeTab() === 'Vue d\'ensemble') {
+          <lib-event-info
+            [expenses]="expenses()"
+            [partners]="partners()"
+            [links]="usefulLinks()"
+            [budget]="current.budget"
+            [totalSpent]="totalSpent()"
+            [remaining]="remaining()"
+            [executionRate]="executionRate()"
+            (addExpense)="onAddExpense()"
+            (editExpense)="onEditExpense($event)"
+            (deleteExpense)="onDeleteExpense($event)"
+            (addLink)="onAddLink()"
+            (deleteLink)="onDeleteLink($event)"
+            (addPartner)="onAddPartner()"
+            (deletePartner)="onDeletePartner($event)"></lib-event-info>
+        }
+
+        <!-- Documents tab -->
+        @if (activeTab() === 'Documents') {
+          <lib-event-document
+            [documents]="current.documents ?? []"
+            (generate)="onGenerateDocument($event)"
+            (upload)="onUploadDocument($event)"
+            (visualize)="onVisualizeDocument($event)"
+            (openFolder)="openFolder()"></lib-event-document>
+        }
+      } @else {
+        <div class="flex items-center justify-center py-24 text-slate-400">
+          <i class="pi pi-spin pi-spinner mr-2"></i> Chargement...
+        </div>
+      }
+    </div>
+  </div>
+</div>

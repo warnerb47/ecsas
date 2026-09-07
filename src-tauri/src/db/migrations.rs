@@ -9,26 +9,8 @@ pub fn get_migrations() -> Vec<Migration> {
         },
         Migration {
             version: 2,
-            description: "V1.0.2__insert_procedures.sql",
-            sql: include_str!("../../migrations/V1.0.2__insert_procedures.sql"),
-            kind: MigrationKind::Up,
-        },
-        Migration {
-            version: 3,
-            description: "V1.0.4__insert_core_applicant.sql",
-            sql: include_str!("../../migrations/V1.0.4__insert_core_applicant.sql"),
-            kind: MigrationKind::Up,
-        },
-        Migration {
-            version: 4,
-            description: "V1.0.5__insert_core_application.sql",
-            sql: include_str!("../../migrations/V1.0.5__insert_core_application.sql"),
-            kind: MigrationKind::Up,
-        },
-        Migration {
-            version: 5,
-            description: "V1.0.6__insert_core_application_for_filter.sql",
-            sql: include_str!("../../migrations/V1.0.6__insert_core_application_for_filter.sql"),
+            description: "V1.0.7__insert_core_event.sql",
+            sql: include_str!("../../migrations/V1.0.7__init_core_event.sql"),
             kind: MigrationKind::Up,
         },
     ]

@@ -17,6 +17,24 @@ WHERE
 `;
 
 
+export const GET_APPLICANT_BY_NIN = `
+SELECT
+  id,
+  full_name as fullName,
+  nin,
+  phone_number as phoneNumber,
+  birthdate,
+  address,
+  status,
+  created_at
+FROM
+  core_applicant
+WHERE
+  nin = ?1
+LIMIT 1
+`;
+
+
 export const GET_APPLICANT_BY_ID = `
 SELECT
   core_applicant.id,

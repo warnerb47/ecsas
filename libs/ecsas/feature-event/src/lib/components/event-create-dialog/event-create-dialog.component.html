@@ -1,0 +1,23 @@
+<div class="flex flex-col space-y-4">
+  <lib-text-input [formField]="eventForm.name" label="Nom de l'événement" placeholder="Ex: Secours Tabaski Octobre 2026"></lib-text-input>
+  <div class="grid grid-cols-2 gap-4">
+    <lib-dropdown [formField]="eventForm.type" label="Type d'événement" [options]="eventTypes"></lib-dropdown>
+    <lib-dropdown [formField]="eventForm.status" label="Statut" [options]="eventStatuses"></lib-dropdown>
+  </div>
+  <div class="grid grid-cols-2 gap-4">
+    <lib-date-input [formField]="eventForm.startDate" label="Date de début"></lib-date-input>
+    <lib-date-input [formField]="eventForm.endDate" label="Date de fin"></lib-date-input>
+  </div>
+  <div class="grid grid-cols-2 gap-4">
+    <lib-text-input [formField]="eventForm.startTime" label="Heure début" placeholder="13:00"></lib-text-input>
+    <lib-text-input [formField]="eventForm.endTime" label="Heure fin" placeholder="17:00"></lib-text-input>
+  </div>
+  <lib-text-input [formField]="eventForm.location" label="Lieu" placeholder="Ex: Place publique de Yoff"></lib-text-input>
+  <lib-number-input [formField]="eventForm.expectedParticipants" label="Participants attendus" placeholder="Ex: 300"></lib-number-input>
+  <lib-text-area [formField]="eventForm.description" label="Description" placeholder="Objectif de l'événement, public cible..."></lib-text-area>
+  <lib-number-input [formField]="eventForm.budget" label="Budget prévu (FCFA)" placeholder="Ex: 2500000"></lib-number-input>
+  <lib-button class="w-full" (click)="save()" type="primary">
+    <i class="pi pi-calendar-plus mr-2"></i>
+    @if (isEdit) { Enregistrer les modifications } @else { Créer l'événement }
+  </lib-button>
+</div>

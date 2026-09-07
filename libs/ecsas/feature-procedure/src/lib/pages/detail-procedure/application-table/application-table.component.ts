@@ -1,18 +1,40 @@
 import { DatePipe, formatDate, NgClass } from '@angular/common';
-import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  effect,
+  ElementRef,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { Application, ApplicationFilters } from '@org/models';
+import {
+  Application,
+  ApplicationFilters,
+  ApplicationImportPreviewRow,
+  ApplicationImportRow,
+} from '@org/models';
 import {
   ButtonComponent,
   DropdownComponent,
+  MultiselectComponent,
   TextInputComponent,
 } from '@org/ecsas/shared-ui';
 import { ProcedureStateService } from '../../../state/procedure-state.service';
-import { ApplicationGateway, ProcedureGateway } from '@org/ecsas/ecsas-data';
-import { map } from 'rxjs';
+import {
+  ApplicationGateway,
+  ApplicationImportService,
+  ProcedureGateway,
+} from '@org/ecsas/ecsas-data';
+import { map, Subject, takeUntil } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { form, FormField } from '@angular/forms/signals';
-import { ExcelExportService } from '@org/api/products';
+import { ExcelExportService, ExcelImportService } from '@org/api/products';
+import { DialogService } from 'primeng/dynamicdialog';
+import { Message } from 'primeng/message';
+import { ApplicationImportPreviewComponent } from './application-import-preview/application-import-preview.component';
 
 @Component({
   selector: 'lib-application-table',
@@ -22,18 +44,41 @@ import { ExcelExportService } from '@org/api/products';
     NgClass,
     ButtonComponent,
     DropdownComponent,
+    MultiselectComponent,
     TextInputComponent,
     DatePipe,
     FormField,
+    Message,
   ],
+  providers: [DialogService],
   templateUrl: './application-table.component.html',
 })
-export class ApplicationTableComponent implements OnInit {
+export class ApplicationTableComponent implements OnInit, OnDestroy {
   private readonly _procedureStateService = inject(ProcedureStateService);
   private readonly _applicationGateway = inject(ApplicationGateway);
   private readonly _procedureGateway = inject(ProcedureGateway);
   private readonly _activatedRoute = inject(ActivatedRoute);
   private readonly _excelExportService = new ExcelExportService();
+  private readonly _excelImportService = new ExcelImportService();
+  private readonly _applicationImportService = inject(ApplicationImportService);
+  private readonly _dialogService = inject(DialogService);
+  private readonly _unsubscribe = new Subject<void>();
+
+  @ViewChild('importFileInput', { static: false })
+  importFileInput: ElementRef<HTMLInputElement> | undefined;
+
+  importMessage = signal('');
+  importMessageSeverity = signal<'success' | 'info' | 'error'>('success');
+  importMessageKey = signal(0);
+
+  private setImportMessage(
+    message: string,
+    severity: 'success' | 'info' | 'error' = 'success',
+  ) {
+    this.importMessage.set(message);
+    this.importMessageSeverity.set(severity);
+    this.importMessageKey.update((key) => key + 1);
+  }
 
   procedureId = toSignal(
     this._activatedRoute.paramMap.pipe(map((p) => p.get('procedureId'))),
@@ -41,14 +86,12 @@ export class ApplicationTableComponent implements OnInit {
   );
 
   statusOptions = [
-    { label: 'Tous les statuts', value: '' },
     { label: 'En attente', value: 'PENDING' },
     { label: 'Approuvé', value: 'APPROVED' },
     { label: 'Rejeté', value: 'REJECTED' },
   ];
 
   conformities = [
-    { label: 'Tous les statuts de Conformité', value: '' },
     { label: 'Conforme', value: 'COMPLIANT' },
     { label: 'Hors zone', value: 'OUT_OF_ZONE' },
     { label: 'Dossier incomplet', value: 'INCOMPLETE' },
@@ -86,8 +129,7 @@ export class ApplicationTableComponent implements OnInit {
     status: null,
     state: null,
     mailRef: null,
-  });
-  filterForm = form(this.filterModel);
+  });  filterForm = form(this.filterModel);
 
   constructor() {
     effect(() => {
@@ -97,6 +139,11 @@ export class ApplicationTableComponent implements OnInit {
 
   ngOnInit() {
     this.initState();
+  }
+
+  ngOnDestroy() {
+    this._unsubscribe.next();
+    this._unsubscribe.complete();
   }
 
   async initState() {
@@ -192,6 +239,97 @@ export class ApplicationTableComponent implements OnInit {
       };
     });
     this._excelExportService.exportToExcel(data, 'liste_des_demandes');
+  }
+
+  openImportDialog() {
+    this.importFileInput?.nativeElement.click();
+  }
+
+  async onImportFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = '';
+    if (!file) {
+      return;
+    }
+    try {
+      const rows = await this._excelImportService.parseApplicationsFile(file);
+      if (!rows.length) {
+        this.setImportMessage(
+          'Aucune ligne à importer dans le fichier.',
+          'info',
+        );
+        return;
+      }
+      const procedureId = this.procedure()?.id;
+      if (!procedureId) {
+        this.setImportMessage(
+          'Impossible de déterminer la procédure courante.',
+          'error',
+        );
+        return;
+      }
+      const previewRows =
+        await this._applicationImportService.previewApplications(
+          rows,
+          procedureId,
+        );
+      this.openImportPreview(previewRows, procedureId);
+    } catch (error) {
+      console.error(error);
+      this.setImportMessage(
+        "L'import a échoué. Vérifiez que le fichier respecte le format d'export.",
+        'error',
+      );
+    }
+  }
+
+  private openImportPreview(
+    previewRows: ApplicationImportPreviewRow[],
+    procedureId: string,
+  ) {
+    this._dialogService
+      .open(ApplicationImportPreviewComponent, {
+        header: "Aperçu de l'import (Excel)",
+        width: '90vw',
+        height: '85vh',
+        focusOnShow: false,
+        closable: true,
+        closeOnEscape: true,
+        maximizable: true,
+        data: {
+          procedureName: this.procedure()?.name,
+          rows: previewRows,
+        },
+      })
+      ?.onClose.pipe(takeUntil(this._unsubscribe))
+      .subscribe(async (selectedRows: ApplicationImportRow[] | undefined) => {
+        if (!selectedRows?.length) {
+          return;
+        }
+        this.loadingApplications.set(true);
+        try {
+          const result =
+            await this._applicationImportService.importApplications(
+              selectedRows,
+              procedureId,
+            );
+          this.setImportMessage(
+            `Import terminé : ${result.applicationsCreated} demande(s) créée(s)` +
+              `, ${result.applicantsCreated} demandeur(s) créé(s)` +
+              (result.failed ? `, ${result.failed} échec(s).` : '.'),
+          );
+          this.filterApplications();
+        } catch (error) {
+          console.error(error);
+          this.setImportMessage(
+            "L'import a échoué pendant l'enregistrement des demandes.",
+            'error',
+          );
+        } finally {
+          this.loadingApplications.set(false);
+        }
+      });
   }
 
   nextPage() {

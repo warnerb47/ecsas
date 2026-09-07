@@ -35,7 +35,8 @@
       ],
       "@org/ecsas/feature-setting": ["libs/ecsas/feature-setting/src/index.ts"],
       "@org/ecsas/shared-ui": ["libs/ecsas/shared-ui/src/index.ts"],
-      "@org/ecsas/ecsas-data": ["libs/ecsas/ecsas-data/src/index.ts"]
+      "@org/ecsas/ecsas-data": ["libs/ecsas/ecsas-data/src/index.ts"],
+      "@org/ecsas/feature-event": ["libs/ecsas/feature-event/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

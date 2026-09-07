@@ -1,0 +1,118 @@
+<div class="flex flex-col gap-4">
+    <div class="flex flex-wrap items-center justify-between gap-2">
+        <p class="text-sm text-slate-500">
+            {{ rows().length }} ligne(s) détectée(s)
+            @if (procedureName) {
+                pour « {{ procedureName }} »
+            }
+        </p>
+        <div class="flex items-center gap-3 text-xs font-medium">
+            <span class="text-emerald-600" title="Lignes sans conflit">
+                {{ safeCount() }} sûre(s)
+            </span>
+            <span class="text-amber-600" title="Lignes avec conflit de doublon">
+                {{ conflictCount() }} conflit(s)
+            </span>
+            <span class="text-red-600" title="Lignes avec erreur">
+                {{ errorCount() }} erreur(s)
+            </span>
+        </div>
+    </div>
+
+    <div class="max-h-96 overflow-auto border border-slate-200 rounded-lg">
+        <table class="w-full min-w-[900px] text-left text-sm">
+            <thead class="bg-slate-50 text-slate-500 font-medium sticky top-0">
+                <tr>
+                    <th class="px-4 py-3 w-10">
+                        <input
+                            type="checkbox"
+                            (change)="toggleAll($any($event.target).checked)"
+                        />
+                    </th>
+                    <th class="px-4 py-3">Demandeur</th>
+                    <th class="px-4 py-3">NIN</th>
+                    <th class="px-4 py-3">Téléphone</th>
+                    <th class="px-4 py-3">Adresse</th>
+                    <th class="px-4 py-3">Date de naissance</th>
+                    <th class="px-4 py-3">Numéro courrier</th>
+                    <th class="px-4 py-3">Vérification</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                @for (item of rows(); track item.row.index; let i = $index) {
+                    <tr [class.bg-slate-50]="!item.selected" [class.opacity-50]="!item.selected">
+                        <td class="px-4 py-3">
+                            <input
+                                type="checkbox"
+                                [checked]="item.selected"
+                                (change)="toggle(i, $any($event.target).checked)"
+                            />
+                        </td>
+                        <td class="px-4 py-3">
+                            <p class="font-medium text-slate-800">
+                                {{ fullName(item) }}
+                            </p>
+                            <span
+                                class="mt-1 inline-block px-2 py-0.5 rounded-full text-[11px] font-bold border"
+                                [class]="applicantTagClass(item)"
+                            >
+                                {{ applicantTagLabel(item) }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3 text-slate-600">
+                            {{ item.row.nin }}
+                        </td>
+                        <td class="px-4 py-3 text-slate-600">
+                            {{ item.row.phoneNumber }}
+                        </td>
+                        <td class="px-4 py-3 text-slate-600">
+                            {{ item.row.address }}
+                        </td>
+                        <td class="px-4 py-3 text-slate-600">
+                            {{ displayBirthdate(item.row.birthdate) }}
+                        </td>
+                        <td class="px-4 py-3 text-slate-600">
+                            {{ item.row.mailRef }}
+                        </td>
+                        <td class="px-4 py-3">
+                            @if (item.issues.length === 0) {
+                                <i
+                                    class="pi pi-check-circle text-lg text-emerald-500"
+                                    title="Importable"
+                                ></i>
+                            } @else {
+                                <div class="flex items-center gap-2">
+                                    @for (issue of item.issues; track issue.message) {
+                                        <i
+                                            [class]="issueIconClass(issue)"
+                                            [title]="issue.message"
+                                        ></i>
+                                    }
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                } @empty {
+                    <tr>
+                        <td colspan="8" class="px-4 py-8 text-center text-slate-500">
+                            Aucune ligne importable dans le fichier
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="flex justify-end gap-3">
+        <lib-button (click)="cancel()" type="secondary">
+            Annuler
+        </lib-button>
+        <lib-button
+            (click)="importSelected()"
+            type="primary"
+            [disabled]="selectedCount() === 0"
+        >
+            Importer ({{ selectedCount() }})
+        </lib-button>
+    </div>
+</div>

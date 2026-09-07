@@ -1,21 +1,36 @@
 import { invoke } from '@tauri-apps/api/core';
-import { open } from '@tauri-apps/plugin-dialog';
-import { openPath } from '@tauri-apps/plugin-opener';
+import { open, save } from '@tauri-apps/plugin-dialog';
 
 export class BackupService {
   async createBackup(): Promise<void> {
     try {
-      const backupPath = await invoke<string>('create_backup');
-      const pathEntries = backupPath?.split('\\');
-      pathEntries.pop();
-      const path = pathEntries.join('\\');
-      if (path) {
-        openPath(path);
-      }
+      const savePath = await save({
+        title: 'Exporter la sauvegarde',
+        defaultPath: `ecsas_backup_${this.nowTimestamp()}.zip`,
+        filters: [
+          {
+            name: 'Backup',
+            extensions: ['zip'],
+          },
+        ],
+      });
+
+      if (!savePath) return;
+
+      await invoke<string>('create_backup', { backupPath: savePath });
     } catch (error) {
       console.error('Backup failed:', error);
       throw error;
     }
+  }
+
+  private nowTimestamp(): string {
+    const now = new Date();
+    const pad = (value: number) => value.toString().padStart(2, '0');
+    return (
+      `${pad(now.getDate())}_${pad(now.getMonth() + 1)}_${now.getFullYear()}` +
+      `_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`
+    );
   }
 
   async restoreBackup(mergeMode = false): Promise<void> {

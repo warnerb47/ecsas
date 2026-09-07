@@ -1,0 +1,15 @@
+<div class="flex flex-col space-y-4">
+  <div class="px-4 py-3 rounded-lg bg-slate-50 border border-slate-100 flex items-center">
+    <i class="pi pi-file-pdf text-rose-500 mr-3"></i>
+    <div>
+      <p class="text-sm font-bold text-slate-700">{{ labels().label }}</p>
+      <p class="text-[11px] text-slate-400">Le document sera généré au format PDF modifiable.</p>
+    </div>
+  </div>
+  <lib-text-input [formField]="docForm.title" label="Titre du document" placeholder="Ex: Lettre d'invitation - Secours Tabaski"></lib-text-input>
+  <lib-text-input [formField]="docForm.recipient" label="Destinataire" [placeholder]="labels().recipientPlaceholder"></lib-text-input>
+  <lib-button class="w-full" (click)="submit()" type="primary">
+    <i class="pi pi-file-pdf mr-2"></i>
+    Générer le document
+  </lib-button>
+</div>

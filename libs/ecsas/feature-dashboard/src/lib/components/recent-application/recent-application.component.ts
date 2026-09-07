@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { form, FormField } from '@angular/forms/signals';
 import { Application, ApplicationFilters } from '@org/models';
 import { ApplicationGateway } from '@org/ecsas/ecsas-data';
-import { ButtonComponent, DropdownComponent } from '@org/ecsas/shared-ui';
+import { ButtonComponent, DropdownComponent, MultiselectComponent } from '@org/ecsas/shared-ui';
 import { firstValueFrom, of, delay } from 'rxjs';
 
 @Component({
@@ -17,6 +17,7 @@ import { firstValueFrom, of, delay } from 'rxjs';
     FormField,
     ButtonComponent,
     DropdownComponent,
+    MultiselectComponent,
   ],
   templateUrl: './recent-application.component.html',
 })
@@ -28,7 +29,6 @@ export class RecentApplicationComponent {
   error = signal(false);
 
   statusOptions = [
-    { label: 'Tous les statuts', value: '' },
     { label: 'En cours', value: 'PENDING' },
     { label: 'Approuvée', value: 'APPROVED' },
     { label: 'Rejetée', value: 'REJECTED' },

@@ -10,6 +10,7 @@ import {
   GET_APPLICATION_BY_ID,
   GET_APPLICATIONS_BY_PROCEDURE_ID,
   GET_APPLICATION_STATISTICS_QUERY,
+  GET_APPLICATION_STATISTICS_BY_PROCEDURE_ID_QUERY,
 } from './query';
 import { v4 as uuidv4 } from 'uuid';
 import { DocumentManager } from '@org/api/products';
@@ -24,6 +25,28 @@ export class ApplicationRepository {
     }
     const stats: ApplicationStatistics[] = await db.select(
       GET_APPLICATION_STATISTICS_QUERY,
+    );
+    await closeConnection(db);
+    return (
+      stats[0] ?? {
+        total: 0,
+        pending: 0,
+        approved: 0,
+        rejected: 0,
+      }
+    );
+  }
+
+  async getApplicationStatisticsByProcedureId(
+    procedureId: string,
+  ): Promise<ApplicationStatistics> {
+    const db = await openConnection();
+    if (!db) {
+      throw new Error('No database connection');
+    }
+    const stats: ApplicationStatistics[] = await db.select(
+      GET_APPLICATION_STATISTICS_BY_PROCEDURE_ID_QUERY,
+      [procedureId],
     );
     await closeConnection(db);
     return (
@@ -240,6 +263,56 @@ export class ApplicationRepository {
     }
   }
 
+  async createImportApplication(params: {
+    applicantId: string;
+    procedureId: string;
+    mailRef: string;
+  }) {
+    const db = await openConnection();
+    if (!db) {
+      throw new Error('No database connection');
+    }
+    const applicationId = uuidv4();
+    const result = await db.execute(
+      `INSERT INTO
+        core_application (
+          id,
+          applicant_id,
+          procedure_id,
+          mail_ref,
+          status,
+          state,
+          requested_amount,
+          received_amount,
+          comment
+        )
+        VALUES ($1, $2, $3, $4, 'PENDING', NULL, NULL, NULL, NULL)`,
+      [applicationId, params.applicantId, params.procedureId, params.mailRef],
+    );
+    if (!result.rowsAffected) {
+      throw new Error('core_application creation failed');
+    }
+    await closeConnection(db);
+    return applicationId;
+  }
+
+  async getMailRefsByProcedureId(procedureId: string) {
+    const db = await openConnection();
+    if (!db) {
+      throw new Error('No database connection');
+    }
+    const rows: { mailRef?: string | null }[] = await db.select(
+      `
+      SELECT mail_ref as mailRef
+      FROM core_application
+      WHERE procedure_id = ?1 AND mail_ref IS NOT NULL AND mail_ref != ''
+      `,
+      [procedureId],
+    );
+    await closeConnection(db);
+    return rows.map((row) => row.mailRef).filter(Boolean) as string[];
+  }
+
   async filterApplications(filters: ApplicationFilters) {
     const db = await openConnection();
     if (!db) {
@@ -304,15 +377,23 @@ export class ApplicationRepository {
       params.push(value);
     };
 
+    // Helper to add an IN condition from a list of values
+    const addInCondition = (column: string, values: string[]) => {
+      if (!values.length) return;
+      const placeholders = values.map(() => '?').join(', ');
+      sql += ` AND ${column} IN (${placeholders})`;
+      params.push(...values);
+    };
+
     // Apply filters
     if (procedureId) {
       addCondition('p.id = ?', procedureId);
     }
-    if (status) {
-      addCondition('a.status = ?', status);
+    if (status?.length) {
+      addInCondition('a.status', status);
     }
-    if (state) {
-      addCondition('a.state = ?', state);
+    if (state?.length) {
+      addInCondition('a.state', state);
     }
     if (mailRef) {
       addCondition('a.mail_ref LIKE ?', `%${mailRef}%`);

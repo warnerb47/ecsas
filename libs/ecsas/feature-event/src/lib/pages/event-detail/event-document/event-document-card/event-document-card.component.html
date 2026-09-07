@@ -1,0 +1,34 @@
+<div class="border border-slate-100 rounded-xl p-3 flex flex-col gap-3 bg-white">
+  <div class="flex items-center justify-between gap-3">
+    <div class="flex items-center min-w-0">
+      <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded flex items-center justify-center font-bold text-xs mr-3 shrink-0">
+        <i class="pi pi-file text-lg"></i>
+      </div>
+      <div class="min-w-0">
+        <p class="text-sm font-bold text-slate-700 truncate">{{ def().label }}</p>
+        @if (doc()?.source) {
+          <p class="text-[10px] text-slate-400 uppercase font-medium truncate">
+            Ajouté le {{ doc()?.source?.uploadedAt | date: 'dd/MM/yyyy' }}
+          </p>
+        } @else if (doc()) {
+          <p class="text-[10px] text-slate-400 uppercase font-medium truncate">Document téléversé</p>
+        } @else {
+          <p class="text-[10px] text-slate-400 uppercase font-medium">Aucun document</p>
+        }
+      </div>
+    </div>
+    @if (doc()?.source) {
+      <button
+        type="button"
+        class="p-2 text-slate-400 hover:text-blue-600 transition shrink-0"
+        (click)="onVisualize()"
+        [attr.aria-label]="'Consulter ' + def().label">
+        <i class="pi pi-eye"></i>
+      </button>
+    }
+  </div>
+
+  <lib-upload-document-card
+    [placeholder]="doc() ? 'Remplacer le document' : 'Ajouter un document'"
+    (selectedFile)="onFileSelected($event)"></lib-upload-document-card>
+</div>

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Événements — Calendrier</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/primeicons@7.0.0/primeicons.css" />
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+  <!-- ================= Application shell ================= -->
+  <div class="flex h-screen overflow-hidden">
+
+    <!-- Sidebar (convention: w-64 bg-[#1A365D]) -->
+    <aside class="w-64 bg-[#1A365D] text-white flex flex-col flex-shrink-0">
+      <div class="p-6 flex items-center space-x-3">
+        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#1A365D] font-bold">M</div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight">Mairie de Yoff</h1>
+          <p class="text-xs text-blue-200">Commision santé et action sociale</p>
+        </div>
+      </div>
+
+      <nav class="mt-6 flex-1">
+        <a href="#" class="flex items-center px-6 py-3 text-blue-100 hover:bg-[#3182CE]/10 transition shadow-sm">
+          <i class="pi pi-home mr-3"></i> Dashboard
+        </a>
+        <a href="#" class="flex items-center px-6 py-3 text-blue-100 hover:bg-[#3182CE]/10 transition shadow-sm">
+          <i class="pi pi-file mr-3"></i> Procédures
+        </a>
+        <a href="event-calendar.html" class="flex items-center px-6 py-3 text-blue-100 bg-[#3182CE]/10 transition shadow-sm">
+          <i class="pi pi-calendar mr-3"></i> Événements
+        </a>
+        <a href="#" class="flex items-center px-6 py-3 text-blue-100 hover:bg-[#3182CE]/10 transition">
+          <i class="pi pi-cog mr-3"></i> Paramètres
+        </a>
+      </nav>
+
+      <div class="px-6 py-4 border-t border-white/10 flex items-center justify-between">
+        <span class="text-xs text-blue-200">Version 0.4.0</span>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+
+      <!-- Topbar -->
+      <header class="bg-white border-b px-8 py-4 flex justify-between items-center sticky top-0 z-10">
+        <div class="flex items-center space-x-8">
+          <!-- Breadcrumb -->
+          <nav class="flex text-sm text-slate-400" aria-label="Breadcrumb">
+            <ol class="flex items-center space-x-2">
+              <li><a href="#" class="hover:text-slate-600">Événements</a></li>
+              <li class="flex items-center justify-center"><i class="pi pi-chevron-right"></i></li>
+              <li class="text-[#1A365D] font-semibold">Calendrier</li>
+            </ol>
+          </nav>
+          <!-- Search -->
+          <div class="relative">
+            <i class="pi pi-search absolute left-3 top-3 text-xs text-slate-400"></i>
+            <input type="text" placeholder="Rechercher un événement..." class="pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm w-72 focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button type="button" class="px-4 py-2 text-sm font-medium rounded-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-sm">
+            <i class="pi pi-list mr-2" style="font-size: 0.85rem"></i> Liste des événements
+          </button>
+          <button type="button" class="px-4 py-2 text-sm font-medium rounded-lg text-white bg-[#1A365D] hover:bg-blue-800 transition shadow-sm" onclick="document.getElementById('create-event-dialog').classList.remove('hidden')">
+            <i class="pi pi-plus mr-2" style="font-size: 0.85rem"></i> Nouvel événement
+          </button>
+        </div>
+      </header>
+
+      <!-- Page content -->
+      <div class="flex-1 overflow-y-auto p-8">
+        <div class="max-w-7xl mx-auto">
+
+          <!-- Header + view toggle -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+            <div>
+              <h2 class="text-3xl font-bold text-[#1A365D]">Calendrier des événements</h2>
+              <p class="text-slate-500 text-sm mt-2">Visualisez et planifiez les événements de la commission santé et action sociale.</p>
+            </div>
+            <!-- View tabs -->
+            <div class="flex space-x-1 bg-slate-200/50 p-1 rounded-xl overflow-auto">
+              <button type="button" class="px-4 py-2 rounded-lg font-medium text-sm transition shrink-0 bg-white text-[#1A365D] shadow-sm">Mois</button>
+              <button type="button" class="px-4 py-2 rounded-lg font-medium text-sm transition shrink-0 text-slate-600 hover:bg-white">Semaine</button>
+              <button type="button" class="px-4 py-2 rounded-lg font-medium text-sm transition shrink-0 text-slate-600 hover:bg-white">Jour</button>
+            </div>
+          </div>
+
+          <!-- Legend -->
+          <div class="flex items-center gap-6 mb-6 text-xs font-semibold text-slate-500 flex-wrap">
+            <span class="flex items-center"><i class="pi pi-heart mr-2 text-rose-500"></i> Secours social</span>
+            <span class="flex items-center"><i class="pi pi-heartbeat mr-2 text-emerald-500"></i> Santé</span>
+            <span class="flex items-center"><i class="pi pi-users mr-2 text-blue-500"></i> Réunion</span>
+            <span class="flex items-center"><i class="pi pi-gift mr-2 text-violet-500"></i> Cérémonie</span>
+            <span class="flex items-center"><i class="pi pi-star mr-2 text-amber-500"></i> Communautaire</span>
+          </div>
+
+          <!-- Calendar card -->
+          <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+
+            <!-- Month navigation -->
+            <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+              <div class="flex items-center space-x-4">
+                <button type="button" class="w-9 h-9 flex items-center justify-center rounded-lg bg-white border-2 border-slate-200 text-slate-600 hover:bg-slate-50 transition shadow-sm">
+                  <i class="pi pi-angle-left"></i>
+                </button>
+                <h3 class="text-lg font-black text-[#1A365D]">Août 2026</h3>
+                <button type="button" class="w-9 h-9 flex items-center justify-center rounded-lg bg-white border-2 border-slate-200 text-slate-600 hover:bg-slate-50 transition shadow-sm">
+                  <i class="pi pi-angle-right"></i>
+                </button>
+              </div>
+              <button type="button" class="px-4 py-2 text-sm font-medium rounded-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-sm">
+                Aujourd'hui
+              </button>
+            </div>
+
+            <!-- Weekday header -->
+            <div class="grid grid-cols-7 border-b border-slate-100">
+              <div class="px-3 py-3 text-center text-xs font-bold text-slate-400 uppercase tracking-wider">Lun</div>
+              <div class="px-3 py-3 text-center text-xs font-bold text-slate-400 uppercase tracking-wider">Mar</div>
+              <div class="px-3 py-3 text-center text-xs font-bold text-slate-400 uppercase tracking-wider">Mer</div>
+              <div class="px-3 py-3 text-center text-xs font-bold text-slate-400 uppercase tracking-wider">Jeu</div>
+              <div class="px-3 py-3 text-center text-xs font-bold text-slate-400 uppercase tracking-wider">Ven</div>
+              <div class="px-3 py-3 text-center text-xs font-bold text-slate-400 uppercase tracking-wider">Sam</div>
+              <div class="px-3 py-3 text-center text-xs font-bold text-slate-400 uppercase tracking-wider">Dim</div>
+            </div>
+
+            <!-- Month grid (Août 2026 — weeks du 27/07 au 06/09) -->
+            <div class="grid grid-cols-7">
+
+              <!-- Semaine 1 : 27/07 – 02/08 -->
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-300">27</span>
+                  <i class="pi pi-plus text-[10px] text-slate-200 cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-300">28</span>
+                  <i class="pi pi-plus text-[10px] text-slate-200 cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-300">29</span>
+                  <i class="pi pi-plus text-[10px] text-slate-200 cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-300">30</span>
+                  <i class="pi pi-plus text-[10px] text-slate-200 cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-300">31</span>
+                  <i class="pi pi-plus text-[10px] text-slate-200 cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition bg-rose-50/30">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">1</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+                <div class="mt-2 space-y-1">
+                  <div class="text-[10px] font-bold text-emerald-800 bg-emerald-100 rounded-md px-2 py-1 truncate">Journée de sensibilisation santé</div>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">2</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+
+              <!-- Semaine 2 : 03/08 – 09/08 -->
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition bg-blue-50/30">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">3</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+                <div class="mt-2 space-y-1">
+                  <div class="text-[10px] font-bold text-blue-800 bg-blue-100 rounded-md px-2 py-1 truncate">Réunion de la commission</div>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">4</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">5</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">6</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">7</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+                <div class="mt-2 space-y-1">
+                  <div class="text-[10px] font-bold text-rose-800 bg-rose-100 rounded-md px-2 py-1 truncate">Secours Tabaski 2026 · 13h-17h</div>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">8</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">9</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+
+              <!-- Semaine 3 : 10/08 – 16/08 -->
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">10</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">11</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">12</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">13</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">14</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition bg-emerald-50/30">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">15</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+                <div class="mt-2 space-y-1">
+                  <div class="text-[10px] font-bold text-emerald-800 bg-emerald-100 rounded-md px-2 py-1 truncate">Caravane médicale du quartier</div>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">16</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+
+              <!-- Semaine 4 : 17/08 – 23/08 -->
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">17</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition bg-blue-50/30">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">18</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+                <div class="mt-2 space-y-1">
+                  <div class="text-[10px] font-bold text-blue-800 bg-blue-100 rounded-md px-2 py-1 truncate">Formation des bénévoles</div>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">19</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">20</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition bg-violet-50/30">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">21</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+                <div class="mt-2 space-y-1">
+                  <div class="text-[10px] font-bold text-violet-800 bg-violet-100 rounded-md px-2 py-1 truncate">Cérémonie de distribution</div>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">22</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">23</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+
+              <!-- Semaine 5 : 24/08 – 30/08 -->
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">24</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">25</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">26</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">27</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">28</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">29</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition bg-amber-50/40 ring-2 ring-inset ring-[#3182CE]">
+                <div class="flex justify-between">
+                  <span class="w-6 h-6 flex items-center justify-center rounded-full bg-[#3182CE] text-white text-sm font-bold">30</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+                <div class="mt-2 space-y-1">
+                  <div class="text-[10px] font-bold text-amber-800 bg-amber-100 rounded-md px-2 py-1 truncate">Iftar communautaire</div>
+                </div>
+              </div>
+
+              <!-- Semaine 6 : 31/08 – 06/09 -->
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition bg-violet-50/30">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-600">31</span>
+                  <i class="pi pi-plus text-[10px] text-slate-300 hover:text-[#3182CE] cursor-pointer"></i>
+                </div>
+                <div class="mt-2 space-y-1">
+                  <div class="text-[10px] font-bold text-amber-800 bg-amber-100 rounded-md px-2 py-1 truncate">Clôture des inscriptions Tabaski</div>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-300">1</span>
+                  <i class="pi pi-plus text-[10px] text-slate-200 cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-300">2</span>
+                  <i class="pi pi-plus text-[10px] text-slate-200 cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-300">3</span>
+                  <i class="pi pi-plus text-[10px] text-slate-200 cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-300">4</span>
+                  <i class="pi pi-plus text-[10px] text-slate-200 cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-300">5</span>
+                  <i class="pi pi-plus text-[10px] text-slate-200 cursor-pointer"></i>
+                </div>
+              </div>
+              <div class="min-h-[110px] border border-slate-100 p-2 hover:bg-slate-50/50 transition">
+                <div class="flex justify-between">
+                  <span class="text-sm font-semibold text-slate-300">6</span>
+                  <i class="pi pi-plus text-[10px] text-slate-200 cursor-pointer"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Create event dialog ================= -->
+  <div id="create-event-dialog" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+    <div class="absolute inset-0 bg-slate-900/50" onclick="document.getElementById('create-event-dialog').classList.add('hidden')"></div>
+    <div class="relative bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+      <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between sticky top-0">
+        <h3 class="text-sm font-black text-[#1A365D] uppercase tracking-wider">Nouvel évènement</h3>
+        <button type="button" class="w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:bg-slate-200 transition" onclick="document.getElementById('create-event-dialog').classList.add('hidden')">
+          <i class="pi pi-times" style="font-size: 0.9rem"></i>
+        </button>
+      </div>
+
+      <div class="p-6 grid grid-cols-2 gap-6">
+        <div class="col-span-2">
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Nom de l'événement</label>
+          <input type="text" placeholder="Ex: Secours Tabaski Octobre 2026" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Type d'événement</label>
+          <select class="w-full px-4 py-3 pr-10 bg-slate-50 border border-slate-200 text-slate-600 rounded-lg focus:outline-none">
+            <option>Secours social</option>
+            <option>Santé</option>
+            <option>Réunion</option>
+            <option>Cérémonie</option>
+            <option>Communautaire</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Statut</label>
+          <select class="w-full px-4 py-3 pr-10 bg-slate-50 border border-slate-200 text-slate-600 rounded-lg focus:outline-none">
+            <option>Planifié</option>
+            <option>En cours</option>
+            <option>Terminé</option>
+            <option>Annulé</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Date de début</label>
+          <input type="date" value="2026-10-01" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Date de fin</label>
+          <input type="date" value="2026-10-01" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Heure début</label>
+          <input type="time" value="13:00" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Heure fin</label>
+          <input type="time" value="17:00" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Lieu</label>
+          <input type="text" placeholder="Ex: Place publique de Yoff" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Participants attendus</label>
+          <input type="number" placeholder="Ex: 300" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+        </div>
+        <div class="col-span-2">
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Description</label>
+          <textarea rows="3" placeholder="Objectif de l'événement, public cible..." class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all"></textarea>
+        </div>
+        <div class="col-span-2">
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Budget prévu (FCFA)</label>
+          <input type="number" placeholder="Ex: 2500000" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+        </div>
+      </div>
+
+      <div class="px-6 py-4 border-t border-slate-200 flex justify-end space-x-4 bg-slate-50/50">
+        <button type="button" class="px-4 py-3 text-sm font-medium rounded-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-sm" onclick="document.getElementById('create-event-dialog').classList.add('hidden')">Annuler</button>
+        <button type="button" class="px-4 py-3 text-sm font-medium rounded-lg text-white bg-[#1A365D] hover:bg-blue-800 transition shadow-sm">
+          <i class="pi pi-calendar-plus mr-2" style="font-size: 0.9rem"></i> Créer l'événement
+        </button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

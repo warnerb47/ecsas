@@ -44,8 +44,8 @@ export type ApplicationStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 
 export interface ApplicationFilters {
   procedureId: string | null;
-  status: ApplicationStatus | null | null;
-  state: ApplicationState | null;
+  status: ApplicationStatus[] | null;
+  state: ApplicationState[] | null;
   fullName: string | null;
   nin: string | null;
   phoneNumber: string | null;
@@ -65,4 +65,37 @@ export interface ApplicationStatistics {
   pending: number;
   approved: number;
   rejected: number;
+}
+
+export interface ApplicationImportRow {
+  index: number;
+  lastName: string;
+  firstName: string;
+  birthdate: string | null; // ISO yyyy-MM-dd
+  nin: string;
+  address: string;
+  phoneNumber: string;
+  mailRef: string;
+}
+
+export interface ApplicationImportResult {
+  total: number;
+  applicantsCreated: number;
+  applicationsCreated: number;
+  failed: number;
+}
+
+export type ApplicationImportIssueType = 'error' | 'warning' | 'info';
+
+export interface ApplicationImportIssue {
+  type: ApplicationImportIssueType;
+  message: string;
+}
+
+export interface ApplicationImportPreviewRow {
+  row: ApplicationImportRow;
+  selected: boolean;
+  existingApplicant: boolean;
+  safe: boolean;
+  issues: ApplicationImportIssue[];
 }

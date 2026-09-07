@@ -1,0 +1,7 @@
+<div class="flex flex-col space-y-4">
+  <lib-text-input [formField]="linkForm.label" label="Titre du lien" placeholder="Ex: Site de la mairie de Yoff"></lib-text-input>
+  <lib-text-input [formField]="linkForm.url" label="URL" placeholder="https://..."></lib-text-input>
+  <lib-button class="w-full" (click)="submit()" type="primary">
+    Ajouter le lien
+  </lib-button>
+</div>

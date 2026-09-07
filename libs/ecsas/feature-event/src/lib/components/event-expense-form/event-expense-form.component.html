@@ -1,0 +1,12 @@
+<div class="flex flex-col space-y-4">
+  <lib-text-input [formField]="expenseForm.label" label="Poste de dépense" placeholder="Ex: Location de tente"></lib-text-input>
+  <lib-dropdown [formField]="expenseForm.category" label="Catégorie" [options]="categories"></lib-dropdown>
+  <div class="grid grid-cols-2 gap-4">
+    <lib-number-input [formField]="expenseForm.planned" label="Budget prévu (FCFA)"></lib-number-input>
+    <lib-number-input [formField]="expenseForm.spent" label="Dépensé (FCFA)"></lib-number-input>
+  </div>
+  <lib-date-input [formField]="expenseForm.date" label="Date"></lib-date-input>
+  <lib-button class="w-full" (click)="submit()" type="primary">
+    Enregistrer la dépense
+  </lib-button>
+</div>

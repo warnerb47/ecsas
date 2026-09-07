@@ -5,10 +5,7 @@ import {
   ButtonComponent,
 } from '@org/ecsas/shared-ui';
 import { Procedure } from '@org/models';
-import {
-  ApplicationStatisticsComponent,
-  StatCard,
-} from './application-statistics/application-statistics.component';
+import { ApplicationStatisticsComponent } from './application-statistics/application-statistics.component';
 import { ApplicationTableComponent } from './application-table/application-table.component';
 import { ProcedureGateway } from '@org/ecsas/ecsas-data';
 import { ProcedureStateService } from '../../state/procedure-state.service';
@@ -38,29 +35,6 @@ export class DetailProcedureComponent implements OnInit {
     { label: 'Accueil', route: '/' },
     { label: 'Procédures', route: '/procedure' },
     { label: 'Détail', route: '.' },
-  ];
-  statCards: StatCard[] = [
-    {
-      label: 'En transfert',
-      value: '42 dossiers',
-      iconClass: 'pi pi-arrow-right-arrow-left',
-      iconBgColor: 'bg-blue-50',
-      iconTextColor: 'text-blue-600',
-    },
-    {
-      label: 'Réceptionnés',
-      value: '128 dossiers',
-      iconClass: 'pi pi-check-circle',
-      iconBgColor: 'bg-emerald-50',
-      iconTextColor: 'text-emerald-600',
-    },
-    {
-      label: 'Délai moyen',
-      value: '4.2 Heures',
-      iconClass: 'pi pi-clock',
-      iconBgColor: 'bg-amber-50',
-      iconTextColor: 'text-amber-600',
-    },
   ];
   loadingProcudre = signal(false);
   procedure = signal<Partial<Procedure> | null>(null);
