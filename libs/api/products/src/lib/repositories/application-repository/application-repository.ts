@@ -10,6 +10,7 @@ import {
   GET_APPLICATION_BY_ID,
   GET_APPLICATIONS_BY_PROCEDURE_ID,
   GET_APPLICATION_STATISTICS_QUERY,
+  GET_APPLICATION_STATISTICS_BY_PROCEDURE_ID_QUERY,
 } from './query';
 import { v4 as uuidv4 } from 'uuid';
 import { DocumentManager } from '@org/api/products';
@@ -24,6 +25,28 @@ export class ApplicationRepository {
     }
     const stats: ApplicationStatistics[] = await db.select(
       GET_APPLICATION_STATISTICS_QUERY,
+    );
+    await closeConnection(db);
+    return (
+      stats[0] ?? {
+        total: 0,
+        pending: 0,
+        approved: 0,
+        rejected: 0,
+      }
+    );
+  }
+
+  async getApplicationStatisticsByProcedureId(
+    procedureId: string,
+  ): Promise<ApplicationStatistics> {
+    const db = await openConnection();
+    if (!db) {
+      throw new Error('No database connection');
+    }
+    const stats: ApplicationStatistics[] = await db.select(
+      GET_APPLICATION_STATISTICS_BY_PROCEDURE_ID_QUERY,
+      [procedureId],
     );
     await closeConnection(db);
     return (

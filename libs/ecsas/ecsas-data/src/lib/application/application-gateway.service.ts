@@ -48,4 +48,10 @@ export class ApplicationGateway {
   getApplicationStatistics() {
     return this._applicationRepository.getApplicationStatistics();
   }
+
+  getApplicationStatisticsByProcedureId(procedureId: string) {
+    return this._applicationRepository.getApplicationStatisticsByProcedureId(
+      procedureId,
+    );
+  }
 }

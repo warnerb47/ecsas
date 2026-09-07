@@ -63,3 +63,15 @@ SELECT
 FROM
   core_application a
 `;
+
+export const GET_APPLICATION_STATISTICS_BY_PROCEDURE_ID_QUERY = `
+SELECT
+  COUNT(*) AS total,
+  COALESCE(SUM(CASE WHEN a.status = 'PENDING' THEN 1 ELSE 0 END), 0) AS pending,
+  COALESCE(SUM(CASE WHEN a.status = 'APPROVED' THEN 1 ELSE 0 END), 0) AS approved,
+  COALESCE(SUM(CASE WHEN a.status = 'REJECTED' THEN 1 ELSE 0 END), 0) AS rejected
+FROM
+  core_application a
+WHERE
+  a.procedure_id = ?1
+`;
