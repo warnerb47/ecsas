@@ -1,5 +1,33 @@
 # Changelog
 
+## [0.5.0](https://github.com/warnerb47/ecsas/compare/ecsas-v0.4.0...ecsas-v0.5.0) (2026-09-07)
+
+
+### Features
+
+* add application import preview modal ([91ce40b](https://github.com/warnerb47/ecsas/commit/91ce40bc878a4b47cc022552256cfc1526e55b69))
+* add event design ([cb6b0ee](https://github.com/warnerb47/ecsas/commit/cb6b0ee1c3d7640cb5a1ce326c88734b8319142f))
+* add update, visualize event-document ([3768e82](https://github.com/warnerb47/ecsas/commit/3768e82da996ff585359c4fa701b4c34c23ebdde))
+* **application-table:** add import message alert ([568b562](https://github.com/warnerb47/ecsas/commit/568b562023360c984c634768ab7e180d0015814f))
+* init application import ([4195d68](https://github.com/warnerb47/ecsas/commit/4195d68a7554252ea5c0a7b7b398a6840aa7c3b9))
+* init event module ([2b750d9](https://github.com/warnerb47/ecsas/commit/2b750d9c39c7295483a3cf5d6c03c570b6f43b9e))
+* let user select backup path ([0b6a592](https://github.com/warnerb47/ecsas/commit/0b6a592ac52c6c9bd3e30e35928449c70de7584c))
+* plug application statistics ([bbe98b4](https://github.com/warnerb47/ecsas/commit/bbe98b49d68b14dcc77c5807f5b72a69dc874486))
+* refactor event module ([c225b47](https://github.com/warnerb47/ecsas/commit/c225b47dad9b1389974c1b2b2bc49518dc3162a8))
+* update event-detail design ([d61a773](https://github.com/warnerb47/ecsas/commit/d61a7737097a6709eb69b694692b40b7ad7a077b))
+* update event-detail page ([f911c0c](https://github.com/warnerb47/ecsas/commit/f911c0cc0ea5c6591e17b9b0f88b10aa5663846d))
+* update event-document ([7726a7d](https://github.com/warnerb47/ecsas/commit/7726a7dafb965345d3a86d74964de829d5ecc9e6))
+* update event-info design ([25b095d](https://github.com/warnerb47/ecsas/commit/25b095dc9233d96c028ed98a385532688da7793c))
+* update event-list table columns ([e31fefe](https://github.com/warnerb47/ecsas/commit/e31fefe300c21840f14f04a1ab6889229995e87e))
+
+
+### Bug Fixes
+
+* fix event-expense-form ([56660c2](https://github.com/warnerb47/ecsas/commit/56660c2722ee417a39e0cba111f84144115dbdfb))
+* fix event-header design ([cce13e7](https://github.com/warnerb47/ecsas/commit/cce13e75b9da63fb5d7a9d1026216f7194c3b84f))
+* fix init migration ([f59270c](https://github.com/warnerb47/ecsas/commit/f59270c0a2ef850ecf18327f9f0c5302c5dcaa99))
+* fix multiselect component ([14d8c25](https://github.com/warnerb47/ecsas/commit/14d8c25975ec1141fed159f22e9877cf88dbbb72))
+
 ## [0.4.0](https://github.com/warnerb47/ecsas/compare/ecsas-v0.3.0...ecsas-v0.4.0) (2026-08-30)
 
 
