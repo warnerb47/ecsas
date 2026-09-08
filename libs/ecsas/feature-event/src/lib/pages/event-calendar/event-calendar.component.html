@@ -74,7 +74,7 @@
               <div class="mt-2 space-y-1">
                 @for (event of day.events; track event.id) {
                   <button type="button" class="w-full text-left text-[10px] font-bold rounded-md px-2 py-1 truncate cursor-pointer"
-                    [class]="getEventClasses(event.type)"
+                    [class]="getEventSpanClasses(event, day)"
                     title="{{ event.name }}" (click)="onDayEvent(event)">
                     {{ event.name }}
                   </button>

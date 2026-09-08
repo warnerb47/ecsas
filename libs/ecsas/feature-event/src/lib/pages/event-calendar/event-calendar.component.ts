@@ -18,6 +18,16 @@ interface CalendarDay {
   events: Partial<Event>[];
 }
 
+const parseDay = (iso: string | undefined): Date | null => {
+  if (!iso) return null;
+  const [year, month, day] = iso.slice(0, 10).split('-').map(Number);
+  if (!year || !month || !day) return null;
+  const date = new Date(year, month - 1, day);
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
+const toIsoKey = (date: Date): string => date.toISOString().slice(0, 10);
+
 @Component({
   selector: 'lib-event-calendar-component',
   imports: [RouterLink, TopbarComponent, ButtonComponent],
@@ -72,18 +82,30 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
     ).getDate();
 
     const eventMap = new Map<string, Partial<Event>[]>();
-    for (const event of this.events()) {
-      if (!event.startDate) continue;
-      const key = event.startDate;
-      const list = eventMap.get(key) ?? [];
+    const addEvent = (iso: string, event: Partial<Event>) => {
+      const list = eventMap.get(iso) ?? [];
       list.push(event);
-      eventMap.set(key, list);
+      eventMap.set(iso, list);
+    };
+
+    for (const event of this.events()) {
+      const start = parseDay(event.startDate);
+      if (!start) continue;
+      const end = parseDay(event.endDate) ?? new Date(start.getTime());
+      if (end < start) {
+        addEvent(toIsoKey(start), event);
+        continue;
+      }
+      const cursor = new Date(start.getTime());
+      for (; cursor <= end; cursor.setDate(cursor.getDate() + 1)) {
+        addEvent(toIsoKey(cursor), event);
+      }
     }
 
     const todayStart = this.today();
 
     const pushDay = (date: Date, inMonth: boolean) => {
-      const iso = date.toISOString().slice(0, 10);
+      const iso = toIsoKey(date);
       days.push({
         date,
         inMonth,
@@ -151,6 +173,16 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
 
   onDayEvent(event: Partial<Event>) {
     this._router.navigate(['/event/detail', event.id]);
+  }
+
+  isEventStart(event: Partial<Event>, day: CalendarDay): boolean {
+    const start = parseDay(event.startDate);
+    return !!start && start.getTime() === day.date.getTime();
+  }
+
+  getEventSpanClasses(event: Partial<Event>, day: CalendarDay): string {
+    const base = this.getEventClasses(event.type);
+    return this.isEventStart(event, day) ? base : `${base} opacity-50`;
   }
 
   onCreate() {
