@@ -12,6 +12,13 @@ describe('ApplicationStatisticsCardComponent', () => {
 
     fixture = TestBed.createComponent(ApplicationStatisticsCardComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('card', {
+      label: 'Total',
+      value: '0',
+      iconClass: 'pi pi-file',
+      iconBgColor: 'bg-blue-50',
+      iconTextColor: 'text-blue-600',
+    });
     await fixture.whenStable();
   });
 

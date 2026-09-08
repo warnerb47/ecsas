@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { of } from 'rxjs';
 import { DetailApplicationComponent } from './detail-application.component';
 
 describe('DetailApplicationComponent', () => {
@@ -8,6 +10,15 @@ describe('DetailApplicationComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [DetailApplicationComponent],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            paramMap: of(convertToParamMap({})),
+            snapshot: { paramMap: convertToParamMap({}) },
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DetailApplicationComponent);

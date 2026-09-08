@@ -1,4 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  DynamicDialogConfig,
+  DynamicDialogRef,
+} from 'primeng/dynamicdialog';
 import { UpdateApplicationComponent } from './update-application.component';
 
 describe('UpdateApplicationComponent', () => {
@@ -8,6 +12,10 @@ describe('UpdateApplicationComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [UpdateApplicationComponent],
+      providers: [
+        { provide: DynamicDialogRef, useValue: { close: () => undefined } },
+        { provide: DynamicDialogConfig, useValue: { data: {} } },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UpdateApplicationComponent);

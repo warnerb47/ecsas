@@ -16,7 +16,8 @@
   ✅ refactoring: update migrations
   ✅ refactoring: remove category keep only procedure and add filter by date
   ✅ refactoring: remove procedure.endDate, procedure.startDate, procedure.type, procedure.status
-- add procedure metrics
+✅ add procedure metrics
+- new procedure form: add error message alert when form is invalid
 
 # Module application
 ✅ add migration for application
@@ -41,8 +42,16 @@
 ✅ update detail-application design (use badge for status and state)
 ✅ update detail-application design (add label for applicant.status)
 ✅ fix dropdown value not applied on render (add [selected] binding on options)
-- Créer des demandes à partir d'un fichier excel
-- Keep a specific folder structure for applicant and application on local machine
+✅ Créer des demandes à partir d'un fichier excel
+✅ Keep a specific folder structure for applicant and application on local machine
+- fix: uploaded document from new-application-form have no extensions
+- new-application-form: use tabs for documents upload:
+  - select from machine
+  - use qrcode
+  - use cable
+  - use bluetooth
+- excel import: make it support all excel column user should specify column for each attributes
+
 
 # Refactoring
 ✅ add applicant.birthDate 
@@ -60,23 +69,33 @@
 ✅ add application statistics query in application repository + gateway
 ✅ add recent procedures query in procedure repository + gateway
 ✅ make filterApplications procedureId optional with procedure name
-- Add delay do data fetch
+✅ Add delay do data fetch
 - Add animation transition to statistics and procedure cards
+- add recent events on dashboard
 
 # Module Setting
 ✅ Remove profile card
-- Let user select where to save backup
+✅ Let user select where to save backup
 
 # Module event
-- visualize / create event on calendar
-- add event table with filters and pagination
-- add detail event page
-  - detail page info: lien utils, Budget / dépenses, Description, Partenaires
-  - generate `lettre d'invitation`
-  - generate `lettre de demande de sponsoring`
-  - generate `budgetisation évènement`
-  - generate or add `feuille de présence`
-  - generate `raport d'évènement`
+✅ visualize / create event on calendar
+✅ add event table with filters and pagination
+✅ add detail event page
+  ✅ detail page info: lien utils, Budget / dépenses, Description, Partenaires
+  ✅ add `lettre d'invitation`
+  ✅ add `lettre de demande de sponsoring`
+  ✅ add `budgetisation évènement`
+  ✅ add `feuille de présence`
+  ✅ add `raport d'évènement`
+- update document design
+  - let user define document name
+  - let user upload document
+- add import from excel format
+- add export to excel format
+- fix event list table: add detail page link, and fix icon not showing
+- new-event form: fix placeholder for event name `Secours tabaski 2026`
+- event-calendar: event card is display only on startDate it should span all the period
+- add event metrics
 
 # Sidebar / Shell
 ✅ display app version on sidebar bottom (imported from package.json, assert against imported value in spec)
