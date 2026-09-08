@@ -1,9 +1,22 @@
 import { Workbook } from 'exceljs';
-import { ApplicationImportRow } from '@org/models';
+import {
+  ApplicationImportRow,
+  ExcelColumnInfo,
+  ExcelColumnMapping,
+  ExcelFileStructure,
+  ExcelImportRowKey,
+} from '@org/models';
+
+export type { ExcelImportRowKey } from '@org/models';
+export type { ExcelColumnMapping } from '@org/models';
+export type { ExcelColumnInfo } from '@org/models';
+export type { ExcelFileStructure } from '@org/models';
 
 type CellValue = string | number | Date | boolean | null | undefined;
 
-type RowKey = keyof Omit<ApplicationImportRow, 'index'>;
+type RowKey = ExcelImportRowKey;
+
+const DATA_ROW_SAMPLE_LIMIT = 5;
 
 const HEADERS: Record<string, RowKey> = {
   nom: 'lastName',
@@ -18,22 +31,43 @@ const HEADERS: Record<string, RowKey> = {
 };
 
 export class ExcelImportService {
-  async parseApplicationsFile(file: File): Promise<ApplicationImportRow[]> {
+  async parseApplicationsFile(
+    file: File,
+    mapping?: ExcelColumnMapping,
+  ): Promise<ApplicationImportRow[]> {
     const fileName = file.name.toLowerCase();
     if (fileName.endsWith('.xlsx')) {
       const buffer = await file.arrayBuffer();
-      return this.parseXlsx(buffer);
+      return this.parseXlsx(buffer, mapping);
     }
     if (fileName.endsWith('.csv')) {
       const content = await this.readText(file);
-      return this.parseCsv(content);
+      return this.parseCsv(content, mapping);
     }
     throw new Error(
       'Format de fichier non supporté. Utilisez un fichier .csv ou .xlsx.',
     );
   }
 
-  async parseXlsx(buffer: ArrayBuffer): Promise<ApplicationImportRow[]> {
+  async inspectFile(file: File): Promise<ExcelFileStructure> {
+    const fileName = file.name.toLowerCase();
+    if (fileName.endsWith('.xlsx')) {
+      const buffer = await file.arrayBuffer();
+      return this.inspectXlsx(buffer);
+    }
+    if (fileName.endsWith('.csv')) {
+      const content = await this.readText(file);
+      return this.inspectCsv(content);
+    }
+    throw new Error(
+      'Format de fichier non supporté. Utilisez un fichier .csv ou .xlsx.',
+    );
+  }
+
+  async parseXlsx(
+    buffer: ArrayBuffer,
+    mapping?: ExcelColumnMapping,
+  ): Promise<ApplicationImportRow[]> {
     const workbook = new Workbook();
     await workbook.xlsx.load(
       buffer as Parameters<typeof workbook.xlsx.load>[0],
@@ -50,7 +84,7 @@ export class ExcelImportService {
         values.push(cell.value as CellValue);
       });
       if (rowNumber === 1) {
-        headers = this.mapHeaders(values);
+        headers = this.mapHeaders(values, mapping);
         return;
       }
       const mapped = this.mapRow(values, headers, rowNumber - 1);
@@ -61,12 +95,13 @@ export class ExcelImportService {
     return rows;
   }
 
-  parseCsv(content: string): ApplicationImportRow[] {
+  parseCsv(content: string, mapping?: ExcelColumnMapping): ApplicationImportRow[] {
     const lines = this.splitCsvLines(content);
     if (!lines.length) {
       return [];
     }
-    const headers = this.mapHeaders(this.splitCsvLine(lines[0], content));
+    const headerValues = this.splitCsvLine(lines[0], content);
+    const headers = this.mapHeaders(headerValues, mapping);
     const rows: ApplicationImportRow[] = [];
     for (let i = 1; i < lines.length; i++) {
       if (!lines[i].trim()) {
@@ -93,11 +128,103 @@ export class ExcelImportService {
     }
   }
 
-  private mapHeaders(values: CellValue[]): (RowKey | null)[] {
+  private mapHeaders(
+    values: CellValue[],
+    mapping?: ExcelColumnMapping,
+  ): (RowKey | null)[] {
+    if (mapping) {
+      return this.buildHeadersFromMapping(mapping, values.length);
+    }
     return values.map((value) => {
       const normalized = this.normalize(value);
       return HEADERS[normalized] ?? null;
     });
+  }
+
+  private buildHeadersFromMapping(
+    mapping: ExcelColumnMapping,
+    columnCount: number,
+  ): (RowKey | null)[] {
+    const headers: (RowKey | null)[] = new Array(columnCount).fill(null);
+    (Object.entries(mapping) as [RowKey, number | null | undefined][]).forEach(
+      ([key, index]) => {
+        if (
+          typeof index === 'number' &&
+          index >= 0 &&
+          index < columnCount
+        ) {
+          headers[index] = key;
+        }
+      },
+    );
+    return headers;
+  }
+
+  private autoDetectMapping(columns: string[]): ExcelColumnMapping {
+    const mapping: ExcelColumnMapping = {};
+    columns.forEach((column, index) => {
+      const key = HEADERS[this.normalize(column)];
+      if (key) {
+        mapping[key] = index;
+      }
+    });
+    return mapping;
+  }
+
+  async inspectXlsx(buffer: ArrayBuffer): Promise<ExcelFileStructure> {
+    const workbook = new Workbook();
+    await workbook.xlsx.load(
+      buffer as Parameters<typeof workbook.xlsx.load>[0],
+    );
+    const worksheet = workbook.worksheets[0];
+    if (!worksheet) {
+      return { columns: [], detectedMapping: {} };
+    }
+    const columns: string[] = [];
+    const dataRows: CellValue[][] = [];
+    worksheet.eachRow((row, rowNumber) => {
+      const values: CellValue[] = [];
+      row.eachCell({ includeEmpty: true }, (cell) => {
+        values.push(cell.value as CellValue);
+      });
+      if (rowNumber === 1) {
+        values.forEach((value) => columns.push(this.asString(value)));
+      } else {
+        dataRows.push(values);
+      }
+    });
+    const sampleRows = dataRows.slice(0, DATA_ROW_SAMPLE_LIMIT);
+    const columnInfos: ExcelColumnInfo[] = columns.map((name, index) => ({
+      name,
+      sampleValues: sampleRows.map((row) => this.asString(row[index])),
+    }));
+    return {
+      columns: columnInfos,
+      detectedMapping: this.autoDetectMapping(columns),
+    };
+  }
+
+  inspectCsv(content: string): ExcelFileStructure {
+    const lines = this.splitCsvLines(content);
+    if (!lines.length) {
+      return { columns: [], detectedMapping: {} };
+    }
+    const columns = this.splitCsvLine(lines[0], content).map((value) =>
+      this.asString(value),
+    );
+    const dataRows = lines
+      .slice(1)
+      .filter((line) => line.trim())
+      .slice(0, DATA_ROW_SAMPLE_LIMIT)
+      .map((line) => this.splitCsvLine(line, content));
+    const columnInfos: ExcelColumnInfo[] = columns.map((name, index) => ({
+      name,
+      sampleValues: dataRows.map((row) => this.asString(row[index])),
+    }));
+    return {
+      columns: columnInfos,
+      detectedMapping: this.autoDetectMapping(columns),
+    };
   }
 
   private mapRow(

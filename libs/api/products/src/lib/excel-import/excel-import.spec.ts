@@ -121,4 +121,51 @@ describe('ExcelImportService', () => {
     expect(rows[0].birthdate).toBe('2006-03-25');
     expect(rows[1].birthdate).toBe('1998-08-14');
   });
+
+  it('parses csv using a custom column mapping for non-standard headers', () => {
+    const csv = [
+      'Libellé;Profil;N°;Téléphone;Email;Ville;ID;Ref',
+      'Dupont;Jean;1;+221 77 000 00 00;j.dupont@mail.com;Dakar;111AAA;REF-X-1',
+    ].join('\n');
+
+    const rows = service.parseCsv(csv, {
+      lastName: 0,
+      firstName: 1,
+      phoneNumber: 3,
+      address: 5,
+      nin: 6,
+      mailRef: 7,
+    });
+
+    expect(rows).toHaveLength(1);
+    expect(rows[0].lastName).toBe('Dupont');
+    expect(rows[0].firstName).toBe('Jean');
+    expect(rows[0].nin).toBe('111AAA');
+    expect(rows[0].phoneNumber).toBe('+221 77 000 00 00');
+    expect(rows[0].address).toBe('Dakar');
+    expect(rows[0].mailRef).toBe('REF-X-1');
+    expect(rows[0].birthdate).toBeNull();
+  });
+
+  it('detects headers and sample values when inspecting a file', () => {
+    const csv = [
+      'Nom;Prénom;NIN',
+      'Fall;Amidou;123456789',
+      'Ndiaye;Awa;999111222',
+    ].join('\n');
+
+    const structure = service.inspectCsv(csv);
+
+    expect(structure.columns.map((c) => c.name)).toEqual([
+      'Nom',
+      'Prénom',
+      'NIN',
+    ]);
+    expect(structure.columns[0].sampleValues).toEqual(['Fall', 'Ndiaye']);
+    expect(structure.detectedMapping).toEqual({
+      lastName: 0,
+      firstName: 1,
+      nin: 2,
+    });
+  });
 });

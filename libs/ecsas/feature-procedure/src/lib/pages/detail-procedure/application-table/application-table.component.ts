@@ -32,9 +32,14 @@ import { map, Subject, takeUntil } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { form, FormField } from '@angular/forms/signals';
 import { ExcelExportService, ExcelImportService } from '@org/api/products';
+import {
+  ExcelColumnMapping,
+  ExcelFileStructure,
+} from '@org/models';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Message } from 'primeng/message';
 import { ApplicationImportPreviewComponent } from './application-import-preview/application-import-preview.component';
+import { ApplicationColumnMappingComponent } from './application-import-preview/application-column-mapping.component';
 
 @Component({
   selector: 'lib-application-table',
@@ -253,35 +258,77 @@ export class ApplicationTableComponent implements OnInit, OnDestroy {
       return;
     }
     try {
-      const rows = await this._excelImportService.parseApplicationsFile(file);
-      if (!rows.length) {
-        this.setImportMessage(
-          'Aucune ligne à importer dans le fichier.',
-          'info',
-        );
-        return;
-      }
-      const procedureId = this.procedure()?.id;
-      if (!procedureId) {
-        this.setImportMessage(
-          'Impossible de déterminer la procédure courante.',
-          'error',
-        );
-        return;
-      }
-      const previewRows =
-        await this._applicationImportService.previewApplications(
-          rows,
-          procedureId,
-        );
-      this.openImportPreview(previewRows, procedureId);
+      this.loadingApplications.set(true);
+      const structure = await this._excelImportService.inspectFile(file);
+      this.openColumnMapping(structure, file);
     } catch (error) {
       console.error(error);
+      this.loadingApplications.set(false);
       this.setImportMessage(
-        "L'import a échoué. Vérifiez que le fichier respecte le format d'export.",
+        "Impossible de lire le fichier. Vérifiez qu'il s'agit d'un fichier .csv ou .xlsx.",
         'error',
       );
     }
+  }
+
+  private openColumnMapping(structure: ExcelFileStructure, file: File) {
+    this._dialogService
+      .open(ApplicationColumnMappingComponent, {
+        header: 'Correspondance des colonnes (Excel)',
+        width: '70vw',
+        focusOnShow: false,
+        closable: true,
+        closeOnEscape: true,
+        maximizable: true,
+        data: {
+          columns: structure.columns,
+          detectedMapping: structure.detectedMapping,
+        },
+      })
+      ?.onClose.pipe(takeUntil(this._unsubscribe))
+      .subscribe(async (mapping: ExcelColumnMapping | undefined) => {
+        if (!mapping) {
+          this.loadingApplications.set(false);
+          return;
+        }
+        try {
+          const rows = await this._excelImportService.parseApplicationsFile(
+            file,
+            mapping,
+          );
+          if (!rows.length) {
+            this.loadingApplications.set(false);
+            this.setImportMessage(
+              'Aucune ligne à importer dans le fichier.',
+              'info',
+            );
+            return;
+          }
+          const procedureId = this.procedure()?.id;
+          if (!procedureId) {
+            this.loadingApplications.set(false);
+            this.setImportMessage(
+              'Impossible de déterminer la procédure courante.',
+              'error',
+            );
+            return;
+          }
+          const previewRows =
+            await this._applicationImportService.previewApplications(
+              rows,
+              procedureId,
+            );
+          this.loadingApplications.set(false);
+          this.openImportPreview(previewRows, procedureId);
+        } catch (error) {
+          console.error(error);
+          this.loadingApplications.set(false);
+          this.setImportMessage(
+            "L'import a échoué. Vérifiez la correspondance des colonnes.",
+            'error',
+          );
+        }
+      });
   }
 
   private openImportPreview(

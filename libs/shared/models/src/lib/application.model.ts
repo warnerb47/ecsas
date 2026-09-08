@@ -99,3 +99,20 @@ export interface ApplicationImportPreviewRow {
   safe: boolean;
   issues: ApplicationImportIssue[];
 }
+
+export type ExcelImportRowKey = keyof Omit<ApplicationImportRow, 'index'>;
+
+/** Maps each application attribute to a zero-based excel column index, or 'ignore' (null). */
+export type ExcelColumnMapping = Partial<
+  Record<ExcelImportRowKey, number | null>
+>;
+
+export interface ExcelColumnInfo {
+  name: string;
+  sampleValues: string[];
+}
+
+export interface ExcelFileStructure {
+  columns: ExcelColumnInfo[];
+  detectedMapping: ExcelColumnMapping;
+}
