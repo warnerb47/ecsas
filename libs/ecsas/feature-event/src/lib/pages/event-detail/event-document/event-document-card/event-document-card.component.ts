@@ -4,6 +4,7 @@ import { UploadDocumentCardComponent } from '@org/ecsas/shared-ui';
 import { EventDocument } from '@org/models';
 import {
   DocumentDef,
+  GenerateDocumentEvent,
   UploadDocumentEvent,
   VisualizeDocumentEvent,
 } from '../event-document.component';
@@ -18,6 +19,7 @@ export class EventDocumentCardComponent {
   def = input.required<DocumentDef>();
   doc = input<Partial<EventDocument> | undefined>();
 
+  generate = output<GenerateDocumentEvent>();
   upload = output<UploadDocumentEvent>();
   visualize = output<VisualizeDocumentEvent>();
 
@@ -25,6 +27,10 @@ export class EventDocumentCardComponent {
 
   updateDocumentName(event: Event) {
     this.documentName.set((event.target as HTMLInputElement).value);
+  }
+
+  onGenerate() {
+    this.generate.emit({ type: this.def().type, label: this.def().label });
   }
 
   onFileSelected(file: File | null) {

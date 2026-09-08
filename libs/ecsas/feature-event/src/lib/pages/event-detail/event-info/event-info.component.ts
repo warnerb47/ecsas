@@ -1,5 +1,16 @@
 import { Component, input, output } from '@angular/core';
-import { EventExpense, EventPartner, EventUsefulLink } from '@org/models';
+import {
+  EventDocument,
+  EventExpense,
+  EventPartner,
+  EventUsefulLink,
+} from '@org/models';
+import {
+  EventDocumentComponent,
+  GenerateDocumentEvent,
+  UploadDocumentEvent,
+  VisualizeDocumentEvent,
+} from '../event-document/event-document.component';
 import { EventExpenseListComponent } from './event-expense-list/event-expense-list.component';
 import { EventLinkListComponent } from './event-link-list/event-link-list.component';
 import { EventPartnerListComponent } from './event-partner-list/event-partner-list.component';
@@ -8,6 +19,7 @@ import { EventPartnerListComponent } from './event-partner-list/event-partner-li
   selector: 'lib-event-info',
   standalone: true,
   imports: [
+    EventDocumentComponent,
     EventExpenseListComponent,
     EventLinkListComponent,
     EventPartnerListComponent,
@@ -18,6 +30,7 @@ export class EventInfoComponent {
   expenses = input<Partial<EventExpense>[]>([]);
   partners = input<Partial<EventPartner>[]>([]);
   links = input<Partial<EventUsefulLink>[]>([]);
+  documents = input<Partial<EventDocument>[]>([]);
   budget = input<number | undefined>(0);
   totalSpent = input(0);
   remaining = input(0);
@@ -32,4 +45,9 @@ export class EventInfoComponent {
 
   addPartner = output<void>();
   deletePartner = output<Partial<EventPartner>>();
+
+  generateDocument = output<GenerateDocumentEvent>();
+  uploadDocument = output<UploadDocumentEvent>();
+  visualizeDocument = output<VisualizeDocumentEvent>();
+  openFolder = output<void>();
 }

@@ -25,4 +25,10 @@
 
     </div>
   </div>
+  <lib-event-document
+    [documents]="documents()"
+    (generate)="generateDocument.emit($event)"
+    (upload)="uploadDocument.emit($event)"
+    (visualize)="visualizeDocument.emit($event)"
+    (openFolder)="openFolder.emit()"></lib-event-document>
 </div>

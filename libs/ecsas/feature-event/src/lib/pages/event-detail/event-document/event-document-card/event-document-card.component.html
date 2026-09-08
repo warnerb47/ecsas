@@ -6,7 +6,17 @@
       </div>
       <div class="min-w-0">
         <p class="text-sm font-bold text-slate-700 truncate">{{ def().label }}</p>
-        @if (doc()?.source) {
+@if (!doc()?.source) {
+      <button
+        type="button"
+        class="px-3 py-1.5 rounded-lg text-xs font-semibold text-blue-600 hover:bg-blue-50 transition shrink-0"
+        (click)="onGenerate()"
+        [attr.aria-label]="'Générer ' + def().label">
+        <i class="pi pi-file-edit mr-1"></i>
+        Générer
+      </button>
+    }
+    @if (doc()?.source) {
           <p class="text-[10px] text-slate-400 uppercase font-medium truncate">
             Ajouté le {{ doc()?.source?.uploadedAt | date: 'dd/MM/yyyy' }}
           </p>

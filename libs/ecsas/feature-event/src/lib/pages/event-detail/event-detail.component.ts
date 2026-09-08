@@ -30,7 +30,6 @@ import { EventDocumentGenerateComponent } from '../../components/event-document-
 import { EventHeaderComponent } from './event-header/event-header.component';
 import { EventInfoComponent } from './event-info/event-info.component';
 import {
-  EventDocumentComponent,
   GenerateDocumentEvent,
   UploadDocumentEvent,
   VisualizeDocumentEvent,
@@ -42,7 +41,6 @@ import {
     TopbarComponent,
     EventHeaderComponent,
     EventInfoComponent,
-    EventDocumentComponent,
   ],
   providers: [DialogService],
   templateUrl: './event-detail.component.html',
@@ -60,9 +58,6 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   ];
 
   event = signal<Partial<Event> | null>(null);
-  activeTab = signal("Vue d'ensemble");
-
-  tabs = ["Vue d'ensemble", 'Documents'];
 
   expenses = computed(() => this.event()?.expenses ?? []);
   partners = computed(() => this.event()?.partners ?? []);
@@ -106,10 +101,6 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     } catch (error) {
       console.error(error);
     }
-  }
-
-  onTabChange(tab: string) {
-    this.activeTab.set(tab);
   }
 
   goBack() {

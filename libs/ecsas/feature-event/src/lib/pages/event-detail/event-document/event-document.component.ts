@@ -1,5 +1,4 @@
 import { Component, input, output } from '@angular/core';
-import { ButtonComponent } from '@org/ecsas/shared-ui';
 import {
   EventDocument,
   EventDocumentType,
@@ -53,7 +52,7 @@ export interface VisualizeDocumentEvent {
 @Component({
   selector: 'lib-event-document',
   standalone: true,
-  imports: [ButtonComponent, EventDocumentCardComponent],
+  imports: [EventDocumentCardComponent],
   templateUrl: './event-document.component.html',
 })
 export class EventDocumentComponent {
