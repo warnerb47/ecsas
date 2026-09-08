@@ -96,97 +96,149 @@
                               <div class="col-span-1">
                                   <lib-number-input [formField]="applicationForm.requestedAmount" label="Montant" placeholder="25000"></lib-number-input>
                               </div>
-                              @for (document of procedure()?.documents ?? []; track $index) {
-                                <div class="col-span-2">
-                                  <lib-upload-document-card
-                                    [label]="document?.name ??''"
-                                    [placeholder]="document.required ? 'Obligatoire' : 'Facultatif'"
-                                    (selectedFile)="addDocument($event, document)">
-                                  </lib-upload-document-card>
-                                </div>
-                              }
                           </div>
-                        }
-                    </div>
 
-                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                        <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
-                            <h3 class="text-sm font-black text-[#1A365D] uppercase tracking-wider">3. Transfert depuis le téléphone</h3>
-                            @if (!transferUrl()) {
-                              <lib-button type="primary" (click)="startTransfer()">
-                                <div class="flex items-center justify-center space-x-2">
-                                  <i class="pi pi-qrcode"></i>
-                                  <span>Transférer depuis le téléphone</span>
-                                </div>
-                              </lib-button>
-                            } @else {
-                              <lib-button type="secondary" (click)="stopTransfer()">
-                                <div class="flex items-center justify-center space-x-2">
-                                  <i class="pi pi-stop"></i>
-                                  <span>Arrêter le transfert</span>
-                                </div>
-                              </lib-button>
-                            }
-                        </div>
-
-                        @if (transferUrl()) {
-                          <div class="p-6">
-                              <div class="flex flex-col items-center space-y-4">
-                                  <p class="text-sm text-slate-500 text-center">
-                                      Scannez ce QR code avec votre téléphone pour envoyer des photos de documents.
-                                  </p>
-                                  <qrcode [qrdata]="transferUrl() ?? ''" [width]="180" elementType="url"></qrcode>
-                                  <p class="text-xs text-slate-400 select-all">{{ transferUrl() }}</p>
-                              </div>
-                          </div>
-                        }
-
-                        @if (transferError()) {
-                          <div class="px-6 py-4">
-                            <p class="text-sm text-red-500">{{ transferError() }}</p>
-                          </div>
-                        }
-
-                        @if (receivedSources().length > 0) {
                           <div class="px-6 pb-6">
-                              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Fichiers reçus</p>
-                              <div class="space-y-2">
-                                  @for (source of receivedSources(); track $index) {
-                                    <div class="flex items-center justify-between gap-4 p-3 border border-slate-100 rounded-xl">
-                                        <div class="flex items-center min-w-0 flex-1">
-                                            <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded flex items-center justify-center mr-3 shrink-0">
-                                                <i class="pi pi-file text-lg"></i>
-                                            </div>
-                                            <div class="min-w-0">
-                                                <p class="text-sm font-bold text-slate-700 truncate">{{ source.file.name }}</p>
-                                                @if (isMatchedReceivedFile(source)) {
-                                                  <p class="text-[10px] text-emerald-600 font-bold uppercase">Associé à : {{ source.document.name }}</p>
-                                                } @else {
-                                                  <p class="text-[10px] text-slate-400 uppercase font-medium">Non associé</p>
-                                                }
-                                            </div>
-                                        </div>
-                                        <select
-                                          [value]="source.document?.name ?? ''"
-                                          (change)="matchReceivedFile($index, $any($event.target).value)"
-                                          class="shrink-0 text-xs border border-slate-200 rounded-lg px-2 py-1.5 bg-slate-50 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-200">
-                                          @if (!isMatchedReceivedFile(source)) {
-                                            <option [value]="source.document?.name ?? ''">{{ source.document?.name ?? source.file.name }}</option>
-                                          }
-                                          <option value="">Aucune correspondance</option>
-                                          @for (doc of procedure()?.documents ?? []; track doc.name) {
-                                            <option [value]="doc.name">{{ doc.name }}</option>
-                                          }
-                                        </select>
-                                        <button type="button" (click)="removeReceivedSource($index)" class="p-2 text-red-500 hover:bg-red-50 rounded shrink-0">
-                                            <i class="pi pi-times"></i>
-                                        </button>
-                                    </div>
-                                  }
+                              <div class="border border-slate-200 rounded-xl overflow-hidden">
+                                  <p-tabs value="machine" styleClass="p-tabs-documents">
+                                      <p-tablist>
+                                          <p-tab value="machine">
+                                              <i class="pi pi-desktop mr-2"></i> Depuis la machine
+                                          </p-tab>
+                                          <p-tab value="qrcode">
+                                              <i class="pi pi-qrcode mr-2"></i> QR Code
+                                          </p-tab>
+                                          <p-tab value="cable">
+                                              <i class="pi pi-send mr-2"></i> Câble
+                                          </p-tab>
+                                          <p-tab value="bluetooth">
+                                              <i class="pi pi-wifi mr-2"></i> Bluetooth
+                                          </p-tab>
+                                      </p-tablist>
+                                      <p-tabpanels>
+                                          <p-tabpanel value="machine">
+                                              <div class="p-4 space-y-4">
+                                                  <p class="text-sm text-slate-500">
+                                                      Choisissez les documents depuis votre ordinateur.
+                                                  </p>
+                                                  @for (document of procedure()?.documents ?? []; track $index) {
+                                                    <lib-upload-document-card
+                                                      [label]="document?.name ??''"
+                                                      [placeholder]="document.required ? 'Obligatoire' : 'Facultatif'"
+                                                      (selectedFile)="addDocument($event, document)">
+                                                    </lib-upload-document-card>
+                                                  }
+                                              </div>
+                                          </p-tabpanel>
+                                          <p-tabpanel value="qrcode">
+                                              <div class="p-4 space-y-4">
+                                                  @if (!transferUrl()) {
+                                                    <div class="flex justify-center">
+                                                      <lib-button type="primary" (click)="startTransfer()">
+                                                        <div class="flex items-center justify-center space-x-2">
+                                                          <i class="pi pi-qrcode"></i>
+                                                          <span>Transférer depuis le téléphone</span>
+                                                        </div>
+                                                      </lib-button>
+                                                    </div>
+                                                  } @else {
+                                                    <div class="flex justify-center">
+                                                      <lib-button type="secondary" (click)="stopTransfer()">
+                                                        <div class="flex items-center justify-center space-x-2">
+                                                          <i class="pi pi-stop"></i>
+                                                          <span>Arrêter le transfert</span>
+                                                        </div>
+                                                      </lib-button>
+                                                    </div>
+                                                  }
+
+                                                  @if (transferUrl()) {
+                                                    <div class="flex flex-col items-center space-y-4">
+                                                        <p class="text-sm text-slate-500 text-center">
+                                                            Scannez ce QR code avec votre téléphone pour envoyer des photos de documents.
+                                                        </p>
+                                                        <qrcode [qrdata]="transferUrl() ?? ''" [width]="180" elementType="url"></qrcode>
+                                                        <p class="text-xs text-slate-400 select-all">{{ transferUrl() }}</p>
+                                                    </div>
+                                                  }
+
+                                                  @if (transferError()) {
+                                                    <p class="text-sm text-red-500">{{ transferError() }}</p>
+                                                  }
+
+                                                  @if (receivedSources().length > 0) {
+                                                    <div>
+                                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Fichiers reçus</p>
+                                                        <div class="space-y-2">
+                                                            @for (source of receivedSources(); track $index) {
+                                                              <div class="flex items-center justify-between gap-4 p-3 border border-slate-100 rounded-xl">
+                                                                  <div class="flex items-center min-w-0 flex-1">
+                                                                      <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded flex items-center justify-center mr-3 shrink-0">
+                                                                          <i class="pi pi-file text-lg"></i>
+                                                                      </div>
+                                                                      <div class="min-w-0">
+                                                                          <p class="text-sm font-bold text-slate-700 truncate">{{ source.file.name }}</p>
+                                                                          @if (isMatchedReceivedFile(source)) {
+                                                                            <p class="text-[10px] text-emerald-600 font-bold uppercase">Associé à : {{ source.document.name }}</p>
+                                                                          } @else {
+                                                                            <p class="text-[10px] text-slate-400 uppercase font-medium">Non associé</p>
+                                                                          }
+                                                                      </div>
+                                                                  </div>
+                                                                  <select
+                                                                    [value]="source.document?.name ?? ''"
+                                                                    (change)="matchReceivedFile($index, $any($event.target).value)"
+                                                                    class="shrink-0 text-xs border border-slate-200 rounded-lg px-2 py-1.5 bg-slate-50 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-200">
+                                                                    @if (!isMatchedReceivedFile(source)) {
+                                                                      <option [value]="source.document?.name ?? ''">{{ source.document?.name ?? source.file.name }}</option>
+                                                                    }
+                                                                    <option value="">Aucune correspondance</option>
+                                                                    @for (doc of procedure()?.documents ?? []; track doc.name) {
+                                                                      <option [value]="doc.name">{{ doc.name }}</option>
+                                                                    }
+                                                                  </select>
+                                                                  <button type="button" (click)="removeReceivedSource($index)" class="p-2 text-red-500 hover:bg-red-50 rounded shrink-0">
+                                                                      <i class="pi pi-times"></i>
+                                                                  </button>
+                                                              </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                  }
+                                              </div>
+                                          </p-tabpanel>
+                                          <p-tabpanel value="cable">
+                                              <div class="p-4">
+                                                  <div class="flex flex-col items-center text-center space-y-3 py-8">
+                                                      <i class="pi pi-send text-3xl text-slate-300"></i>
+                                                      <p class="text-sm font-semibold text-slate-700">Transfert par câble</p>
+                                                      <p class="text-sm text-slate-400 max-w-md">
+                                                          Le transfert de documents via une connexion physique (câble USB) n'est pas encore disponible.
+                                                      </p>
+                                                      <span class="text-xs font-bold uppercase tracking-wider text-amber-600 bg-amber-50 px-3 py-1 rounded-full">Bientôt disponible</span>
+                                                  </div>
+                                              </div>
+                                          </p-tabpanel>
+                                          <p-tabpanel value="bluetooth">
+                                              <div class="p-4">
+                                                  <div class="flex flex-col items-center text-center space-y-3 py-8">
+                                                      <i class="pi pi-wifi text-3xl text-slate-300"></i>
+                                                      <p class="text-sm font-semibold text-slate-700">Transfert par Bluetooth</p>
+                                                      <p class="text-sm text-slate-400 max-w-md">
+                                                          Le transfert de documents sans fil (Bluetooth) n'est pas encore disponible.
+                                                      </p>
+                                                      <span class="text-xs font-bold uppercase tracking-wider text-amber-600 bg-amber-50 px-3 py-1 rounded-full">Bientôt disponible</span>
+                                                  </div>
+                                              </div>
+                                          </p-tabpanel>
+                                      </p-tabpanels>
+                                  </p-tabs>
                               </div>
                           </div>
                         }
                     </div>
+
+
 
                     <div class="flex items-center justify-end space-x-4 pb-12">
                         <a routerLink="/procedure" class="inline-block">

@@ -10,6 +10,7 @@ import {
   NumberInputComponent,
 } from '@org/ecsas/shared-ui';
 import { DialogService } from 'primeng/dynamicdialog';
+import { TabsModule } from 'primeng/tabs';
 import { SearchApplicantComponent } from './search-applicant/search-applicant.component';
 import { CreateApplicantComponent } from './create-applicant/create-applicant.component';
 import {
@@ -42,6 +43,7 @@ type ReceivedSourceItem = ApplicationDocument & { originalName: string };
     NumberInputComponent,
     FormField,
     QRCodeComponent,
+    TabsModule,
   ],
   providers: [DialogService],
   templateUrl: './new-application.component.html',
