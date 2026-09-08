@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { UploadDocumentCardComponent } from '@org/ecsas/shared-ui';
 import { EventDocument } from '@org/models';
@@ -21,9 +21,16 @@ export class EventDocumentCardComponent {
   upload = output<UploadDocumentEvent>();
   visualize = output<VisualizeDocumentEvent>();
 
+  documentName = signal('');
+
+  updateDocumentName(event: Event) {
+    this.documentName.set((event.target as HTMLInputElement).value);
+  }
+
   onFileSelected(file: File | null) {
     if (!file) return;
-    this.upload.emit({ type: this.def().type, file });
+    const fileName = this.documentName().trim() || file.name;
+    this.upload.emit({ type: this.def().type, file, fileName });
   }
 
   onVisualize() {

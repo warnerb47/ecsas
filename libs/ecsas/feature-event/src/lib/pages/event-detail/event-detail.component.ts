@@ -280,7 +280,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
       eventId,
       type: params.type,
       status: 'UPLOADED',
-      fileName: params.file?.name,
+      fileName: params.fileName ?? params.file?.name,
       file: params.file,
     };
     const call = this.hasDocument(params.type)

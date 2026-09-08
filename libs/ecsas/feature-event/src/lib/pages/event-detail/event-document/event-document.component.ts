@@ -42,6 +42,7 @@ export interface GenerateDocumentEvent {
 export interface UploadDocumentEvent {
   type: EventDocumentType;
   file: File;
+  fileName?: string;
 }
 
 export interface VisualizeDocumentEvent {
