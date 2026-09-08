@@ -1,4 +1,5 @@
 import { Source } from './source.model';
+import { ExcelColumnInfo } from './application.model';
 
 export type EventType =
   | 'SOCIAL_CARE'
@@ -107,4 +108,52 @@ export interface EventStats {
   inProgress: number;
   completed: number;
   cancelled: number;
+}
+
+export interface EventImportRow {
+  index: number;
+  name: string;
+  type: string;
+  status: string;
+  location: string;
+  startDate: string | null; // ISO yyyy-MM-dd
+  endDate: string | null; // ISO yyyy-MM-dd
+  startTime: string;
+  endTime: string;
+  expectedParticipants: number | null;
+  budget: number | null;
+  description: string;
+}
+
+export type EventImportRowKey = keyof Omit<EventImportRow, 'index'>;
+
+/** Maps each event attribute to a zero-based excel column index, or 'ignore' (null). */
+export type EventExcelColumnMapping = Partial<
+  Record<EventImportRowKey, number | null>
+>;
+
+export interface EventExcelFileStructure {
+  columns: ExcelColumnInfo[];
+  detectedMapping: EventExcelColumnMapping;
+}
+
+export type EventImportIssueType = 'error' | 'warning' | 'info';
+
+export interface EventImportIssue {
+  type: EventImportIssueType;
+  message: string;
+}
+
+export interface EventImportPreviewRow {
+  row: EventImportRow;
+  selected: boolean;
+  existing: boolean;
+  safe: boolean;
+  issues: EventImportIssue[];
+}
+
+export interface EventImportResult {
+  total: number;
+  eventsCreated: number;
+  failed: number;
 }

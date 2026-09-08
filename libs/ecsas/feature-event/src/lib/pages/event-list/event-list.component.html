@@ -11,6 +11,21 @@
           <p class="text-slate-500 text-sm mt-2">Gérez les événements de la commission santé et action sociale.</p>
         </div>
         <div class="flex space-x-3">
+          <lib-button type="secondary" (click)="export()">
+            <i class="pi pi-download mr-2"></i>
+            Exporter (Excel)
+          </lib-button>
+          <lib-button type="secondary" (click)="openImportDialog()">
+            <i class="pi pi-upload mr-2"></i>
+            Importer (Excel)
+          </lib-button>
+          <input
+            #importFileInput
+            type="file"
+            accept=".csv,.xlsx"
+            class="hidden"
+            (change)="onImportFileSelected($event)"
+          />
           <lib-button type="secondary" routerLink="/event">
             <i class="pi pi-calendar mr-2"></i>
             Vue calendrier
@@ -21,6 +36,19 @@
           </lib-button>
         </div>
       </div>
+
+      @for (key of [importMessageKey()]; track key) {
+        @if (importMessage()) {
+          <p-message
+            class="mb-4 block"
+            [severity]="importMessageSeverity()"
+            [closable]="true"
+            [life]="8000"
+          >
+            {{ importMessage() }}
+          </p-message>
+        }
+      }
 
       <!-- Table card -->
       <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">

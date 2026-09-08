@@ -4,4 +4,5 @@ export * from './lib/repositories';
 export * from './lib/llama-service/llama.service';
 export * from './lib/excel-export/excel-export';
 export * from './lib/excel-import/excel-import';
+export * from './lib/excel-import/event-excel-import';
 export * from './lib/backup-service/backup-service';
