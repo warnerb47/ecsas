@@ -49,6 +49,17 @@
                         }
                     </div>
                 </div>
+                @if (formError()) {
+                    <p-message
+                        class="mt-8 block"
+                        severity="error"
+                        [closable]="true"
+                        [life]="8000"
+                        (onClose)="clearFormError()"
+                    >
+                        {{ formError() }}
+                    </p-message>
+                }
                 <div class="mt-8 pt-8 border-t border-slate-200 flex justify-end space-x-4">
                     <lib-button routerLink="/procedure" type="secondary">Annuler</lib-button>
                     <lib-button (click)="onSubmit()" type="primary">

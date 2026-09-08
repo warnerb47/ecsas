@@ -14,6 +14,7 @@ import {
 import { form, FormField, required, submit } from '@angular/forms/signals';
 import { ProcedureGateway } from '@org/ecsas/ecsas-data';
 import { DialogService } from 'primeng/dynamicdialog';
+import { Message } from 'primeng/message';
 import { DocumentCardComponent, ProcedureDocumentComponent } from '../../components';
 
 @Component({
@@ -26,6 +27,7 @@ import { DocumentCardComponent, ProcedureDocumentComponent } from '../../compone
     ButtonComponent,
     TextAreaComponent,
     DocumentCardComponent,
+    Message,
   ],
   providers: [DialogService],
   templateUrl: './new-procedure.component.html',
@@ -53,6 +55,11 @@ export class NewProcedureComponent {
 
   documents = signal<ProcedureDocument[]>([]);
   loadingSubmit = signal(false);
+  formError = signal('');
+
+  private readonly _fieldLabels: Record<string, string> = {
+    name: 'Le nom de la procédure',
+  };
 
 
   addDocument() {
@@ -78,11 +85,39 @@ export class NewProcedureComponent {
   }
 
   async onSubmit() {
-    await submit(this.procedureForm, async () => {
-      if (this.procedureForm().valid()) {
-        this.createProcedure();
-      }
+    this.formError.set('');
+    await submit(this.procedureForm, {
+      ignoreValidators: 'none',
+      action: () => this.createProcedure(),
+      onInvalid: () => {
+        this.formError.set(this.buildFormError());
+      },
     });
+  }
+
+  private buildFormError(): string {
+    const errors = this.procedureForm().errorSummary();
+    if (!errors.length) {
+      return 'Le formulaire contient des erreurs. Veuillez vérifier les champs.';
+    }
+    return errors
+      .map((issue) => {
+        const key = String(issue.fieldTree().keyInParent() ?? '');
+        const label = this._fieldLabels[key];
+        if (issue.kind === 'required') {
+          return label
+            ? `${label} est obligatoire.`
+            : 'Un champ obligatoire est vide.';
+        }
+        return label
+          ? `${label} : ${issue.message ?? 'invalide'}.`
+          : (issue.message ?? 'Un champ est invalide.');
+      })
+      .join(' ');
+  }
+
+  clearFormError() {
+    this.formError.set('');
   }
 
   async createProcedure() {
