@@ -1,6 +1,7 @@
-import { formatDate } from '@angular/common';
+import { formatDate, NgClass } from '@angular/common';
 import {
   Component,
+  computed,
   ElementRef,
   inject,
   OnDestroy,
@@ -21,6 +22,7 @@ import {
   EventFilters,
   EventImportPreviewRow,
   EventImportRow,
+  EventStats,
   EventStatus,
   EventType,
 } from '@org/models';
@@ -43,6 +45,7 @@ import { EventImportPreviewComponent } from './event-import/event-import-preview
     TopbarComponent,
     ButtonComponent,
     Message,
+    NgClass,
   ],
   providers: [DialogService],
   templateUrl: './event-list.component.html',
@@ -105,6 +108,41 @@ export class EventListComponent implements OnInit, OnDestroy {
   total = signal(0);
   loading = signal(false);
 
+  stats = signal<EventStats | null>(null);
+
+  statCards = computed(() => [
+    {
+      label: "Total d'événements",
+      value: this.stats()?.total ?? 0,
+      color: 'text-[#1A365D]',
+      icon: 'pi pi-calendar text-sm text-slate-300',
+    },
+    {
+      label: 'Planifiés',
+      value: this.stats()?.planned ?? 0,
+      color: 'text-blue-600',
+      icon: 'pi pi-clock text-sm text-slate-300',
+    },
+    {
+      label: 'En cours',
+      value: this.stats()?.inProgress ?? 0,
+      color: 'text-emerald-600',
+      icon: 'pi pi-spinner text-sm text-slate-300',
+    },
+    {
+      label: 'Terminés',
+      value: this.stats()?.completed ?? 0,
+      color: 'text-violet-600',
+      icon: 'pi pi-check text-sm text-slate-300',
+    },
+    {
+      label: 'Annulés',
+      value: this.stats()?.cancelled ?? 0,
+      color: 'text-red-600',
+      icon: 'pi pi-times text-sm text-slate-300',
+    },
+  ]);
+
   ngOnInit(): void {
     this.fetchEvents();
   }
@@ -120,6 +158,7 @@ export class EventListComponent implements OnInit, OnDestroy {
       const result = await this._eventGateway.filterEvents(this.filters());
       this.events.set(result);
       const stats = await this._eventGateway.getEventStats();
+      this.stats.set(stats);
       this.total.set(stats.total);
     } catch (error) {
       console.error(error);

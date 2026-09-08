@@ -50,6 +50,19 @@
         }
       }
 
+      <!-- Stats -->
+      <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
+        @for (card of statCards(); track card.label) {
+          <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm">
+            <div class="flex items-center justify-between mb-2">
+              <p class="text-[10px] font-bold text-slate-400 uppercase">{{ card.label }}</p>
+              <i [class]="card.icon"></i>
+            </div>
+            <p class="text-3xl font-black" [ngClass]="card.color">{{ card.value.toLocaleString('fr-FR') }}</p>
+          </div>
+        }
+      </div>
+
       <!-- Table card -->
       <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
 
