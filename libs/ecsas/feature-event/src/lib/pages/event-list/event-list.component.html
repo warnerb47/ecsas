@@ -73,18 +73,19 @@
                 <th class="px-6 py-4">Budget</th>
                 <th class="px-6 py-4">Dépenses</th>
                 <th class="px-6 py-4">Statut</th>
+                <th class="px-6 py-4">Action</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
               @if (loading()) {
                 <tr>
-                  <td colspan="6" class="px-6 py-8 text-center text-slate-400">
+                  <td colspan="7" class="px-6 py-8 text-center text-slate-400">
                     <i class="pi pi-spin pi-spinner mr-2"></i> Chargement...
                   </td>
                 </tr>
               } @else if (!events().length) {
                 <tr>
-                  <td colspan="6" class="px-6 py-8 text-center text-slate-400 text-sm">
+                  <td colspan="7" class="px-6 py-8 text-center text-slate-400 text-sm">
                     Aucun événement trouvé.
                   </td>
                 </tr>
@@ -94,7 +95,7 @@
                     <td class="px-6 py-4">
                       <div class="flex items-center">
                         <div class="w-10 h-10 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center mr-3">
-                          <i [class]="getTypeIcon(event.type)" class="pi"></i>
+                          <i [class]="getTypeIcon(event.type)"></i>
                         </div>
                         <div>
                           <p class="font-bold text-slate-800">{{ event.name }}</p>
@@ -111,6 +112,14 @@
                       <span class="px-3 py-1 rounded-full text-[11px] font-bold border" [class]="getStatusClasses(event.status)">
                         {{ getStatusLabel(event.status) }}
                       </span>
+                    </td>
+                    <td class="px-6 py-4">
+                      <a
+                        [routerLink]="['/event/detail', event.id]"
+                        class="p-2 text-slate-400 hover:text-blue-600 transition inline-flex items-center"
+                        [attr.aria-label]="'Consulter ' + event.name">
+                        <i class="pi pi-eye"></i>
+                      </a>
                     </td>
                   </tr>
                 }

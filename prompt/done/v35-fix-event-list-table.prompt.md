@@ -12,3 +12,4 @@ Requirements:
 - **Add an eye icon** to each row (e.g. in a last "Action" column) that navigates to the event detail page at `/event/detail/{eventId}`.
 - **Fix the event type icon** so the correct type icon displays. The current `<i [class]="getTypeIcon(event.type)" class="pi"></i>` binding conflicts between `[class]` and static `class="pi"`. Refactor to combine them reliably (e.g. use a single bound class string including the `pi` base, or a dedicated bound attribute) so both the `pi` base style and the type-specific icon class render.
 - Verify the icon appears for all event types using `getTypeIcon()`'s mapping.
+

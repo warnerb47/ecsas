@@ -146,13 +146,13 @@ export class EventListComponent implements OnInit, OnDestroy {
 
   getTypeIcon(type: EventType | undefined): string {
     const map: Record<string, string> = {
-      SOCIAL_CARE: 'pi-heart',
-      HEALTH: 'pi-heartbeat',
-      MEETING: 'pi-users',
-      CEREMONY: 'pi-gift',
-      COMMUNITY: 'pi-star',
+      SOCIAL_CARE: 'pi pi-heart',
+      HEALTH: 'pi pi-heart',
+      MEETING: 'pi pi-users',
+      CEREMONY: 'pi pi-gift',
+      COMMUNITY: 'pi pi-star',
     };
-    return type ? (map[type] ?? 'pi-calendar') : 'pi-calendar';
+    return type ? (map[type] ?? 'pi pi-calendar') : 'pi pi-calendar';
   }
 
   formatAmount(value: number | undefined): string {
