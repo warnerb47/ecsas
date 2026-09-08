@@ -6,7 +6,7 @@ import {
   SEARCH_APPLICANT,
 } from './query';
 import { v4 as uuidv4 } from 'uuid';
-import { DocumentManager } from '@org/api/products';
+import { DocumentManager } from '../../document-manager/document-manager';
 
 export class ApplicantRepository {
   private readonly _documentManager = new DocumentManager();
@@ -56,10 +56,11 @@ export class ApplicantRepository {
     return applicants[0];
   }
 
-  async createCoreSource(file: File) {
+  async createCoreSource(params: { file: File; folder: string }) {
+    const { file, folder } = params;
     const sourceId = uuidv4();
     const mimeType = file.type;
-    const fullPath = `${this._documentManager.appDataConfig.applicantFolder.path}/${file.name}`;
+    const fullPath = `${folder}/${file.name}`;
     const db = await openConnection();
     if (!db) {
       throw new Error('No database connection');
@@ -83,8 +84,8 @@ export class ApplicantRepository {
     return sourceId;
   }
 
-  async updateCoreSource(params: { id: string; file?: File }) {
-    const { id, file } = params;
+  async updateCoreSource(params: { id: string; file?: File; folder?: string }) {
+    const { id, file, folder } = params;
     let fullPath: string | undefined;
     let mimeType: string | undefined;
     let fileName: string | undefined;
@@ -92,7 +93,7 @@ export class ApplicantRepository {
     if (file) {
       fileName = file.name;
       mimeType = file.type;
-      fullPath = `${this._documentManager.appDataConfig.applicantFolder.path}/${file.name}`;
+      fullPath = `${folder ?? this._documentManager.appDataConfig.applicantFolder.path}/${file.name}`;
 
       const uploaded = await this._documentManager.uploadFile({
         file,
@@ -189,7 +190,14 @@ export class ApplicantRepository {
       if (!payload?.source) {
         throw new Error('No source provided');
       }
-      const sourceId = await this.createCoreSource(payload?.source);
+      const folder = this._documentManager.applicantFolder({
+        fullName: payload.fullName ?? '',
+        nin: payload.nin ?? '',
+      });
+      const sourceId = await this.createCoreSource({
+        file: payload.source,
+        folder,
+      });
       const applicantId = await this.createCoreApplicant(payload);
       await this.createCoreApplicantSource({ applicantId, sourceId });
       return applicantId;
@@ -248,8 +256,16 @@ export class ApplicantRepository {
   }) {
     const { applicant, sourceId } = params;
     try {
+      const folder = this._documentManager.applicantFolder({
+        fullName: applicant.fullName ?? '',
+        nin: applicant.nin ?? '',
+      });
       if (applicant?.source && sourceId) {
-        await this.updateCoreSource({ id: sourceId, file: applicant.source });
+        await this.updateCoreSource({
+          id: sourceId,
+          file: applicant.source,
+          folder,
+        });
       }
       if (applicant.id) {
         await this.updateCoreApplicant({ id: applicant.id, applicant });

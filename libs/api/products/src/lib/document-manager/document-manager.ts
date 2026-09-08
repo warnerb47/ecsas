@@ -14,18 +14,71 @@ export class DocumentManager {
     applicationFolder: { path: 'Documents/Demandes', exist: false },
     eventFolder: { path: 'Documents/Événements', exist: false },
   };
-  async initAppFolder() {
-    this.appDataConfig.applicantFolder.exist = await this.checkExist(
-      this.appDataConfig.applicantFolder.path,
-    );
-    this.appDataConfig.applicationFolder.exist = await this.checkExist(
-      this.appDataConfig.applicationFolder.path,
-    );
-    if (!this.appDataConfig.applicantFolder.exist) {
-      this.createFolder(this.appDataConfig.applicantFolder.path);
+
+  sanitizeSegment(value: string): string {
+    return value
+      .replace(/[/\\:*?"<>|]/g, '-')
+      .replace(/[\p{Cc}]/gu, '')
+      .replace(/\s+/g, ' ')
+      .replace(/[. ]+$/g, '')
+      .trim();
+  }
+
+  formatDate(value?: string | null): string {
+    if (value) {
+      const datePart = value.split(' ')[0];
+      if (/^\d{4}-\d{2}-\d{2}$/.test(datePart)) {
+        return datePart;
+      }
+      const date = new Date(value);
+      if (!Number.isNaN(date.getTime())) {
+        return date.toISOString().slice(0, 10);
+      }
     }
-    if (!this.appDataConfig.applicationFolder.exist) {
-      this.createFolder(this.appDataConfig.applicationFolder.path);
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  applicantFolder(params: { fullName: string; nin: string }): string {
+    const { fullName, nin } = params;
+    return `${this.appDataConfig.applicantFolder.path}/${this.sanitizeSegment(`${fullName}_${nin}`)}`;
+  }
+
+  applicationFolder(params: {
+    procedureName: string;
+    mailRef: string;
+    createdAt?: string | null;
+  }): string {
+    const { procedureName, mailRef, createdAt } = params;
+    const segments = [
+      this.sanitizeSegment(procedureName),
+      this.sanitizeSegment(mailRef),
+      this.formatDate(createdAt),
+    ].filter(Boolean);
+    return `${this.appDataConfig.applicationFolder.path}/${segments.join('_')}`;
+  }
+
+  eventFolder(params: {
+    eventName: string;
+    createdAt?: string | null;
+  }): string {
+    const { eventName, createdAt } = params;
+    const segments = [
+      this.sanitizeSegment(eventName),
+      this.formatDate(createdAt),
+    ].filter(Boolean);
+    return `${this.appDataConfig.eventFolder.path}/${segments.join('_')}`;
+  }
+
+  async initAppFolder() {
+    for (const folder of [
+      this.appDataConfig.applicantFolder,
+      this.appDataConfig.applicationFolder,
+      this.appDataConfig.eventFolder,
+    ]) {
+      folder.exist = await this.checkExist(folder.path);
+      if (!folder.exist) {
+        await this.createFolder(folder.path);
+      }
     }
   }
 

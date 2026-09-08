@@ -13,7 +13,7 @@ import {
   GET_APPLICATION_STATISTICS_BY_PROCEDURE_ID_QUERY,
 } from './query';
 import { v4 as uuidv4 } from 'uuid';
-import { DocumentManager } from '@org/api/products';
+import { DocumentManager } from '../../document-manager/document-manager';
 
 export class ApplicationRepository {
   private readonly _documentManager = new DocumentManager();
@@ -100,7 +100,7 @@ export class ApplicationRepository {
     return results[0];
   }
 
-  async createCoreSources(documents: ApplicationDocument[]) {
+  async createCoreSources(documents: ApplicationDocument[], folder: string) {
     if (!documents.length) {
       return [];
     }
@@ -113,7 +113,7 @@ export class ApplicationRepository {
       const file = document.file;
       const sourceId = uuidv4();
       const mimeType = file.type;
-      const fullPath = `${this._documentManager.appDataConfig.applicationFolder.path}/${file.name}`;
+      const fullPath = `${folder}/${file.name}`;
 
       const uploaded = await this._documentManager.uploadFile({
         file,
@@ -253,13 +253,40 @@ export class ApplicationRepository {
       if (!payload?.sources.length) {
         throw new Error('No source provided');
       }
-      const sourceIds = await this.createCoreSources(payload?.sources);
+      const folder = await this.computeApplicationFolder(
+        payload.procedure,
+        payload.mailRef ?? '',
+      );
+      const sourceIds = await this.createCoreSources(payload?.sources, folder);
       const applicationId = await this.createCoreApplication(payload);
       await this.createCoreApplicationSource({ applicationId, sourceIds });
       return applicationId;
     } catch (error) {
       console.error(error);
       throw error;
+    }
+  }
+
+  private async computeApplicationFolder(
+    procedureId: string,
+    mailRef: string,
+  ): Promise<string> {
+    const db = await openConnection();
+    if (!db) {
+      throw new Error('No database connection');
+    }
+    try {
+      const rows: { name?: string }[] = await db.select(
+        `SELECT name FROM core_procedure WHERE id = ?1`,
+        [procedureId],
+      );
+      return this._documentManager.applicationFolder({
+        procedureName: rows?.[0]?.name ?? '',
+        mailRef,
+        createdAt: new Date().toISOString(),
+      });
+    } finally {
+      await closeConnection(db);
     }
   }
 

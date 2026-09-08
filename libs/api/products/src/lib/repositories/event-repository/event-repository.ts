@@ -10,7 +10,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { closeConnection, openConnection, parseKey } from '../db.utils';
 import { GET_EVENT_BY_ID } from './queries';
-import { DocumentManager } from '@org/api/products';
+import { DocumentManager } from '../../document-manager/document-manager';
 import Database from '@tauri-apps/plugin-sql';
 
 export class EventRepository {
@@ -442,14 +442,27 @@ export class EventRepository {
 
 
 
-  private async createCoreSource(params: { file: File; type: string, db: Database }) {
-    const { file, type, db } = params;
+  private async createCoreSource(params: {
+    file: File;
+    eventId: string;
+    db: Database;
+  }) {
+    const { file, eventId, db } = params;
     if (!db) {
       throw new Error('No database connection');
     }
     const sourceId = uuidv4();
     const mimeType = file.type;
-    const fullPath = `${this._documentManager.appDataConfig.eventFolder.path}/${type}_${Date.now()}_${file.name}`;
+
+    const event: { name?: string; createdAt?: string }[] = await db.select(
+      `SELECT name, created_at as createdAt FROM core_event WHERE id = ?1`,
+      [eventId],
+    );
+    const folder = this._documentManager.eventFolder({
+      eventName: event?.[0]?.name ?? '',
+      createdAt: event?.[0]?.createdAt ?? null,
+    });
+    const fullPath = `${folder}/${file.name}`;
 
     const uploaded = await this._documentManager.uploadFile({ file, fullPath });
     if (!uploaded) {
@@ -482,7 +495,7 @@ export class EventRepository {
     try {
       let sourceId: string | null = null;
       if (file) {
-        sourceId = await this.createCoreSource({ file, type, db });
+        sourceId = await this.createCoreSource({ file, eventId, db });
       }
       const docId = uuidv4();
       await db.execute(
@@ -521,7 +534,7 @@ export class EventRepository {
       }
       let sourceId = existing[0].sourceId;
       if (file) {
-        sourceId = await this.createCoreSource({ file, type, db });
+        sourceId = await this.createCoreSource({ file, eventId, db });
       }
       await db.execute(
         `UPDATE core_event_document
