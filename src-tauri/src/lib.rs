@@ -28,9 +28,16 @@ pub fn run() {
         .manage(server::llama::LlamaState {
             process: Mutex::new(None),
         })
+        .manage(server::transfer::TransferState {
+            server_running: std::sync::atomic::AtomicBool::new(false),
+            shutdown: Mutex::new(None),
+            url: Mutex::new(None),
+        })
         .invoke_handler(tauri::generate_handler![
             server::llama::start_llama_server,
             server::llama::stop_llama_server,
+            server::transfer::start_transfer_server,
+            server::transfer::stop_transfer_server,
             db::backup::create_backup,
             db::restore::restore_backup,
         ])

@@ -25,6 +25,10 @@ import { map, Subject, takeUntil } from 'rxjs';
 import { form, FormField, submit } from '@angular/forms/signals';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ApplicationGateway, ProcedureGateway } from '@org/ecsas/ecsas-data';
+import { QRCodeComponent } from 'angularx-qrcode';
+import { TransferFileService } from '../../state/transfer-file.service';
+
+type ReceivedSourceItem = ApplicationDocument & { originalName: string };
 
 @Component({
   selector: 'lib-new-application-component',
@@ -37,6 +41,7 @@ import { ApplicationGateway, ProcedureGateway } from '@org/ecsas/ecsas-data';
     TextInputComponent,
     NumberInputComponent,
     FormField,
+    QRCodeComponent,
   ],
   providers: [DialogService],
   templateUrl: './new-application.component.html',
@@ -48,6 +53,7 @@ export class NewApplicationComponent implements OnInit, OnDestroy {
   private readonly _activatedRoute = inject(ActivatedRoute);
   private readonly _procedureGateway = inject(ProcedureGateway);
   private readonly _router = inject(Router);
+  private readonly _transferService = inject(TransferFileService);
 
   procedureId = toSignal(
     this._activatedRoute.paramMap.pipe(map((p) => p.get('procedureId'))),
@@ -76,6 +82,11 @@ export class NewApplicationComponent implements OnInit, OnDestroy {
   });
 
   applicationForm = form(this.applicationModel);
+
+  transferUrl = this._transferService.url;
+  transferError = signal<string | null>(null);
+  receivedSources = signal<ReceivedSourceItem[]>([]);
+
   ngOnInit() {
     this.initState();
   }
@@ -90,8 +101,92 @@ export class NewApplicationComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this._transferService.dispose();
     this._unsubscribe.next();
     this._unsubscribe.complete();
+  }
+
+  async startTransfer() {
+    this.transferError.set(null);
+    try {
+      await this._transferService.start();
+      this._transferService.listenForFiles(async (files) => {
+        for (const transferred of files) {
+          try {
+            const file = await this._transferService.readAsFile(transferred.path);
+            const document: Partial<ProcedureDocument> = {
+              name: transferred.name,
+              required: false,
+            };
+            const entry: ReceivedSourceItem = {
+              document,
+              file,
+              originalName: file.name,
+            };
+            this.receivedSources.set([...this.receivedSources(), entry]);
+            this.applicationModel().sources = [
+              ...this.applicationModel().sources,
+              entry,
+            ];
+          } catch (error) {
+            console.error('Impossible de lire le fichier transféré', error);
+          }
+        }
+      });
+      this._transferService.listenForStopped(() => this.transferError.set(null));
+    } catch (error) {
+      this.transferError.set(String(error));
+    }
+  }
+
+  async stopTransfer() {
+    try {
+      await this._transferService.stop();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  removeReceivedSource(index: number) {
+    const target = this.receivedSources()[index];
+    this.receivedSources.update((sources) =>
+      sources.filter((_, i) => i !== index),
+    );
+    this.applicationModel().sources = this.applicationModel().sources.filter(
+      (source) => source !== target,
+    );
+  }
+
+  matchReceivedFile(index: number, documentName: string) {
+    const item = this.receivedSources()[index];
+    if (!item) {
+      return;
+    }
+    const matched =
+      this.procedure()?.documents?.find((doc) => doc.name === documentName) ??
+      null;
+    if (matched) {
+      item.document = matched;
+      item.file = this.renameFile(item.file, `${matched.name} - ${item.originalName}`);
+    } else {
+      item.document = { name: item.originalName, required: false };
+      item.file = this.renameFile(item.file, item.originalName);
+    }
+    this.receivedSources.set([...this.receivedSources()]);
+    this.applicationModel().sources = [...this.applicationModel().sources];
+  }
+
+  renameFile(file: File, newName: string): File {
+    return new File([file], newName, {
+      type: file.type,
+      lastModified: file.lastModified,
+    });
+  }
+
+  isMatchedReceivedFile(source: ApplicationDocument): boolean {
+    return (this.procedure()?.documents ?? []).some(
+      (doc) => doc.name === source.document?.name,
+    );
   }
 
   async fetchProcedureById() {
@@ -183,18 +278,14 @@ export class NewApplicationComponent implements OnInit, OnDestroy {
   }
 
   validDocument() {
-    for (const document of this.procedure()?.documents ?? []) {
-      const found = this.applicationModel().sources?.find((source) => {
-        return (
-          source.document.name === document.name && source.document.required
-        );
-      });
-
-      if (!found) {
-        return false;
-      }
-    }
-    return true;
+    const sources = this.applicationModel().sources ?? [];
+    return (this.procedure()?.documents ?? [])
+      .filter((doc) => doc.required)
+      .every((doc) =>
+        sources.some(
+          (source) => source.document?.name === doc.name && !!source.file,
+        ),
+      );
   }
 
   async submitApplication() {

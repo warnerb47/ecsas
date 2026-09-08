@@ -109,6 +109,85 @@
                         }
                     </div>
 
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                            <h3 class="text-sm font-black text-[#1A365D] uppercase tracking-wider">3. Transfert depuis le téléphone</h3>
+                            @if (!transferUrl()) {
+                              <lib-button type="primary" (click)="startTransfer()">
+                                <div class="flex items-center justify-center space-x-2">
+                                  <i class="pi pi-qrcode"></i>
+                                  <span>Transférer depuis le téléphone</span>
+                                </div>
+                              </lib-button>
+                            } @else {
+                              <lib-button type="secondary" (click)="stopTransfer()">
+                                <div class="flex items-center justify-center space-x-2">
+                                  <i class="pi pi-stop"></i>
+                                  <span>Arrêter le transfert</span>
+                                </div>
+                              </lib-button>
+                            }
+                        </div>
+
+                        @if (transferUrl()) {
+                          <div class="p-6">
+                              <div class="flex flex-col items-center space-y-4">
+                                  <p class="text-sm text-slate-500 text-center">
+                                      Scannez ce QR code avec votre téléphone pour envoyer des photos de documents.
+                                  </p>
+                                  <qrcode [qrdata]="transferUrl() ?? ''" [width]="180" elementType="url"></qrcode>
+                                  <p class="text-xs text-slate-400 select-all">{{ transferUrl() }}</p>
+                              </div>
+                          </div>
+                        }
+
+                        @if (transferError()) {
+                          <div class="px-6 py-4">
+                            <p class="text-sm text-red-500">{{ transferError() }}</p>
+                          </div>
+                        }
+
+                        @if (receivedSources().length > 0) {
+                          <div class="px-6 pb-6">
+                              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Fichiers reçus</p>
+                              <div class="space-y-2">
+                                  @for (source of receivedSources(); track $index) {
+                                    <div class="flex items-center justify-between gap-4 p-3 border border-slate-100 rounded-xl">
+                                        <div class="flex items-center min-w-0 flex-1">
+                                            <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded flex items-center justify-center mr-3 shrink-0">
+                                                <i class="pi pi-file text-lg"></i>
+                                            </div>
+                                            <div class="min-w-0">
+                                                <p class="text-sm font-bold text-slate-700 truncate">{{ source.file.name }}</p>
+                                                @if (isMatchedReceivedFile(source)) {
+                                                  <p class="text-[10px] text-emerald-600 font-bold uppercase">Associé à : {{ source.document.name }}</p>
+                                                } @else {
+                                                  <p class="text-[10px] text-slate-400 uppercase font-medium">Non associé</p>
+                                                }
+                                            </div>
+                                        </div>
+                                        <select
+                                          [value]="source.document?.name ?? ''"
+                                          (change)="matchReceivedFile($index, $any($event.target).value)"
+                                          class="shrink-0 text-xs border border-slate-200 rounded-lg px-2 py-1.5 bg-slate-50 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-200">
+                                          @if (!isMatchedReceivedFile(source)) {
+                                            <option [value]="source.document?.name ?? ''">{{ source.document?.name ?? source.file.name }}</option>
+                                          }
+                                          <option value="">Aucune correspondance</option>
+                                          @for (doc of procedure()?.documents ?? []; track doc.name) {
+                                            <option [value]="doc.name">{{ doc.name }}</option>
+                                          }
+                                        </select>
+                                        <button type="button" (click)="removeReceivedSource($index)" class="p-2 text-red-500 hover:bg-red-50 rounded shrink-0">
+                                            <i class="pi pi-times"></i>
+                                        </button>
+                                    </div>
+                                  }
+                              </div>
+                          </div>
+                        }
+                    </div>
+
                     <div class="flex items-center justify-end space-x-4 pb-12">
                         <a routerLink="/procedure" class="inline-block">
                             <lib-button type="secondary">Annuler</lib-button>
