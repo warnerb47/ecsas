@@ -247,7 +247,11 @@ export class NewApplicationComponent implements OnInit, OnDestroy {
 
   addDocument(file: File | null, document: Partial<ProcedureDocument>) {
     if (!file) return;
-    const fileName = document?.name ?? file.name;
+    const extension = file.name.includes('.')
+      ? file.name.slice(file.name.lastIndexOf('.'))
+      : '';
+    const baseName = document?.name ?? file.name.replace(extension, '');
+    const fileName = `${baseName}${extension}`;
     const newFile = new File([file], fileName, {
       type: file.type,
       lastModified: file.lastModified,
